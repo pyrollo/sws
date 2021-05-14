@@ -72,3 +72,15 @@ void DrawnModule::unHighlightPlugs()
         it->second->setHighlighted(false);
     }
 }
+
+void DrawnModule::setPenAndBrush(QPainter *painter)
+{
+    if (isSelected()) {
+        painter->setPen(GuiStyle::pModuleSelected());
+        painter->setBrush(GuiStyle::bModuleSelected());
+    } else {
+        painter->setPen(GuiStyle::pModule());
+        painter->setBrush(GuiStyle::bModule());
+    }
+}
+

@@ -16,6 +16,12 @@ DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
     setAcceptHoverEvents(true);
 }
 
+DrawnPlug::~DrawnPlug()
+{
+    for (auto wire: mConnectedWires)
+        delete wire; // Should be better with something like "disconnect"
+}
+
 QRectF DrawnPlug::boundingRect() const
 {
     float margin = GuiStyle::pPlug().width();
@@ -88,17 +94,47 @@ void DrawnPlug::setHighlighted(bool highlighted)
 
 void DrawnPlug::setPenAndBrush(QPainter *painter)
 {
-    if (mWire) {
-        painter->setPen(GuiStyle::pPlugConnecting());
-        painter->setBrush(GuiStyle::bPlugConnecting());
-    } else if (mHighlighted) {
-        painter->setPen(GuiStyle::pPlugConnectable());
-        painter->setBrush(GuiStyle::bPlugConnectable());
-    } else if (connected()) {
-        painter->setPen(GuiStyle::pPlugConnected());
-        painter->setBrush(GuiStyle::bPlugConnected());
+    if (module()->isSelected()) {
+        painter->setPen(GuiStyle::pPlugSelected());
+        painter->setBrush(GuiStyle::bPlugSelected());
     } else {
         painter->setPen(GuiStyle::pPlug());
         painter->setBrush(GuiStyle::bPlug());
     }
+
+    if (connected()) {
+//        painter->setPen(GuiStyle::pPlugConnected());
+        painter->setBrush(GuiStyle::bPlugConnected());
+    }
+
+    if (mWire) {
+//        painter->setPen(GuiStyle::pPlugConnecting());
+        painter->setBrush(GuiStyle::bPlugConnecting());
+    }
+
+    if (mHighlighted) {
+        painter->setPen(GuiStyle::pPlugConnectable());
+//        painter->setBrush(GuiStyle::bPlugConnectable());
+    }
+
+    for (auto wire: mConnectedWires)
+        if (wire->isSelected()) {
+            painter->setBrush(GuiStyle::bPlugSelected());
+            break;
+        }
+}
+
+void DrawnPlug::addConnectedWire(DrawnWire *wire)
+{
+    mConnectedWires.insert(wire);
+}
+
+void DrawnPlug::removeConnectedWire(DrawnWire *wire)
+{
+    mConnectedWires.erase(wire);
+}
+
+bool DrawnPlug::connected()
+{
+    return !mConnectedWires.empty();
 }

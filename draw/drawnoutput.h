@@ -13,12 +13,11 @@ public:
     CoreOutput *core() { return mCoreOutput; }
 
     bool pluggable() { return true; }
-    bool connected();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
 protected:
     CoreOutput *mCoreOutput;
-
 };
 
 #endif // DRAWNOUTPUT_H

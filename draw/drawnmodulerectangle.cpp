@@ -19,8 +19,7 @@ void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsIt
 {
     (void)(option); (void)(widget);
 
-    painter->setPen(GuiStyle::pModule());
-    painter->setBrush(GuiStyle::bModule());
+    setPenAndBrush(painter);
 
     QPainterPath path;
     path.addRoundedRect(0.0f, 0.0f, mWidth, mHeight, 0.1f, 0.1f);

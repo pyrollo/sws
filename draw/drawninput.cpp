@@ -23,7 +23,3 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->drawPolygon(points, 3);
 }
 
-bool DrawnInput::connected()
-{
-    return core()->isConnected();
-}

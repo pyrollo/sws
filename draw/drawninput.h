@@ -15,7 +15,6 @@ public:
     CoreInput *core() { return mCoreInput; }
 
     bool pluggable() { return !connected(); }
-    bool connected();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

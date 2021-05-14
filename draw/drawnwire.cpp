@@ -11,37 +11,48 @@ DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
     DrawnItem(parentSchema), mSchema(parentSchema),
     storedBoundingRect(0, 0, 0, 0),
     dragging(false), dragpoint(0, 0),
-    connectedOutput(nullptr), connectedInput(nullptr)
+    mConnectedOutput(nullptr), mConnectedInput(nullptr)
 {
-    setZValue(2);
+    setFlags(flags()|ItemIsSelectable);
+    setZValue(1);
+}
+
+DrawnWire::~DrawnWire()
+{
+    if (mConnectedOutput)
+        mConnectedOutput->removeConnectedWire(this);
+    if (mConnectedInput)
+        mConnectedInput->removeConnectedWire(this);
 }
 
 void DrawnWire::connectTo(DrawnOutput *output)
 {
-    if (connectedOutput || !output)
+    if (mConnectedOutput || !output)
         return;
 
-    if (connectedInput)
-        output->core()->connect(connectedInput->core());
+    if (mConnectedInput)
+        output->core()->connect(mConnectedInput->core());
 
-    connectedOutput = output;
+    mConnectedOutput = output;
+    mConnectedOutput->addConnectedWire(this);
 
-    connect(connectedOutput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
+    connect(mConnectedOutput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
     updateBoundingRect();
     update();
 }
 
 void DrawnWire::connectTo(DrawnInput *input)
 {
-    if (connectedInput || !input)
+    if (mConnectedInput || !input)
         return;
 
-    if (connectedOutput)
-        input->core()->connect(connectedOutput->core());
+    if (mConnectedOutput)
+        input->core()->connect(mConnectedOutput->core());
 
-    connectedInput = input;
+    mConnectedInput = input;
+    mConnectedInput->addConnectedWire(this);
 
-    connect(connectedInput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
+    connect(mConnectedInput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
     updateBoundingRect();
     update();
 }
@@ -73,19 +84,19 @@ void DrawnWire::updateBoundingRect()
     from = QPointF(0, 0);
     to = QPointF(0, 0);
 
-    if (!dragging && (!connectedInput || !connectedOutput)) {
+    if (!dragging && (!mConnectedInput || !mConnectedOutput)) {
         storedBoundingRect = QRectF(0, 0, 0, 0);
         return;
      }
 
-    if (connectedInput) {
-        from = mapFromItem(connectedInput, connectedInput->connectionPoint());
+    if (mConnectedInput) {
+        from = mapFromItem(mConnectedInput, mConnectedInput->connectionPoint());
         if (dragging)
             to = dragpoint;
     }
 
-    if (connectedOutput) {
-        to = mapFromItem(connectedOutput, connectedOutput->connectionPoint());
+    if (mConnectedOutput) {
+        to = mapFromItem(mConnectedOutput, mConnectedOutput->connectionPoint());
         if (dragging)
             from = dragpoint;
     }
@@ -111,12 +122,34 @@ void DrawnWire::endDrag()
     update();
 }
 
+
+QVariant DrawnWire::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if (change == QGraphicsItem::ItemSelectedChange)
+    {
+        if (value == true)
+             setZValue(2);
+        else
+             setZValue(1);
+
+        if (mConnectedOutput)
+            mConnectedOutput->update();
+
+        if (mConnectedInput)
+            mConnectedInput->update();
+    }
+
+    return QGraphicsItem::itemChange(change, value);
+}
+
 void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     (void)(option); (void)(widget);
 
     if (dragging) {
         painter->setPen(GuiStyle::pWireConnecting());
+    } else if (isSelected()) {
+        painter->setPen(GuiStyle::pWireSelected());
     } else {
         painter->setPen(GuiStyle::pWire());
     }
@@ -131,8 +164,6 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
             QPointF((from.x() + to.x())/2, to.y()),
             to
         };
-
-//        QPointF points[2] = { from, to };
 
         painter->drawPolyline(points, 4);
 

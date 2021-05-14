@@ -20,8 +20,6 @@ public:
     void connect(CoreOutput *input);
     void disconnect(CoreOutput *input);
 
-    bool isConnected() { return mConnectedTo != nullptr; }
-
 protected:
     CoreValue mDefaultValue;
     CoreOutput *mConnectedTo;

@@ -16,7 +16,3 @@ void DrawnOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->drawChord(QRectF(-plugSize, -plugSize, plugSize*2, plugSize*2), -90*16, 180*16);
 }
 
-bool DrawnOutput::connected()
-{
-    return core()->isConnected();
-}

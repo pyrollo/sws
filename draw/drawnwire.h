@@ -12,6 +12,7 @@ class DrawnWire : public DrawnItem
     Q_OBJECT
 public:
     DrawnWire(DrawnSchema *parentSchema);
+    ~DrawnWire();
 
     DrawnSchema *schema() { return mSchema; }
 
@@ -24,9 +25,11 @@ public:
 
     void drag(QPointF scenePoint);
     void endDrag();
-    bool isValid() { return connectedOutput && connectedInput; }
+    bool isValid() { return mConnectedOutput && mConnectedInput; }
 
     Q_SLOT void endpointsmoved();
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
 protected:
     DrawnSchema *mSchema;
@@ -39,8 +42,8 @@ protected:
 
     QPointF from, to;
 
-    DrawnOutput *connectedOutput;
-    DrawnInput *connectedInput;
+    DrawnOutput *mConnectedOutput;
+    DrawnInput *mConnectedInput;
 };
 
 #endif // DRAWNWIRE_H

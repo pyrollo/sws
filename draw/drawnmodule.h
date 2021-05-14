@@ -10,6 +10,7 @@ class DrawSchema;
 class DrawnInput;
 class DrawnOutput;
 class CoreModule;
+class QPainter;
 
 class DrawnModule : public DrawnItem
 {
@@ -23,6 +24,8 @@ public:
     void unHighlightPlugs();
     void hightlightInputs();
     void hightlightOutputs();
+
+    void setPenAndBrush(QPainter *painter);
 
 protected:
     DrawnSchema *mSchema;

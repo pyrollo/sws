@@ -21,8 +21,6 @@ public:
     void connect(CoreInput *input);
     void disconnect(CoreInput *input);
 
-    bool isConnected() { return mConnectedTo.size() > 0; }
-
 protected:
     CoreValue mValue;
     std::unordered_set<CoreInput *> mConnectedTo;

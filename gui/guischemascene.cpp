@@ -1,15 +1,12 @@
 #include "guischemascene.h"
+#include "guistyle.h"
 #include <QPainter>
 
 void GuiSchemaScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    QPen pen2(Qt::red, 0.3);
-    painter->setPen(pen2);
-    painter->drawRect(sceneRect());
-
     QRectF visible = rect.intersected(sceneRect());
 
-    painter->fillRect(visible, Qt::darkGray);
+    painter->fillRect(visible, GuiStyle::bBackground());
 
     int gridSize =  getGridSize();
 
