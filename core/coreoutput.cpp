@@ -35,6 +35,8 @@ void CoreOutput::connect(CoreInput *input)
     if (mConnectedTo.find(input) != mConnectedTo.end())
         return;
 
+    checkConnection(input);
+
     if (module()->isUpstream(input->module()))
         throw CoreLoopConnectionEx();
 

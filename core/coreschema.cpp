@@ -16,17 +16,28 @@ CoreModule *CoreSchema::newModule(std::string name, std::string type)
 
     CoreModule *module = mModuleFactory->newModule(type);
 
-    mModules[name] = std::unique_ptr<CoreModule>(module);
-
-    mPrepared = false;
+    if (module) {
+        mModules[name] = module;
+        mPrepared = false;
+    }
 
     return module;
+}
+
+void CoreSchema::removeModule(CoreModule *module)
+{
+    for (auto it : mModules)
+        if (it.second == module) {
+            mModules.erase(it.first);
+            mPrepared = false;
+            return;
+        }
 }
 
 CoreModule *CoreSchema::module(std::string name)
 {
     try {
-        return mModules.at(name).get();
+        return mModules.at(name);
     } catch (const std::out_of_range&) {
         throw CoreUnknownModuleEx(name);
     }
@@ -76,7 +87,7 @@ void CoreSchema::prepare()
     do {
         change = false;
         for (auto it = mModules.begin(); it != mModules.end(); it++)
-            change = change || tryQueue(it->second.get());
+            change = change || tryQueue(it->second);
     } while(change);
 
     if (orderedModules.size() != mModules.size()) {

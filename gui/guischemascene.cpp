@@ -1,27 +1,45 @@
 #include "guischemascene.h"
 #include "guistyle.h"
+#include "../draw/drawnschema.h"
 #include <QPainter>
+#include <QKeyEvent>
+
+GuiSchemaScene::GuiSchemaScene():
+    QGraphicsScene(-1000, -1000, 2000, 2000), mSchema(nullptr)
+{
+}
 
 void GuiSchemaScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QRectF visible = rect.intersected(sceneRect());
-
     painter->fillRect(visible, GuiStyle::bBackground());
+}
 
-    int gridSize =  getGridSize();
+void GuiSchemaScene::keyPressEvent(QKeyEvent *event)
+{
+    if (!mSchema)
+        return;
 
-    QPen pen(Qt::lightGray, 0.1);
-    painter->setPen(pen);
+    if (event->key() == Qt::Key_Backspace)
+        mSchema->deleteSelected();
+}
 
-    qreal left = int(visible.left()) - (int(visible.left()) % gridSize);
-    qreal top = int(visible.top()) - (int(visible.top()) % gridSize);
+void GuiSchemaScene::removeSchema()
+{
+    if (!mSchema)
+        return;
 
-    QVector<QPointF> points;
+    removeItem(mSchema);
+    mSchema = nullptr;
+}
 
-    for (qreal x = left; x < visible.right(); x += gridSize){
-        for (qreal y = top; y < visible.bottom(); y += gridSize){
-            points.append(QPointF(x,y));
-        }
-    }
-    painter->drawPoints(points.data(), points.size());
+void GuiSchemaScene::setSchema(DrawnSchema *schema)
+{
+    removeSchema();
+
+    if (!schema)
+        return;
+
+    mSchema = schema;
+    addItem(mSchema);
 }

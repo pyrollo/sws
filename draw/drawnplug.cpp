@@ -18,8 +18,8 @@ DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
 
 DrawnPlug::~DrawnPlug()
 {
-    for (auto wire: mConnectedWires)
-        delete wire; // Should be better with something like "disconnect"
+    while (!mConnectedWires.empty())
+        delete *(mConnectedWires.begin()); // Should be better with something like "disconnect"
 }
 
 QRectF DrawnPlug::boundingRect() const
@@ -127,11 +127,13 @@ void DrawnPlug::setPenAndBrush(QPainter *painter)
 void DrawnPlug::addConnectedWire(DrawnWire *wire)
 {
     mConnectedWires.insert(wire);
+    update();
 }
 
 void DrawnPlug::removeConnectedWire(DrawnWire *wire)
 {
     mConnectedWires.erase(wire);
+    update();
 }
 
 bool DrawnPlug::connected()

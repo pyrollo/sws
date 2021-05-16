@@ -19,6 +19,8 @@ DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
 
 DrawnWire::~DrawnWire()
 {
+    if (mConnectedOutput && mConnectedInput)
+        mConnectedOutput->core()->disconnect(mConnectedInput->core());
     if (mConnectedOutput)
         mConnectedOutput->removeConnectedWire(this);
     if (mConnectedInput)

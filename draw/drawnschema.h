@@ -2,7 +2,6 @@
 #define DRAWNSCHEMA_H
 #include "drawnitem.h"
 #include <map>
-#include <memory>
 
 class CoreSchema;
 class DrawnModule;
@@ -13,10 +12,13 @@ class DrawnSchema : public DrawnItem
 {
 public:
     DrawnSchema(CoreSchema *coreSchema);
+    ~DrawnSchema();
+
     CoreSchema *core() { return mCoreSchema; }
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     DrawnModule *newModule(std::string name, std::string type);
+    void removeModule(DrawnModule *module);
 
     void highlightConnectable(DrawnPlug * plug);
     void unHighlight();
@@ -24,7 +26,7 @@ public:
 protected:
     CoreSchema *mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
-    std::map<std::string, std::unique_ptr<DrawnModule>> mModules;
+    std::map<std::string, DrawnModule *> mModules;
 };
 
 #endif // DRAWNSCHEMA_H

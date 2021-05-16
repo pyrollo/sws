@@ -17,6 +17,9 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
 
+    void deleteAll();
+    void deleteSelected();
+
 signals:
     void positionChanged();
 

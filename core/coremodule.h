@@ -15,7 +15,7 @@ class CoreModule
 {
 public:
     CoreModule(CoreSchema *schema);
-    virtual ~CoreModule() {}
+    virtual ~CoreModule();
 
     CoreSchema *schema() { return mSchema; }
 

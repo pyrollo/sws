@@ -25,7 +25,7 @@ public:
     static QBrush bModule()          { return QBrush(QColor("#224")); }
     static QBrush bModuleSelected()  { return QBrush(QColor("#442")); }
     static QBrush bPlug()            { return QBrush(QColor("#224")); }
-    static QBrush bPlugSelected()    { return QBrush(QColor("#884")); }
+    static QBrush bPlugSelected()    { return QBrush(QColor("#442")); }
     static QBrush bPlugConnecting()  { return QBrush(QColor("#484")); }
     static QBrush bPlugConnectable() { return QBrush(QColor("#484")); }
     static QBrush bPlugConnected()   { return QBrush(QColor("#66C")); } // 448

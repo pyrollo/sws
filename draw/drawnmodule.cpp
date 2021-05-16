@@ -14,6 +14,10 @@ DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
     setFlags(flags()|ItemIsSelectable|ItemIsMovable);
 }
 
+DrawnModule::~DrawnModule() {
+    mSchema->removeModule(this);
+    delete mCoreModule;
+}
 
 DrawnInput *DrawnModule::newInput(std::string name)
 {
@@ -83,4 +87,3 @@ void DrawnModule::setPenAndBrush(QPainter *painter)
         painter->setBrush(GuiStyle::bModule());
     }
 }
-

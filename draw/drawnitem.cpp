@@ -35,4 +35,21 @@ void DrawnItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = false;
     QGraphicsItem::hoverLeaveEvent(event);
 }
+void DrawnItem::deleteAll()
+{
+    delete this;
+}
 
+void DrawnItem::deleteSelected()
+{
+    for (auto qitem: childItems()) {
+        DrawnItem *item = dynamic_cast<DrawnItem *>(qitem);
+        if (!item)
+            continue;
+
+        if (item->isSelected())
+            item->deleteAll();
+        else
+            item->deleteSelected();
+    }
+}

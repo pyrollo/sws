@@ -13,10 +13,10 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     , ui(new Ui::GuiMainWindow)
 {
     ui->setupUi(this);
-    GuiSchemaScene* scene = new GuiSchemaScene(-1000, -1000, 2000, 2000);
+    GuiSchemaScene* scene = new GuiSchemaScene();
     scene->setBackgroundBrush(Qt::black);
 
-    ui->graphicsView->setScene( scene );
+    ui->graphicsView->setScene(scene);
 
     CoreSchema *coreSchema = new CoreSchema();
     DrawnSchema *schema = new DrawnSchema(coreSchema);
@@ -35,7 +35,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     wire2->connectTo(add2->output("result"));
     wire2->connectTo(add3->input("operand1"));
 
-    scene->addItem(schema);
+    scene->setSchema(schema);
 }
 
 GuiMainWindow::~GuiMainWindow()

@@ -15,6 +15,10 @@ class QPainter;
 class DrawnModule : public DrawnItem
 {
 public:
+    ~DrawnModule();
+
+    void deleteAll();
+
     DrawnSchema *schema() { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 

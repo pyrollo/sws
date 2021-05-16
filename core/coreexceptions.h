@@ -51,6 +51,21 @@ public:
     }
 };
 
+class CoreNoSchemaEx: public CoreException
+{
+public:
+    CoreNoSchemaEx() {
+        mMsg = "Can't connect without schema.";
+    }
+};
+
+class CoreNotSameSchemaEx: public CoreException
+{
+public:
+    CoreNotSameSchemaEx() {
+        mMsg = "Can't connect between different schemas.";
+    }
+};
 class CoreAlreadyConnectedEx: public CoreException
 {
 public:

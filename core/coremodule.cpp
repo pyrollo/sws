@@ -1,4 +1,5 @@
 #include "coremodule.h"
+#include "coreschema.h"
 #include "coreinput.h"
 #include "coreoutput.h"
 #include "coreexceptions.h"
@@ -9,7 +10,12 @@
 CoreModule::CoreModule(CoreSchema *schema) :
     mSchema(schema)
 {
+}
 
+CoreModule::~CoreModule()
+{
+    if (mSchema)
+        mSchema->removeModule(this);
 }
 
 CoreInput *CoreModule::newInput(std::string name, CoreValue defaultValue)

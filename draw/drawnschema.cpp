@@ -14,6 +14,12 @@ DrawnSchema::DrawnSchema(CoreSchema *coreSchema) :
     mModuleFactory = new DrawnModuleFactory(this);
 }
 
+DrawnSchema::~DrawnSchema()
+{
+    while (mModules.size())
+        delete mModules.begin()->second;
+}
+
 void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     (void)(option); (void)(widget);
 
@@ -37,8 +43,18 @@ DrawnModule *DrawnSchema::newModule(std::string name, std::string type)
 {
     CoreModule *coreModule = core()->newModule(name, type);
     DrawnModule *module = mModuleFactory->newModule(type, coreModule);
-    mModules[name] = std::unique_ptr<DrawnModule>(module);
+    if (module)
+        mModules[name] = module;
     return module;
+}
+
+// Should be called only from module destructor
+void DrawnSchema::removeModule(DrawnModule *module) {
+    for (auto it : mModules)
+        if (it.second == module) {
+            mModules.erase(it.first);
+            return;
+        }
 }
 
 void DrawnSchema::highlightConnectable(DrawnPlug * plug)
@@ -56,9 +72,10 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
     DrawnOutput *output = dynamic_cast<DrawnOutput *>(plug);
     if (output) {
         output->core()->module()->listUpstream(list);
-        for (auto it = mModules.begin(); it != mModules.end(); it++)
+        for (auto it = mModules.begin(); it != mModules.end(); it++) {
             if (list.find(it->second->core()) == list.end())
                 it->second->hightlightInputs();
+        }
     }
 }
 
@@ -67,3 +84,4 @@ void DrawnSchema::unHighlight()
     for (auto it = mModules.begin(); it != mModules.end(); it++)
         it->second->unHighlightPlugs();
 }
+
