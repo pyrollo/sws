@@ -6,11 +6,11 @@
 #include <algorithm>
 #include "../gui/guistyle.h"
 #include <QPainter>
+#include <QPainterPathStroker>
 
 DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
-    DrawnItem(parentSchema), mSchema(parentSchema),
-    storedBoundingRect(0, 0, 0, 0),
-    dragging(false), dragpoint(0, 0),
+    DrawnItem(parentSchema), mSchema(parentSchema), mBoundingRect(0,0,0,0),
+    mDragging(false), mDragpoint(0, 0),
     mConnectedOutput(nullptr), mConnectedInput(nullptr)
 {
     setFlags(flags()|ItemIsSelectable);
@@ -83,35 +83,35 @@ void DrawnWire::updateBoundingRect()
 {
     prepareGeometryChange();
     float margin = GuiStyle::pWire().widthF() * 0.5f;
-    from = QPointF(0, 0);
-    to = QPointF(0, 0);
+    mFrom = QPointF(0, 0);
+    mTo = QPointF(0, 0);
 
-    if (!dragging && (!mConnectedInput || !mConnectedOutput)) {
-        storedBoundingRect = QRectF(0, 0, 0, 0);
+    if (!mDragging && (!mConnectedInput || !mConnectedOutput)) {
+        mBoundingRect = QRectF(0, 0, 0, 0);
         return;
      }
 
     if (mConnectedInput) {
-        from = mapFromItem(mConnectedInput, mConnectedInput->connectionPoint());
-        if (dragging)
-            to = dragpoint;
+        mFrom = mapFromItem(mConnectedInput, mConnectedInput->connectionPoint());
+        if (mDragging)
+            mTo = mDragpoint;
     }
 
     if (mConnectedOutput) {
-        to = mapFromItem(mConnectedOutput, mConnectedOutput->connectionPoint());
-        if (dragging)
-            from = dragpoint;
+        mTo = mapFromItem(mConnectedOutput, mConnectedOutput->connectionPoint());
+        if (mDragging)
+            mFrom = mDragpoint;
     }
 
-    storedBoundingRect = QRectF(QPointF(std::min(from.x(), to.x()), std::min(from.y(), to.y())),
-            QPointF(std::max(from.x(), to.x()), std::max(from.y(), to.y())))
+    mBoundingRect = QRectF(QPointF(std::min(mFrom.x(), mTo.x()), std::min(mFrom.y(), mTo.y())),
+            QPointF(std::max(mFrom.x(), mTo.x()), std::max(mFrom.y(), mTo.y())))
             .marginsAdded(QMarginsF(margin, margin, margin, margin));
 }
 
 void DrawnWire::drag(QPointF scenePoint)
 {
-    dragging = true;
-    dragpoint = mapFromScene(scenePoint);
+    mDragging = true;
+    mDragpoint = mapFromScene(scenePoint);
 
     updateBoundingRect();
     update();
@@ -119,11 +119,10 @@ void DrawnWire::drag(QPointF scenePoint)
 
 void DrawnWire::endDrag()
 {
-    dragging = false;
+    mDragging = false;
     updateBoundingRect();
     update();
 }
-
 
 QVariant DrawnWire::itemChange(GraphicsItemChange change, const QVariant &value)
 {
@@ -144,11 +143,28 @@ QVariant DrawnWire::itemChange(GraphicsItemChange change, const QVariant &value)
     return QGraphicsItem::itemChange(change, value);
 }
 
+QPainterPath DrawnWire::path() const
+{
+    QPainterPath path;
+    path.moveTo(mFrom);
+    path.lineTo(QPointF((mFrom.x() + mTo.x())/2, mFrom.y()));
+    path.lineTo(QPointF((mFrom.x() + mTo.x())/2, mTo.y()));
+    path.lineTo(mTo);
+    return path;
+}
+
+QPainterPath DrawnWire::shape() const
+{
+    QPainterPathStroker stroker;
+    stroker.setWidth(0.3f); // TODO: Put that in a setting (distance around wire to select them)
+    return stroker.createStroke(path());
+}
+
 void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     (void)(option); (void)(widget);
 
-    if (dragging) {
+    if (mDragging) {
         painter->setPen(GuiStyle::pWireConnecting());
     } else if (isSelected()) {
         painter->setPen(GuiStyle::pWireSelected());
@@ -156,19 +172,5 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         painter->setPen(GuiStyle::pWire());
     }
 
-    QPointF input;
-    QPointF output;
-
-    if (from != to) {
-        QPointF points[4] = {
-            from,
-            QPointF((from.x() + to.x())/2, from.y()),
-            QPointF((from.x() + to.x())/2, to.y()),
-            to
-        };
-
-        painter->drawPolyline(points, 4);
-
-    }
+    painter->drawPath(path());
 }
-

@@ -16,7 +16,7 @@ public:
 
     DrawnSchema *schema() { return mSchema; }
 
-    QRectF boundingRect() const { return storedBoundingRect; }
+    QRectF boundingRect() const { return mBoundingRect; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     void connectTo(DrawnOutput *output);
@@ -31,19 +31,23 @@ public:
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
+    QPainterPath shape() const;
+
 protected:
     DrawnSchema *mSchema;
 
-    void updateBoundingRect();
-    QRectF storedBoundingRect;
+    QRectF mBoundingRect;
 
-    bool dragging;
-    QPointF dragpoint;
+    bool mDragging;
+    QPointF mDragpoint;
 
-    QPointF from, to;
+    QPointF mFrom, mTo;
 
     DrawnOutput *mConnectedOutput;
     DrawnInput *mConnectedInput;
+
+    void updateBoundingRect();
+    QPainterPath path() const;
 };
 
 #endif // DRAWNWIRE_H
