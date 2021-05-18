@@ -1,6 +1,5 @@
 #ifndef COREOUTPUT_H
 #define COREOUTPUT_H
-
 #include <unordered_set>
 #include "coreplug.h"
 
@@ -18,8 +17,9 @@ public:
     void listConnectedModules(std::unordered_set<CoreModule *> &list);
     bool isDownstream(CoreModule *module) const;
 
-    void connect(CoreInput *input);
-    void disconnect(CoreInput *input);
+    // Internal use only
+    void halfConnect(CoreInput *input);
+    void halfDisconnect(CoreInput *input);
 
 protected:
     CoreValue mValue;

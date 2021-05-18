@@ -1,6 +1,5 @@
 #ifndef COREMODULE_H
 #define COREMODULE_H
-
 #include "core.h"
 #include "coreinput.h"
 #include "coreoutput.h"
@@ -8,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <mutex>
 
 class CoreSchema;
 

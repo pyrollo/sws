@@ -1,7 +1,9 @@
 #include "coreschema.h"
-#include "coremodule.h"
-#include "coremodulefactory.h"
 #include "coreexceptions.h"
+#include "coremodule.h"
+#include "coreinput.h"
+#include "coreoutput.h"
+#include "coremodulefactory.h"
 
 CoreSchema::CoreSchema() :
     mPrepared(false)
@@ -11,6 +13,8 @@ CoreSchema::CoreSchema() :
 
 CoreModule *CoreSchema::newModule(std::string name, std::string type)
 {
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
     if (mModules.find(name) != mModules.end())
         throw CoreDuplicateNameEx(name);
 
@@ -26,6 +30,8 @@ CoreModule *CoreSchema::newModule(std::string name, std::string type)
 
 void CoreSchema::removeModule(CoreModule *module)
 {
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
     for (auto it : mModules)
         if (it.second == module) {
             mModules.erase(it.first);
@@ -43,14 +49,6 @@ CoreModule *CoreSchema::module(std::string name) const
     }
 }
 
-void CoreSchema::step()
-{
-    if (!mPrepared)
-        prepare();
-
-    for (auto module: orderedModules)
-        module->step();
-}
 
 // This part needs optimization (isQueued, tryQueue and prepare).
 // Could be done by using a set of ordered modules instead of searching in vector.
@@ -79,20 +77,54 @@ bool CoreSchema::tryQueue(CoreModule *module)
     return true;
 }
 
-void CoreSchema::prepare()
+void CoreSchema::step()
 {
-    bool change;
-    orderedModules.clear();
+    std::lock_guard<std::mutex> lock(mStepMutex);
 
-    do {
-        change = false;
-        for (auto it = mModules.begin(); it != mModules.end(); it++)
-            change = change || tryQueue(it->second);
-    } while(change);
+    if (!mPrepared) {
+        bool change;
+        orderedModules.clear();
 
-    if (orderedModules.size() != mModules.size()) {
-        throw CoreCantScheduleModulesEx();
+        do {
+            change = false;
+            for (auto it = mModules.begin(); it != mModules.end(); it++)
+                change = change || tryQueue(it->second);
+        } while(change);
+
+        if (orderedModules.size() != mModules.size()) {
+            throw CoreCantScheduleModulesEx();
+        }
+
+        mPrepared = true;
     }
 
-    mPrepared = true;
+    for (auto module: orderedModules)
+        module->step();
+}
+
+void CoreSchema::connect(CoreInput *input, CoreOutput *output)
+{
+    if (input->module()->schema() != this ||
+            output->module()->schema() != this)
+        throw CoreNotSameSchemaEx();
+
+    if (output->module()->isUpstream(input->module()))
+        throw CoreLoopConnectionEx();
+
+    std::lock_guard<std::mutex> lock(mStepMutex);
+    input->halfConnect(output);
+    output->halfConnect(input);
+    mPrepared = false;
+}
+
+void CoreSchema::disconnect(CoreInput *input, CoreOutput *output)
+{
+    if (input->module()->schema() != this ||
+            output->module()->schema() != this)
+        throw CoreNotSameSchemaEx();
+
+    std::lock_guard<std::mutex> lock(mStepMutex);
+    output->halfDisconnect(input);
+    input->halfDisconnect(output);
+    mPrepared = false;
 }

@@ -4,7 +4,7 @@
 #include "drawninput.h"
 #include "drawnoutput.h"
 #include <map>
-#include <memory>
+//#include <memory>
 
 class DrawSchema;
 class DrawnInput;
@@ -16,8 +16,6 @@ class DrawnModule : public DrawnItem
 {
 public:
     ~DrawnModule();
-
-    void deleteAll();
 
     DrawnSchema *schema() { return mSchema; }
     CoreModule *core() { return mCoreModule; }
@@ -35,14 +33,13 @@ protected:
     DrawnSchema *mSchema;
     CoreModule *mCoreModule;
 
-    std::map<std::string, std::unique_ptr<DrawnInput>> mInputs;
-    std::map<std::string, std::unique_ptr<DrawnOutput>> mOutputs;
+    std::map<std::string, DrawnInput *> mInputs;
+    std::map<std::string, DrawnOutput *> mOutputs;
 
     DrawnModule(DrawnSchema *schema, CoreModule *coreModule);
 
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);
-
 };
 
 

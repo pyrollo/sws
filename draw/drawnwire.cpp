@@ -3,6 +3,7 @@
 #include "drawninput.h"
 #include "../core/coreinput.h"
 #include "../core/coreoutput.h"
+#include "../core/coreschema.h"
 #include <algorithm>
 #include "../gui/guistyle.h"
 #include <QPainter>
@@ -20,7 +21,7 @@ DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
 DrawnWire::~DrawnWire()
 {
     if (mConnectedOutput && mConnectedInput)
-        mConnectedOutput->core()->disconnect(mConnectedInput->core());
+        schema()->core()->disconnect(mConnectedInput->core(), mConnectedOutput->core());
     if (mConnectedOutput)
         mConnectedOutput->removeConnectedWire(this);
     if (mConnectedInput)
@@ -33,7 +34,7 @@ void DrawnWire::connectTo(DrawnOutput *output)
         return;
 
     if (mConnectedInput)
-        output->core()->connect(mConnectedInput->core());
+        schema()->core()->connect(mConnectedInput->core(), output->core());
 
     mConnectedOutput = output;
     mConnectedOutput->addConnectedWire(this);
@@ -49,7 +50,7 @@ void DrawnWire::connectTo(DrawnInput *input)
         return;
 
     if (mConnectedOutput)
-        input->core()->connect(mConnectedOutput->core());
+        schema()->core()->connect(input->core(), mConnectedOutput->core());
 
     mConnectedInput = input;
     mConnectedInput->addConnectedWire(this);

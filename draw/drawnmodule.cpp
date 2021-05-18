@@ -15,6 +15,12 @@ DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
 }
 
 DrawnModule::~DrawnModule() {
+    for (auto it : mInputs)
+        delete it.second;
+
+    for (auto it : mOutputs)
+        delete it.second;
+
     mSchema->removeModule(this);
     delete mCoreModule;
 }
@@ -23,7 +29,7 @@ DrawnInput *DrawnModule::newInput(std::string name)
 {
     DrawnInput *input = new DrawnInput(this, core()->input(name));
     connect(this, SIGNAL(positionChanged()), input, SIGNAL(positionChanged()));
-    mInputs[name] = std::unique_ptr<DrawnInput>(input);
+    mInputs[name] = input;
     return input;
 }
 
@@ -31,14 +37,14 @@ DrawnOutput *DrawnModule::newOutput(std::string name)
 {
     DrawnOutput *output = new DrawnOutput(this, core()->output(name));
     connect(this, SIGNAL(positionChanged()), output, SIGNAL(positionChanged()));
-    mOutputs[name] = std::unique_ptr<DrawnOutput>(output);
+    mOutputs[name] = output;
     return output;
 }
 
 DrawnInput *DrawnModule::input(std::string name)
 {
     try {
-        return mInputs.at(name).get();
+        return mInputs.at(name);
     } catch(const std::out_of_range&) {
         throw CoreUnknownInputEx(name);
     }
@@ -47,7 +53,7 @@ DrawnInput *DrawnModule::input(std::string name)
 DrawnOutput *DrawnModule::output(std::string name)
 {
     try {
-        return mOutputs.at(name).get();
+        return mOutputs.at(name);
     } catch(const std::out_of_range&) {
         throw CoreUnknownOutputEx(name);
     }
@@ -55,26 +61,24 @@ DrawnOutput *DrawnModule::output(std::string name)
 
 void DrawnModule::hightlightInputs()
 {
-    for (auto it = mInputs.begin(); it != mInputs.end(); it++) {
-        if (!it->second->core()->isConnected())
-            it->second->setHighlighted(true);
-    }
+    for (auto it : mInputs)
+        if (!it.second->core()->isConnected())
+            it.second->setHighlighted(true);
 }
 
 void DrawnModule::hightlightOutputs()
 {
-    for (auto it = mOutputs.begin(); it != mOutputs.end(); it++) {
-        it->second->setHighlighted(true);
-    }
+    for (auto it : mOutputs)
+        it.second->setHighlighted(true);
 }
 
 void DrawnModule::unHighlightPlugs()
 {
-    for (auto it = mInputs.begin(); it != mInputs.end(); it++) {
-        it->second->setHighlighted(false);
+    for (auto it : mInputs) {
+        it.second->setHighlighted(false);
     }
-    for (auto it = mOutputs.begin(); it != mOutputs.end(); it++) {
-        it->second->setHighlighted(false);
+    for (auto it : mOutputs) {
+        it.second->setHighlighted(false);
     }
 }
 

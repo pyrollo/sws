@@ -1,5 +1,6 @@
 #include "drawnmodulefactory.h"
 #include "modules/drawnmoduleadd.h"
+
 class CoreModule;
 
 DrawnModuleFactory::DrawnModuleFactory(DrawnSchema *schema) :

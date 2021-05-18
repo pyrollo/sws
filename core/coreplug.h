@@ -1,6 +1,5 @@
 #ifndef COREPLUG_H
 #define COREPLUG_H
-
 #include "core.h"
 
 class CoreModule;
@@ -13,8 +12,6 @@ public:
 
     virtual CoreValue value() const = 0;
     CoreModule *module() const { return mModule; }
-
-    void checkConnection(CorePlug *plug) const;
 
 protected:
     CoreModule *mModule;

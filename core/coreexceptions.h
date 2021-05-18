@@ -1,6 +1,5 @@
 #ifndef COREEXCEPTIONS_H
 #define COREEXCEPTIONS_H
-
 #include <string>
 #include <exception>
 
@@ -51,14 +50,6 @@ public:
     }
 };
 
-class CoreNoSchemaEx: public CoreException
-{
-public:
-    CoreNoSchemaEx() {
-        mMsg = "Can't connect without schema.";
-    }
-};
-
 class CoreNotSameSchemaEx: public CoreException
 {
 public:
@@ -66,13 +57,23 @@ public:
         mMsg = "Can't connect between different schemas.";
     }
 };
+
 class CoreAlreadyConnectedEx: public CoreException
 {
 public:
     CoreAlreadyConnectedEx() {
-        mMsg = "Input already connected.";
+        mMsg = "Plug already connected.";
     }
 };
+
+class CoreNotConnectedEx: public CoreException
+{
+public:
+    CoreNotConnectedEx() {
+        mMsg = "Plug not connected.";
+    }
+};
+
 
 class CoreLoopConnectionEx: public CoreException
 {

@@ -5,8 +5,6 @@
 #include "coreexceptions.h"
 #include <vector>
 
-#include <iostream>
-
 CoreModule::CoreModule(CoreSchema *schema) :
     mSchema(schema)
 {

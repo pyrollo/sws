@@ -4,8 +4,7 @@
 
 DrawnOutput::DrawnOutput(DrawnModule *parent, CoreOutput *coreOutput) :
     DrawnPlug(parent), mCoreOutput(coreOutput)
-{
-}
+{}
 
 void DrawnOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

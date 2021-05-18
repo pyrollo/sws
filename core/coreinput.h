@@ -1,6 +1,5 @@
 #ifndef COREINPUT_H
 #define COREINPUT_H
-
 #include "coreplug.h"
 #include <unordered_set>
 
@@ -16,15 +15,16 @@ public:
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list) const;
     bool isUpstream(CoreModule *module) const;
-
-    void connect(CoreOutput *input);
-    void disconnect(CoreOutput *input);
-
     bool isConnected() const { return mConnectedTo != nullptr; }
+
+    // Internal use only
+    void halfConnect(CoreOutput *output);
+    void halfDisconnect(CoreOutput *output);
 
 protected:
     CoreValue mDefaultValue;
     CoreOutput *mConnectedTo;
+
 };
 
 #endif // COREINPUT_H

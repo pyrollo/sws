@@ -5,8 +5,7 @@
 
 DrawnInput::DrawnInput(DrawnModule *parent, CoreInput *coreInput) :
     DrawnPlug(parent), mCoreInput(coreInput)
-{
-}
+{}
 
 void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

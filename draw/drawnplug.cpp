@@ -8,7 +8,6 @@
 #include <QPainter>
 #include <QMessageBox>
 
-
 DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
     DrawnItem(parentModule), mModule(parentModule), mWire(nullptr), mHighlighted(false)
 {

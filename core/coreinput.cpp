@@ -12,7 +12,7 @@ CoreInput::CoreInput(CoreModule *module, CoreValue defaultValue) :
 CoreInput::~CoreInput()
 {
     if (mConnectedTo)
-        disconnect(mConnectedTo);
+        mModule->schema()->disconnect(this, mConnectedTo);
 }
 
 CoreValue CoreInput::value() const {
@@ -36,28 +36,19 @@ bool CoreInput::isUpstream(CoreModule *module) const
     return false;
 }
 
-void CoreInput::connect(CoreOutput *output)
+void CoreInput::halfConnect(CoreOutput *output)
 {
-    if (mConnectedTo == output)
-        return;
-
-    if (mConnectedTo)
+    if (mConnectedTo != nullptr)
         throw CoreAlreadyConnectedEx();
 
-    if (module()->isDownstream(output->module()))
-        throw CoreLoopConnectionEx();
-
     mConnectedTo = output;
-    output->connect(this);
-    mModule->schema()->unprepare();
 }
 
-void CoreInput::disconnect(CoreOutput *output)
+void CoreInput::halfDisconnect(CoreOutput *output)
 {
-    if (mConnectedTo == output) {
-        mConnectedTo = nullptr;
-        output->disconnect(this);
-        mModule->schema()->unprepare();
-    }
+    if (mConnectedTo != output)
+        throw CoreNotConnectedEx();
+
+    mConnectedTo = nullptr;
 }
 

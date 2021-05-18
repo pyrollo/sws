@@ -12,7 +12,7 @@ CoreOutput::CoreOutput(CoreModule *module) :
 CoreOutput::~CoreOutput()
 {
     for (const auto& connectedTo: mConnectedTo)
-        disconnect(connectedTo);
+        mModule->schema()->disconnect(connectedTo, this);
 }
 
 void CoreOutput::listConnectedModules(std::unordered_set<CoreModule *> &list)
@@ -30,26 +30,16 @@ bool CoreOutput::isDownstream(CoreModule *module) const
     return false;
 }
 
-void CoreOutput::connect(CoreInput *input)
+void CoreOutput::halfConnect(CoreInput *input)
 {
-    if (mConnectedTo.find(input) != mConnectedTo.end())
-        return;
-
-    checkConnection(input);
-
-    if (module()->isUpstream(input->module()))
-        throw CoreLoopConnectionEx();
-
-    mConnectedTo.insert(input);
-    input->connect(this);
-    mModule->schema()->unprepare();
+    auto result = mConnectedTo.insert(input);
+    if (!result.second)
+        throw CoreAlreadyConnectedEx();
 }
 
-void CoreOutput::disconnect(CoreInput *input)
+void CoreOutput::halfDisconnect(CoreInput *input)
 {
-    if (mConnectedTo.erase(input)) {
-        input->disconnect(this);
-        mModule->schema()->unprepare();
-    }
+    if (!mConnectedTo.erase(input))
+        throw CoreNotConnectedEx();
 }
 
