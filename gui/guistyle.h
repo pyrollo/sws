@@ -14,7 +14,7 @@ public:
     static QPen pPlug()            { return QPen(QColor("#448"), .05); }
     static QPen pPlugSelected()    { return QPen(QColor("#884"), .05); }
     static QPen pPlugConnecting()  { return QPen(QColor("#6A6"), .05); }
-    static QPen pPlugConnected()   { return QPen(QColor("#448"), .05); } // 66C
+    static QPen pPlugConnected()   { return QPen(QColor("#448"), .05); }
     static QPen pPlugConnectable() { return QPen(QColor("#8F8"), .05); }
     static QPen pWire()            { return QPen(QColor("#66C"), .1); } // Qt::SolidLine, Qt::FlatCap); }
     static QPen pWireSelected()    { return QPen(QColor("#884"), .1); }
@@ -28,7 +28,8 @@ public:
     static QBrush bPlugSelected()    { return QBrush(QColor("#442")); }
     static QBrush bPlugConnecting()  { return QBrush(QColor("#484")); }
     static QBrush bPlugConnectable() { return QBrush(QColor("#484")); }
-    static QBrush bPlugConnected()   { return QBrush(QColor("#66C")); } // 448
+    static QBrush bPlugConnected()   { return QBrush(QColor("#66C")); }
+    static QBrush bWireSelected()    { return QBrush(QColor("#884")); } //Plug color when selected wire plugged in
 };
 
 #endif // GUISTYLE_H

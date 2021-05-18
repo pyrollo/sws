@@ -20,6 +20,8 @@ public:
     void connect(CoreOutput *input);
     void disconnect(CoreOutput *input);
 
+    bool isConnected() const { return mConnectedTo != nullptr; }
+
 protected:
     CoreValue mDefaultValue;
     CoreOutput *mConnectedTo;

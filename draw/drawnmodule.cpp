@@ -56,7 +56,8 @@ DrawnOutput *DrawnModule::output(std::string name)
 void DrawnModule::hightlightInputs()
 {
     for (auto it = mInputs.begin(); it != mInputs.end(); it++) {
-        it->second->setHighlighted(true);
+        if (!it->second->core()->isConnected())
+            it->second->setHighlighted(true);
     }
 }
 

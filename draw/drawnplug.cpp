@@ -119,7 +119,7 @@ void DrawnPlug::setPenAndBrush(QPainter *painter)
 
     for (auto wire: mConnectedWires)
         if (wire->isSelected()) {
-            painter->setBrush(GuiStyle::bPlugSelected());
+            painter->setBrush(GuiStyle::bWireSelected());
             break;
         }
 }
