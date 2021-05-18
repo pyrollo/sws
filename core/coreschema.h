@@ -15,7 +15,7 @@ public:
     CoreModule *newModule(std::string name, std::string type);
     void addModule(CoreModule *module);
     void removeModule(CoreModule *module);
-    CoreModule *module(std::string name);
+    CoreModule *module(std::string name) const;
     void unprepare() { mPrepared = false; }
     void prepare();
     void step();
@@ -31,7 +31,7 @@ protected:
  //   std::vector<std::unique_ptr<CoreModule>> modules;
     std::vector<CoreModule *> orderedModules;
 
-    bool isQueued(CoreModule *module);
+    bool isQueued(CoreModule *module) const;
     bool tryQueue(CoreModule *module);
 };
 

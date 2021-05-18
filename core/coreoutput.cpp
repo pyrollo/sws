@@ -21,7 +21,7 @@ void CoreOutput::listConnectedModules(std::unordered_set<CoreModule *> &list)
         connectedTo->module()->listDownstream(list);
 }
 
-bool CoreOutput::isDownstream(CoreModule *module)
+bool CoreOutput::isDownstream(CoreModule *module) const
 {
     for (const auto& connectedTo: mConnectedTo)
         if (connectedTo->module()->isDownstream(module))

@@ -34,7 +34,7 @@ void CoreSchema::removeModule(CoreModule *module)
         }
 }
 
-CoreModule *CoreSchema::module(std::string name)
+CoreModule *CoreSchema::module(std::string name) const
 {
     try {
         return mModules.at(name);
@@ -56,7 +56,7 @@ void CoreSchema::step()
 // Could be done by using a set of ordered modules instead of searching in vector.
 // Something to do also for inputConnectedModules
 
-bool CoreSchema::isQueued(CoreModule *module)
+bool CoreSchema::isQueued(CoreModule *module) const
 {
     for (auto module2 : orderedModules)
         if (module2 == module)

@@ -22,13 +22,13 @@ CoreValue CoreInput::value() const {
         return mDefaultValue;
 }
 
-void CoreInput::listConnectedModules(std::unordered_set<CoreModule *> &list)
+void CoreInput::listConnectedModules(std::unordered_set<CoreModule *> &list) const
 {
     if (mConnectedTo)
         mConnectedTo->module()->listUpstream(list);
 }
 
-bool CoreInput::isUpstream(CoreModule *module)
+bool CoreInput::isUpstream(CoreModule *module) const
 {
     if (mConnectedTo)
         return mConnectedTo->module()->isUpstream(module);

@@ -14,7 +14,7 @@ public:
     virtual CoreValue value() const = 0;
     CoreModule *module() const { return mModule; }
 
-    void checkConnection(CorePlug *plug);
+    void checkConnection(CorePlug *plug) const;
 
 protected:
     CoreModule *mModule;

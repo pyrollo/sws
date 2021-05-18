@@ -16,7 +16,7 @@ public:
     void setValue(CoreValue value) { mValue = value; }
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list);
-    bool isDownstream(CoreModule *module);
+    bool isDownstream(CoreModule *module) const;
 
     void connect(CoreInput *input);
     void disconnect(CoreInput *input);

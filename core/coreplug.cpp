@@ -8,7 +8,7 @@ CorePlug::CorePlug(CoreModule *module) :
 
 }
 
-void CorePlug::checkConnection(CorePlug *plug)
+void CorePlug::checkConnection(CorePlug *plug) const
 {
     if (!module()->schema() || !plug->module()->schema())
         throw CoreNoSchemaEx();

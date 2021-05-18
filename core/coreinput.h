@@ -14,8 +14,8 @@ public:
 
     CoreValue value() const;
 
-    void listConnectedModules(std::unordered_set<CoreModule *> &list);
-    bool isUpstream(CoreModule *module);
+    void listConnectedModules(std::unordered_set<CoreModule *> &list) const;
+    bool isUpstream(CoreModule *module) const;
 
     void connect(CoreOutput *input);
     void disconnect(CoreOutput *input);

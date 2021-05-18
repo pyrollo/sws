@@ -32,7 +32,7 @@ CoreOutput *CoreModule::newOutput(std::string name)
     return output;
 }
 
-CoreInput *CoreModule::input(std::string name)
+CoreInput *CoreModule::input(std::string name) const
 {
     try {
         return mInputs.at(name).get();
@@ -41,7 +41,7 @@ CoreInput *CoreModule::input(std::string name)
     }
 }
 
-CoreOutput *CoreModule::output(std::string name)
+CoreOutput *CoreModule::output(std::string name) const
 {
     try {
         return mOutputs.at(name).get();
@@ -69,7 +69,7 @@ void CoreModule::listDownstream(std::unordered_set<CoreModule *> &list)
     }
 }
 
-bool CoreModule::isUpstream(CoreModule *module)
+bool CoreModule::isUpstream(CoreModule *module) const
 {
     if (!interconnected())
         return false;
@@ -84,7 +84,7 @@ bool CoreModule::isUpstream(CoreModule *module)
     return false;
 }
 
-bool CoreModule::isDownstream(CoreModule *module)
+bool CoreModule::isDownstream(CoreModule *module) const
 {
     if (!interconnected())
         return false;
@@ -99,7 +99,7 @@ bool CoreModule::isDownstream(CoreModule *module)
     return false;
 }
 
-const std::vector<CoreModule *> CoreModule::inputConnectedModules()
+const std::vector<CoreModule *> CoreModule::inputConnectedModules() const
 {
     std::vector<CoreModule *> result;
     for (auto it = mInputs.begin(); it != mInputs.end(); it++)
