@@ -31,7 +31,7 @@ public:
     bool isUpstream(CoreModule *module) const;
     bool isDownstream(CoreModule *module) const;
 
-    const std::vector<CoreModule *> inputConnectedModules() const;
+    const std::vector<CoreInput *> inputs() const;
 
 protected:
     CoreInput  *newInput(std::string name, CoreValue defaultValue);

@@ -22,6 +22,15 @@ CoreValue CoreInput::value() const {
         return mDefaultValue;
 }
 
+CoreModule *CoreInput::connectedModule() const
+{
+    if (mConnectedTo)
+        return mConnectedTo->module();
+    else
+        return nullptr;
+}
+
+
 void CoreInput::listConnectedModules(std::unordered_set<CoreModule *> &list) const
 {
     if (mConnectedTo)

@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_set>
 #include <mutex>
 
 class CoreModuleFactory;
@@ -28,18 +29,17 @@ public:
 
 protected:
     CoreModuleFactory *mModuleFactory;
-    bool mPrepared;
 
     std::map<std::string, CoreModule *> mModules;
     std::map<std::string, CoreValue> mInputs;
     std::map<std::string, CoreValue> mOutputs;
 
-    std::vector<CoreModule *> orderedModules;
-
-    bool isQueued(CoreModule *module) const;
-    bool tryQueue(CoreModule *module);
-
+    std::vector<CoreModule *> mScheduledModules;
+    bool mPrepared;
     std::mutex mStepMutex;
+
+    bool queuable(CoreModule *module, std::unordered_set<CoreModule *> &unscheduledModules);
+
 };
 
 #endif // CORESCHEMA_H

@@ -49,56 +49,52 @@ CoreModule *CoreSchema::module(std::string name) const
     }
 }
 
-
-// This part needs optimization (isQueued, tryQueue and prepare).
-// Could be done by using a set of ordered modules instead of searching in vector.
-// Something to do also for inputConnectedModules
-
-bool CoreSchema::isQueued(CoreModule *module) const
+bool CoreSchema::queuable(CoreModule *module, std::unordered_set<CoreModule *> &unscheduledModules)
 {
-    for (auto module2 : orderedModules)
-        if (module2 == module)
-            return true;
-    return false;
-}
-
-bool CoreSchema::tryQueue(CoreModule *module)
-{
-    if (isQueued(module))
-        return false;
-
     // Check that all upstream modules are queued
     if (module->interconnected())
-        for (auto module2: module->inputConnectedModules())
-            if (!isQueued(module2))
+        for (auto input: module->inputs()) {
+            CoreModule *connectedModule = input->connectedModule();
+            if (connectedModule && unscheduledModules.find(connectedModule) != unscheduledModules.end())
                 return false;
+        }
 
-    orderedModules.push_back(module);
     return true;
 }
 
 void CoreSchema::step()
 {
-    std::lock_guard<std::mutex> lock(mStepMutex);
+    const std::lock_guard<std::mutex> lock(mStepMutex);
 
+    // Prepare for step
     if (!mPrepared) {
-        bool change;
-        orderedModules.clear();
+        mScheduledModules.clear();
 
+        std::unordered_set<CoreModule *> unscheduledModules;
+        for (auto it: mModules)
+            unscheduledModules.insert(it.second);
+
+        bool change;
         do {
             change = false;
-            for (auto it = mModules.begin(); it != mModules.end(); it++)
-                change = change || tryQueue(it->second);
+            for (auto module = unscheduledModules.begin(); module != unscheduledModules.end(); ) {
+                if (queuable(*module, unscheduledModules)) {
+                    change = true;
+                    mScheduledModules.push_back(*module);
+                    module = unscheduledModules.erase(module);
+                } else
+                    module++;
+            }
         } while(change);
 
-        if (orderedModules.size() != mModules.size()) {
+        if (unscheduledModules.size()) {
             throw CoreCantScheduleModulesEx();
         }
-
         mPrepared = true;
     }
 
-    for (auto module: orderedModules)
+    // Actual step operation
+    for (auto module: mScheduledModules)
         module->step();
 }
 

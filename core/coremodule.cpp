@@ -97,11 +97,12 @@ bool CoreModule::isDownstream(CoreModule *module) const
     return false;
 }
 
-const std::vector<CoreModule *> CoreModule::inputConnectedModules() const
+const std::vector<CoreInput *> CoreModule::inputs() const
 {
-    std::vector<CoreModule *> result;
+    std::vector<CoreInput *> result;
+
     for (auto it = mInputs.begin(); it != mInputs.end(); it++)
-        result.push_back(it->second->module());
+        result.push_back(it->second.get());
 
     return result;
 }

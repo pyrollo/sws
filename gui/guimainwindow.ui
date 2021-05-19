@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>500</height>
+    <width>1053</width>
+    <height>730</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,27 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="GuiSchemaView" name="graphicsView">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="transformationAnchor">
        <enum>QGraphicsView::AnchorUnderMouse</enum>
       </property>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+      <item>
+       <widget class="QPushButton" name="pushButtonStep">
+        <property name="text">
+         <string>Step</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -29,10 +46,16 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1053</width>
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSWS">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <addaction name="menuSWS"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">

@@ -10,7 +10,7 @@
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::GuiMainWindow)
+    , ui(new Ui::GuiMainWindow), mCoreSchema(nullptr)
 {
     ui->setupUi(this);
     GuiSchemaScene* scene = new GuiSchemaScene();
@@ -18,8 +18,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     ui->graphicsView->setScene(scene);
 
-    CoreSchema *coreSchema = new CoreSchema();
-    DrawnSchema *schema = new DrawnSchema(coreSchema);
+    mCoreSchema = new CoreSchema();
+    DrawnSchema *schema = new DrawnSchema(mCoreSchema);
     DrawnModule *add1 = schema->newModule("add1", "add");
     DrawnModule *add2 = schema->newModule("add2", "add");
     DrawnModule *add3 = schema->newModule("add3", "add");
@@ -36,10 +36,17 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     wire2->connectTo(add3->input("operand1"));
 
     scene->setSchema(schema);
+
+    connect(ui->pushButtonStep, &QPushButton::released, this, &GuiMainWindow::handleButtonStep);
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
     delete ui;
+}
+
+void GuiMainWindow::handleButtonStep()
+{
+    mCoreSchema->step();
 }
 

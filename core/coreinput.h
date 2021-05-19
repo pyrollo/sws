@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 class CoreOutput;
+class CoreModule;
 
 class CoreInput : public CorePlug
 {
@@ -16,6 +17,7 @@ public:
     void listConnectedModules(std::unordered_set<CoreModule *> &list) const;
     bool isUpstream(CoreModule *module) const;
     bool isConnected() const { return mConnectedTo != nullptr; }
+    CoreModule *connectedModule() const;
 
     // Internal use only
     void halfConnect(CoreOutput *output);

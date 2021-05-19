@@ -2,6 +2,7 @@
 #define GUIMAINWINDOW_H
 
 #include <QMainWindow>
+class CoreSchema;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -14,8 +15,10 @@ class GuiMainWindow : public QMainWindow
 public:
     GuiMainWindow(QWidget *parent = nullptr);
     ~GuiMainWindow();
+    void handleButtonStep();
 
 private:
     Ui::GuiMainWindow *ui;
+    CoreSchema *mCoreSchema;
 };
 #endif // GUIMAINWINDOW_H
