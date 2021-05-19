@@ -16,6 +16,9 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
+    void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+
 protected:
     CoreOutput *mCoreOutput;
 };

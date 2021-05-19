@@ -1,5 +1,5 @@
 #include "drawnmoduleadd.h"
-#include "../../core/coreschema.h"
+#include "core/coreschema.h"
 #include <QPainter>
 
 DrawnModuleAdd::DrawnModuleAdd(DrawnSchema *parentSchema, CoreModule *coreModule):
@@ -8,4 +8,16 @@ DrawnModuleAdd::DrawnModuleAdd(DrawnSchema *parentSchema, CoreModule *coreModule
     newInput("operand1", left, 0.5f);
     newInput("operand2", left, 1.5f);
     newOutput("result", right, 1.0f);
+}
+
+void DrawnModuleAdd::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    DrawnModuleRectangle::paint(painter, option, widget);
+
+    QPainterPath path;
+    path.moveTo(1.0f, 0.6f);
+    path.lineTo(1.0f, 1.4f);
+    path.moveTo(0.6f, 1.0f);
+    path.lineTo(1.4f, 1.0f);
+    painter->drawPath(path);
 }

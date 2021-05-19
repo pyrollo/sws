@@ -28,6 +28,7 @@ public:
 
     void addConnectedWire(DrawnWire *wire);
     void removeConnectedWire(DrawnWire *wire);
+
 protected:
     const float plugSize = 0.3f;
 

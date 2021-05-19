@@ -35,6 +35,7 @@ void DrawnItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = false;
     QGraphicsItem::hoverLeaveEvent(event);
 }
+
 void DrawnItem::deleteAll()
 {
     delete this;

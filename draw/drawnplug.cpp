@@ -1,8 +1,8 @@
 #include "drawnplug.h"
 #include "drawnwire.h"
 #include "drawnmodule.h"
-#include "../gui/guistyle.h"
-#include "../core/coreexceptions.h"
+#include "gui/guistyle.h"
+#include "core/coreexceptions.h"
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -139,3 +139,5 @@ bool DrawnPlug::connected()
 {
     return !mConnectedWires.empty();
 }
+
+

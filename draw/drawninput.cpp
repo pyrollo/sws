@@ -1,6 +1,6 @@
 #include "drawninput.h"
-#include "../gui/guistyle.h"
-#include "../core/coreinput.h"
+#include "core/coreinput.h"
+#include "gui/guischemascene.h"
 #include <QPainter>
 
 DrawnInput::DrawnInput(DrawnModule *parent, CoreInput *coreInput) :
@@ -22,3 +22,18 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     painter->drawPolygon(points, 3);
 }
 
+void DrawnInput::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
+    mIsHovered = true;
+    GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+    if (schemaScene)
+        schemaScene->setProbe(QString("input"), core()->value());
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void DrawnInput::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
+    mIsHovered = false;
+    GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+    if (schemaScene)
+        schemaScene->clearProbe();
+    QGraphicsItem::hoverLeaveEvent(event);
+}

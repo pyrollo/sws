@@ -3,9 +3,11 @@
 #include "../draw/drawnschema.h"
 #include <QPainter>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QTextStream>
 
 GuiSchemaScene::GuiSchemaScene():
-    QGraphicsScene(-1000, -1000, 2000, 2000), mSchema(nullptr)
+    QGraphicsScene(-1000, -1000, 2000, 2000), mSchema(nullptr), mProbeWidget(nullptr)
 {
 }
 
@@ -42,4 +44,28 @@ void GuiSchemaScene::setSchema(DrawnSchema *schema)
 
     mSchema = schema;
     addItem(mSchema);
+}
+
+void GuiSchemaScene::setProbeWidget(QLabel *widget)
+{
+    mProbeWidget = widget;
+    clearProbe();
+}
+
+void GuiSchemaScene::setProbe(QString label, CoreValue value)
+{
+    if (!mProbeWidget)
+        return;
+
+    QString text;
+    QTextStream(&text) << label << ": " << value;
+    mProbeWidget->setText(text);
+}
+
+void GuiSchemaScene::clearProbe()
+{
+    if (!mProbeWidget)
+        return;
+
+    mProbeWidget->setText("");
 }

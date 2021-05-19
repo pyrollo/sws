@@ -4,6 +4,7 @@
 #include <QColor>
 #include <QBrush>
 #include <QPen>
+#include <QFont>
 
 class GuiStyle
 {
@@ -30,6 +31,9 @@ public:
     static QBrush bPlugConnectable() { return QBrush(QColor("#484")); }
     static QBrush bPlugConnected()   { return QBrush(QColor("#66C")); }
     static QBrush bWireSelected()    { return QBrush(QColor("#884")); } //Plug color when selected wire plugged in
+
+    // Fonts
+    static QFont fModule() { return QFont("SansSerif", 6); }
 };
 
 #endif // GUISTYLE_H

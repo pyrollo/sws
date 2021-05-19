@@ -26,6 +26,7 @@ SOURCES += \
     core/modules/coremoduleadd.cpp \
     core/modules/coremoduleconstant.cpp \
     core/modules/coremoduleinput.cpp \
+    core/modules/coremodulemultiply.cpp \
     core/modules/coremoduleoutput.cpp \
     core/value.cpp \
     draw/drawninput.cpp \
@@ -38,6 +39,8 @@ SOURCES += \
     draw/drawnschema.cpp \
     draw/drawnwire.cpp \
     draw/modules/drawnmoduleadd.cpp \
+    draw/modules/drawnmoduleconstant.cpp \
+    draw/modules/drawnmodulemultiply.cpp \
     gui/guimainwindow.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
@@ -57,6 +60,7 @@ HEADERS += \
     core/modules/coremoduleadd.h \
     core/modules/coremoduleconstant.h \
     core/modules/coremoduleinput.h \
+    core/modules/coremodulemultiply.h \
     core/modules/coremoduleoutput.h \
     core/value.h \
     draw/drawninput.h \
@@ -69,6 +73,8 @@ HEADERS += \
     draw/drawnschema.h \
     draw/drawnwire.h \
     draw/modules/drawnmoduleadd.h \
+    draw/modules/drawnmoduleconstant.h \
+    draw/modules/drawnmodulemultiply.h \
     gui/guimainwindow.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
