@@ -27,15 +27,13 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     add1->moveBy(-3,0);
     mult1->moveBy(3,0);
     const1->moveBy(0,3);
-    DrawnWire *wire1 = new DrawnWire(schema);
-    wire1->connectTo(add1->output("result"));
-    wire1->connectTo(add2->input("operand1"));
 
-    DrawnWire *wire2 = new DrawnWire(schema);
-    wire2->connectTo(add2->output("result"));
-    wire2->connectTo(mult1->input("operand1"));
+    DrawnModule *in1 = schema->newModule("in1", "input");
+    DrawnModule *out1 = schema->newModule("out1", "output");
+
 
     scene->setSchema(schema);
+
 
     connect(ui->pushButtonStep, &QPushButton::released, this, &GuiMainWindow::handleButtonStep);
 }

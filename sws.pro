@@ -40,7 +40,9 @@ SOURCES += \
     draw/drawnwire.cpp \
     draw/modules/drawnmoduleadd.cpp \
     draw/modules/drawnmoduleconstant.cpp \
+    draw/modules/drawnmoduleinput.cpp \
     draw/modules/drawnmodulemultiply.cpp \
+    draw/modules/drawnmoduleoutput.cpp \
     gui/guimainwindow.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
@@ -74,7 +76,9 @@ HEADERS += \
     draw/drawnwire.h \
     draw/modules/drawnmoduleadd.h \
     draw/modules/drawnmoduleconstant.h \
+    draw/modules/drawnmoduleinput.h \
     draw/modules/drawnmodulemultiply.h \
+    draw/modules/drawnmoduleoutput.h \
     gui/guimainwindow.h \
     gui/guischemascene.h \
     gui/guischemaview.h \

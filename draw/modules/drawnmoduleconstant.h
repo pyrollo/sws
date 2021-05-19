@@ -1,7 +1,6 @@
 #ifndef DRAWNMODULECONSTANT_H
 #define DRAWNMODULECONSTANT_H
 #include "../drawnmodulerectangle.h"
-#include <string>
 
 class DrawnModuleConstant : public DrawnModuleRectangle
 {
