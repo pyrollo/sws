@@ -11,6 +11,7 @@ class DrawnInput;
 class DrawnOutput;
 class CoreModule;
 class QPainter;
+class QMouseEvent;
 
 class DrawnModule : public DrawnItem
 {
@@ -29,6 +30,8 @@ public:
 
     void setPenAndBrush(QPainter *painter);
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 protected:
     DrawnSchema *mSchema;
     CoreModule *mCoreModule;
@@ -36,7 +39,7 @@ protected:
     std::map<std::string, DrawnInput *> mInputs;
     std::map<std::string, DrawnOutput *> mOutputs;
 
-    DrawnModule(DrawnSchema *schema, CoreModule *coreModule);
+    DrawnModule(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
 
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);

@@ -15,6 +15,8 @@ public:
     ~DrawnSchema();
 
     CoreSchema *core() { return mCoreSchema; }
+    DrawnModuleFactory *getModuleFactory() { return mModuleFactory; }
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     DrawnModule *newModule(std::string name, std::string type);

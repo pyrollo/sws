@@ -7,8 +7,8 @@ class QPainter;
 class DrawnModuleAdd : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleAdd(DrawnSchema *parentSchema, CoreModule *coreModule);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    DrawnModuleAdd(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 };
 
 #endif // DRAWNMODULEADD_H

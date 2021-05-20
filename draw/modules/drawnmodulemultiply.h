@@ -5,8 +5,8 @@
 class DrawnModuleMultiply : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleMultiply(DrawnSchema *parentSchema, CoreModule *coreModule);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    DrawnModuleMultiply(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 };
 
 #endif // DRAWNMODULEMULTIPLY_H

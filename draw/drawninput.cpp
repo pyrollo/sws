@@ -24,16 +24,24 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 void DrawnInput::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = true;
-    GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-    if (schemaScene)
-        schemaScene->setProbe(QString("input"), core()->value());
+
+    if (mCoreInput) {
+        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+        if (schemaScene)
+            schemaScene->setProbe(QString("input"), mCoreInput->value());
+    }
+
     QGraphicsItem::hoverEnterEvent(event);
 }
 
 void DrawnInput::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = false;
-    GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-    if (schemaScene)
-        schemaScene->clearProbe();
+
+    if (mCoreInput) {
+        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+        if (schemaScene)
+            schemaScene->clearProbe();
+    }
+
     QGraphicsItem::hoverLeaveEvent(event);
 }

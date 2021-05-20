@@ -5,8 +5,8 @@
 class DrawnModuleInput : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleInput(DrawnSchema *parentSchema, CoreModule *coreModule);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    DrawnModuleInput(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 };
 
 #endif // DRAWNMODULEINPUT_H

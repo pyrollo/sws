@@ -5,8 +5,8 @@
 class DrawnModuleConstant : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *coreModule);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    DrawnModuleConstant(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };
 

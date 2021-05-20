@@ -11,7 +11,7 @@
 DrawnSchema::DrawnSchema(CoreSchema *coreSchema) :
     DrawnItem(nullptr), mCoreSchema(coreSchema)
 {
-    mModuleFactory = new DrawnModuleFactory(this);
+    mModuleFactory = new DrawnModuleFactory();
 }
 
 DrawnSchema::~DrawnSchema()
@@ -42,7 +42,7 @@ QRectF DrawnSchema::boundingRect() const
 DrawnModule *DrawnSchema::newModule(std::string name, std::string type)
 {
     CoreModule *coreModule = core()->newModule(name, type);
-    DrawnModule *module = mModuleFactory->newModule(type, coreModule);
+    DrawnModule *module = mModuleFactory->newModule(type, this, coreModule);
     if (module)
         mModules[name] = module;
     return module;

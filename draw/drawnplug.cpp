@@ -12,7 +12,8 @@ DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
     DrawnItem(parentModule), mModule(parentModule), mWire(nullptr), mHighlighted(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
-    setAcceptHoverEvents(true);
+    if (mModule->schema())
+        setAcceptHoverEvents(true);
 }
 
 DrawnPlug::~DrawnPlug()
@@ -34,13 +35,13 @@ QPointF DrawnPlug::connectionPoint() const
 
 void DrawnPlug::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (pluggable()) {
+    if (mModule->schema() && pluggable()) {
         if (mWire)
             delete mWire;
-        mWire = new DrawnWire(module()->schema());
+        mWire = new DrawnWire(mModule->schema());
         mWire->connectTo(this);
         mWire->drag(mapToScene(event->pos()));
-        module()->schema()->highlightConnectable(this);
+        mModule->schema()->highlightConnectable(this);
         update();
     }
 }

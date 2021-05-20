@@ -1,39 +1,54 @@
 #include "guimainwindow.h"
-#include "../core/coreschema.h"
-#include "../draw/drawnmodule.h"
-#include "../draw/drawnschema.h"
-#include "../draw/drawninput.h"
-#include "../draw/drawnoutput.h"
-#include "../draw/drawnwire.h"
+#include "core/coreschema.h"
+#include "draw/drawnmodule.h"
+#include "draw/drawnschema.h"
+#include "draw/drawninput.h"
+#include "draw/drawnoutput.h"
+#include "draw/drawnwire.h"
+#include "draw/drawnmodulefactory.h"
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
+#include "guistyle.h"
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::GuiMainWindow), mCoreSchema(nullptr)
 {
     ui->setupUi(this);
-    GuiSchemaScene* scene = new GuiSchemaScene();
-    scene->setProbeWidget(ui->probeLabel);
 
-    ui->graphicsView->setScene(scene);
-
+    // Workscheet view
     mCoreSchema = new CoreSchema();
     DrawnSchema *schema = new DrawnSchema(mCoreSchema);
-    DrawnModule *add1 = schema->newModule("add1", "add");
-    DrawnModule *add2 = schema->newModule("add2", "add");
-    DrawnModule *mult1 = schema->newModule("mult1", "multiply");
-    DrawnModule *const1 = schema->newModule("const1", "constant");
-    add1->moveBy(-3,0);
-    mult1->moveBy(3,0);
-    const1->moveBy(0,3);
-
-    DrawnModule *in1 = schema->newModule("in1", "input");
-    DrawnModule *out1 = schema->newModule("out1", "output");
-
-
+    GuiSchemaScene* scene = new GuiSchemaScene();
     scene->setSchema(schema);
+    scene->setProbeWidget(ui->probeLabel);
+    ui->schemaView->setScene(scene);
 
+    // Some modules
+    schema->newModule("add1", "add");
+
+
+    // Modules library view
+    QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
+    moduleLibraryScene->setBackgroundBrush(GuiStyle::bBackground());
+
+    DrawnModuleFactory *factory = schema->getModuleFactory();
+    float y = 1.0f;
+    for (auto moduletype: factory->listModules()) {
+        DrawnModule *module = factory->newModule(moduletype);
+        QRectF rect = module->boundingRect();
+        module->moveBy(-0.5 * rect.width(), y);
+        y += rect.height() + 1.0f;
+        moduleLibraryScene->addItem(module);
+    }
+
+    QRectF sceneRect = moduleLibraryScene->sceneRect();
+    sceneRect = sceneRect.marginsAdded(QMarginsF(.5f, .5f, .5f, .5f));
+    moduleLibraryScene->setSceneRect(sceneRect);
+    float scale = ui->modulesLibraryView->rect().width() / sceneRect.width();
+
+    ui->modulesLibraryView->setScene(moduleLibraryScene);
+    ui->modulesLibraryView->setTransform(QTransform().scale(scale, scale));
 
     connect(ui->pushButtonStep, &QPushButton::released, this, &GuiMainWindow::handleButtonStep);
 }

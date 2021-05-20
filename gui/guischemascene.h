@@ -10,7 +10,6 @@ class GuiSchemaScene : public QGraphicsScene
 {
 public:
     GuiSchemaScene();
-    void drawBackground(QPainter *painter, const QRectF &rect);
     void keyPressEvent(QKeyEvent *keyEvent);
 
     void removeSchema();

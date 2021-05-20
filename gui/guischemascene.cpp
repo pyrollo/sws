@@ -9,12 +9,7 @@
 GuiSchemaScene::GuiSchemaScene():
     QGraphicsScene(-1000, -1000, 2000, 2000), mSchema(nullptr), mProbeWidget(nullptr)
 {
-}
-
-void GuiSchemaScene::drawBackground(QPainter *painter, const QRectF &rect)
-{
-    QRectF visible = rect.intersected(sceneRect());
-    painter->fillRect(visible, GuiStyle::bBackground());
+    setBackgroundBrush(GuiStyle::bBackground());
 }
 
 void GuiSchemaScene::keyPressEvent(QKeyEvent *event)

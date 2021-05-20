@@ -10,13 +10,13 @@ class CoreInput;
 class DrawnInput : public DrawnPlug
 {
 public:
-    DrawnInput(DrawnModule *parent, CoreInput *coreInput);
+    DrawnInput(DrawnModule *parent, CoreInput *coreInput = nullptr);
 
     CoreInput *core() { return mCoreInput; }
 
     bool pluggable() { return !connected(); }
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);

@@ -5,8 +5,7 @@
 #include "modules/drawnmoduleadd.h"
 #include "modules/drawnmodulemultiply.h"
 
-DrawnModuleFactory::DrawnModuleFactory(DrawnSchema *schema) :
-    mSchema(schema)
+DrawnModuleFactory::DrawnModuleFactory()
 {
     mFactories["constant"] = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleConstant(schema, coreModule); };
     mFactories["input"]    = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleInput(schema, coreModule); };
@@ -15,7 +14,16 @@ DrawnModuleFactory::DrawnModuleFactory(DrawnSchema *schema) :
     mFactories["multiply"] = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleMultiply(schema, coreModule); };
 }
 
-DrawnModule *DrawnModuleFactory::newModule(std::string type, CoreModule *coreModule)
+DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)
 {
-    return mFactories.at(type)(mSchema, coreModule);
+    return mFactories.at(type)(schema, coreModule);
+}
+
+std::vector<std::string> DrawnModuleFactory::listModules()
+{
+    std::vector<std::string> result;
+    for (auto it: mFactories)
+        result.push_back(it.first);
+
+    return result;
 }

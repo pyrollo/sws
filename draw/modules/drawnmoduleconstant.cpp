@@ -18,13 +18,18 @@ void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsIte
     QRectF textRect(1.0f, 1.0f, 35.0f, 8.0f);
 
     QString value;
-    QTextStream(&value) << core()->output("value")->value();
+    if (mCoreModule)
+        QTextStream(&value) << core()->output("value")->value();
+    else
+        value = "1234";
+
     painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, value);
 }
 
 void DrawnModuleConstant::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    (void)(event);
     bool ok;
     double value = QInputDialog::getDouble(nullptr, "Constant module",
             "Value:", core()->output("value")->value(), -2147483647, 2147483647, 6, &ok);
