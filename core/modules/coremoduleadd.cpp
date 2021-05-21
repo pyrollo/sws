@@ -7,7 +7,7 @@ CoreModuleAdd::CoreModuleAdd(CoreSchema *schema) :
 {
     mInputOperand1 = newInput("operand1", 0);
     mInputOperand2 = newInput("operand2", 0);
-    mOutputResult =newOutput("result");
+    mOutputResult = newOutput("result");
 }
 
 void CoreModuleAdd::step()

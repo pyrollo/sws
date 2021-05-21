@@ -24,25 +24,30 @@ SOURCES += \
     core/coreplug.cpp \
     core/coreschema.cpp \
     core/modules/coremoduleadd.cpp \
+    core/modules/coremoduleclip.cpp \
     core/modules/coremoduleconstant.cpp \
     core/modules/coremoduleinput.cpp \
     core/modules/coremodulemultiply.cpp \
     core/modules/coremoduleoutput.cpp \
+    core/modules/coremoduletime.cpp \
     core/value.cpp \
     draw/drawninput.cpp \
     draw/drawnitem.cpp \
     draw/drawnmodule.cpp \
     draw/drawnmodulefactory.cpp \
     draw/drawnmodulerectangle.cpp \
+    draw/drawnmoduleround.cpp \
     draw/drawnoutput.cpp \
     draw/drawnplug.cpp \
     draw/drawnschema.cpp \
     draw/drawnwire.cpp \
     draw/modules/drawnmoduleadd.cpp \
+    draw/modules/drawnmoduleclip.cpp \
     draw/modules/drawnmoduleconstant.cpp \
     draw/modules/drawnmoduleinput.cpp \
     draw/modules/drawnmodulemultiply.cpp \
     draw/modules/drawnmoduleoutput.cpp \
+    draw/modules/drawnmoduletime.cpp \
     gui/guimainwindow.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
@@ -60,25 +65,30 @@ HEADERS += \
     core/coreplug.h \
     core/coreschema.h \
     core/modules/coremoduleadd.h \
+    core/modules/coremoduleclip.h \
     core/modules/coremoduleconstant.h \
     core/modules/coremoduleinput.h \
     core/modules/coremodulemultiply.h \
     core/modules/coremoduleoutput.h \
+    core/modules/coremoduletime.h \
     core/value.h \
     draw/drawninput.h \
     draw/drawnitem.h \
     draw/drawnmodule.h \
     draw/drawnmodulefactory.h \
     draw/drawnmodulerectangle.h \
+    draw/drawnmoduleround.h \
     draw/drawnoutput.h \
     draw/drawnplug.h \
     draw/drawnschema.h \
     draw/drawnwire.h \
     draw/modules/drawnmoduleadd.h \
+    draw/modules/drawnmoduleclip.h \
     draw/modules/drawnmoduleconstant.h \
     draw/modules/drawnmoduleinput.h \
     draw/modules/drawnmodulemultiply.h \
     draw/modules/drawnmoduleoutput.h \
+    draw/modules/drawnmoduletime.h \
     gui/guimainwindow.h \
     gui/guischemascene.h \
     gui/guischemaview.h \

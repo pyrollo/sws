@@ -12,7 +12,6 @@
 GuiSchemaView::GuiSchemaView(QWidget *parent = nullptr):
     QGraphicsView(parent), mSchemaScene(nullptr)
 {
-    scale(10.0, 10.0);
     setDragMode(QGraphicsView::ScrollHandDrag);
     setAcceptDrops(true);
 }

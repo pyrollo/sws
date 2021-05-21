@@ -1,5 +1,6 @@
 #include "guimainwindow.h"
 #include "core/coreschema.h"
+#include "core/coremachine.h"
 #include "draw/drawnmodule.h"
 #include "draw/drawnschema.h"
 #include "draw/drawninput.h"
@@ -24,10 +25,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     scene->setProbeWidget(ui->probeLabel);
     ui->schemaView->setScene(scene);
 
-    // Some modules
-    schema->newModule("add");
-
-
     // Modules library view
     QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
     moduleLibraryScene->setBackgroundBrush(GuiStyle::bBackground());
@@ -49,17 +46,29 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     ui->modulesLibraryView->setScene(moduleLibraryScene);
     ui->modulesLibraryView->setTransform(QTransform().scale(scale, scale));
+    mCoreMachine = new CoreMachine(mCoreSchema, 0.1);
+    mCoreMachine->start();
+    ui->pushButtonStartStop->setText("Stop");
 
-    connect(ui->pushButtonStep, &QPushButton::released, this, &GuiMainWindow::handleButtonStep);
+    ui->schemaView->scale(scale, scale);
+
+    connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
+    mCoreMachine->stop();
     delete ui;
 }
 
-void GuiMainWindow::handleButtonStep()
+void GuiMainWindow::handleButtonStartStop()
 {
-    mCoreSchema->step();
+    if (mCoreMachine->isRunning()) {
+        mCoreMachine->stop();
+        ui->pushButtonStartStop->setText("Start");
+    } else {
+        mCoreMachine->start();
+        ui->pushButtonStartStop->setText("Stop");
+    }
 }
 

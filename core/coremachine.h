@@ -1,22 +1,29 @@
 #ifndef COREMACHINE_H
 #define COREMACHINE_H
 #include "core.h"
-#include <map>
+#include <thread>
+#include <mutex>
 
 class CoreModule;
+class CoreSchema;
 
 class CoreMachine
 {
 public:
-    CoreMachine();
-    CoreMachine(CoreValue step_time);
-    void prepare();
-    void step();
+    CoreMachine(CoreSchema *schema, CoreValue stepTime);
+    void start();
+    void stop();
+    bool isRunning() { return mRunning; }
 
 protected:
-    CoreValue time;
-    std::map<std::string, CoreValue> mInputs;
-    std::map<std::string, CoreValue> mOutputs;
+    CoreSchema *mSchema;
+    CoreValue mStepTime;
+
+    std::thread *mThread;
+    bool mRunning;
+    std::mutex mThreadControlMutex;
+
+    void run();
 };
 
 #endif // COREMACHINE_H

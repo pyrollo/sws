@@ -6,7 +6,7 @@
 #include "coremodulefactory.h"
 
 CoreSchema::CoreSchema() :
-    mPrepared(false)
+    mTime(0), mPrepared(false)
 {
     mModuleFactory = new CoreModuleFactory(this);
 }

@@ -1,8 +1,10 @@
 #include "coremodulefactory.h"
 #include "coreexceptions.h"
 #include "modules/coremoduleconstant.h"
+#include "modules/coremoduletime.h"
 #include "modules/coremoduleinput.h"
 #include "modules/coremoduleoutput.h"
+#include "modules/coremoduleclip.h"
 #include "modules/coremoduleadd.h"
 #include "modules/coremodulemultiply.h"
 
@@ -12,8 +14,10 @@ CoreModuleFactory::CoreModuleFactory(CoreSchema *schema) :
     mSchema(schema)
 {
     mFactories["constant"] = [](CoreSchema *schema) { return new CoreModuleConstant(schema); };
+    mFactories["time"]     = [](CoreSchema *schema) { return new CoreModuleTime(schema); };
     mFactories["input"]    = [](CoreSchema *schema) { return new CoreModuleInput(schema); };
     mFactories["output"]   = [](CoreSchema *schema) { return new CoreModuleOutput(schema); };
+    mFactories["clip"]     = [](CoreSchema *schema) { return new CoreModuleClip(schema); };
     mFactories["add"]      = [](CoreSchema *schema) { return new CoreModuleAdd(schema); };
     mFactories["multiply"] = [](CoreSchema *schema) { return new CoreModuleMultiply(schema); };
 }

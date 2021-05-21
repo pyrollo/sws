@@ -1,8 +1,6 @@
 #ifndef DRAWNMODULERECTANGLE_H
 #define DRAWNMODULERECTANGLE_H
 #include "drawnmodule.h"
-class CoreModule;
-class DrawnSchema;
 
 class DrawnModuleRectangle : public DrawnModule
 {

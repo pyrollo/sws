@@ -26,12 +26,16 @@ public:
     void connect(CoreInput *input, CoreOutput *output);
     void disconnect(CoreInput *input, CoreOutput *output);
 
+    CoreValue getTime() { return mTime; }
+    void setTime(CoreValue time) { mTime = time; }
+
 protected:
     CoreModuleFactory *mModuleFactory;
 
     std::unordered_set<CoreModule *> mModules;
     std::map<std::string, CoreValue> mInputs;
     std::map<std::string, CoreValue> mOutputs;
+    CoreValue mTime;
 
     std::vector<CoreModule *> mScheduledModules;
     bool mPrepared;

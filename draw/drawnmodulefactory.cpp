@@ -1,7 +1,9 @@
 #include "drawnmodulefactory.h"
 #include "modules/drawnmoduleconstant.h"
+#include "modules/drawnmoduletime.h"
 #include "modules/drawnmoduleinput.h"
 #include "modules/drawnmoduleoutput.h"
+#include "modules/drawnmoduleclip.h"
 #include "modules/drawnmoduleadd.h"
 #include "modules/drawnmodulemultiply.h"
 
@@ -11,8 +13,10 @@
 DrawnModuleFactory::DrawnModuleFactory()
 {
     ADDMODULECLASS(DrawnModuleConstant)
+    ADDMODULECLASS(DrawnModuleTime)
     ADDMODULECLASS(DrawnModuleInput)
     ADDMODULECLASS(DrawnModuleOutput)
+    ADDMODULECLASS(DrawnModuleClip)
     ADDMODULECLASS(DrawnModuleAdd)
     ADDMODULECLASS(DrawnModuleMultiply)
 }
