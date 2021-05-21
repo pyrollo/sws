@@ -13,11 +13,16 @@ class CoreModule;
 class QPainter;
 class QMouseEvent;
 
+#define MODULE_TYPE(TYPE) \
+public: \
+    virtual const char *getType() const { return mType; } \
+    static constexpr char *mType = (char *)TYPE;
+
 class DrawnModule : public DrawnItem
 {
 public:
     ~DrawnModule();
-
+    virtual const char *getType() const { return ""; }
     DrawnSchema *schema() { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 

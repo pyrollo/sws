@@ -4,6 +4,7 @@
 
 class DrawnModuleInput : public DrawnModuleRectangle
 {
+    MODULE_TYPE("input")
 public:
     DrawnModuleInput(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);

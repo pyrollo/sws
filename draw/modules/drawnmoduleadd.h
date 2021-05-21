@@ -6,6 +6,7 @@ class QPainter;
 
 class DrawnModuleAdd : public DrawnModuleRectangle
 {
+    MODULE_TYPE("add")
 public:
     DrawnModuleAdd(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);

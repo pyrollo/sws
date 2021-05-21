@@ -25,7 +25,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     ui->schemaView->setScene(scene);
 
     // Some modules
-    schema->newModule("add1", "add");
+    schema->newModule("add");
 
 
     // Modules library view

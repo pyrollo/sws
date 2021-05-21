@@ -17,7 +17,7 @@ DrawnSchema::DrawnSchema(CoreSchema *coreSchema) :
 DrawnSchema::~DrawnSchema()
 {
     while (mModules.size())
-        delete mModules.begin()->second;
+        delete *(mModules.begin());
 }
 
 void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
@@ -39,22 +39,19 @@ QRectF DrawnSchema::boundingRect() const
     return QRectF(-1000, -1000, 2000, 2000);
 }
 
-DrawnModule *DrawnSchema::newModule(std::string name, std::string type)
+DrawnModule *DrawnSchema::newModule(std::string type)
 {
-    CoreModule *coreModule = core()->newModule(name, type);
+    CoreModule *coreModule = core()->newModule(type);
     DrawnModule *module = mModuleFactory->newModule(type, this, coreModule);
     if (module)
-        mModules[name] = module;
+        mModules.insert(module);
     return module;
 }
 
 // Should be called only from module destructor
 void DrawnSchema::removeModule(DrawnModule *module) {
-    for (auto it : mModules)
-        if (it.second == module) {
-            mModules.erase(it.first);
-            return;
-        }
+    core()->removeModule(module->core());
+    mModules.erase(module);
 }
 
 void DrawnSchema::highlightConnectable(DrawnPlug * plug)
@@ -64,24 +61,23 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
     DrawnInput *input = dynamic_cast<DrawnInput *>(plug);
     if (input) {
         input->core()->module()->listDownstream(list);
-        for (auto it = mModules.begin(); it != mModules.end(); it++)
-            if (list.find(it->second->core()) == list.end())
-                it->second->hightlightOutputs();
+        for (auto module : mModules)
+            if (list.find(module->core()) == list.end())
+                module->hightlightOutputs();
     }
 
     DrawnOutput *output = dynamic_cast<DrawnOutput *>(plug);
     if (output) {
         output->core()->module()->listUpstream(list);
-        for (auto it = mModules.begin(); it != mModules.end(); it++) {
-            if (list.find(it->second->core()) == list.end())
-                it->second->hightlightInputs();
-        }
+        for (auto module : mModules)
+             if (list.find(module->core()) == list.end())
+                module->hightlightInputs();
     }
 }
 
 void DrawnSchema::unHighlight()
 {
-    for (auto it = mModules.begin(); it != mModules.end(); it++)
-        it->second->unHighlightPlugs();
+    for (auto module : mModules)
+        module->unHighlightPlugs();
 }
 

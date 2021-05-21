@@ -4,6 +4,7 @@
 
 class DrawnModuleConstant : public DrawnModuleRectangle
 {
+    MODULE_TYPE("constant")
 public:
     DrawnModuleConstant(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);

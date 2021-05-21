@@ -11,17 +11,14 @@ CoreSchema::CoreSchema() :
     mModuleFactory = new CoreModuleFactory(this);
 }
 
-CoreModule *CoreSchema::newModule(std::string name, std::string type)
+CoreModule *CoreSchema::newModule(std::string type)
 {
     std::lock_guard<std::mutex> lock(mStepMutex);
-
-    if (mModules.find(name) != mModules.end())
-        throw CoreDuplicateNameEx(name);
 
     CoreModule *module = mModuleFactory->newModule(type);
 
     if (module) {
-        mModules[name] = module;
+        mModules.insert(module);
         mPrepared = false;
     }
 
@@ -32,21 +29,11 @@ void CoreSchema::removeModule(CoreModule *module)
 {
     std::lock_guard<std::mutex> lock(mStepMutex);
 
-    for (auto it : mModules)
-        if (it.second == module) {
-            mModules.erase(it.first);
-            mPrepared = false;
-            return;
-        }
-}
+    if (module->schema() != this)
+        throw CoreNotSameSchemaEx();
 
-CoreModule *CoreSchema::module(std::string name) const
-{
-    try {
-        return mModules.at(name);
-    } catch (const std::out_of_range&) {
-        throw CoreUnknownModuleEx(name);
-    }
+    if (mModules.erase(module))
+        mPrepared = false;
 }
 
 bool CoreSchema::queuable(CoreModule *module, std::unordered_set<CoreModule *> &unscheduledModules)
@@ -66,13 +53,11 @@ void CoreSchema::step()
 {
     const std::lock_guard<std::mutex> lock(mStepMutex);
 
-    // Prepare for step
+    // Prepare for step - Schedule modules in the right order to perform computations
     if (!mPrepared) {
         mScheduledModules.clear();
 
-        std::unordered_set<CoreModule *> unscheduledModules;
-        for (auto it: mModules)
-            unscheduledModules.insert(it.second);
+        std::unordered_set<CoreModule *> unscheduledModules = mModules;
 
         bool change;
         do {

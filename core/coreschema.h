@@ -17,10 +17,9 @@ class CoreSchema
 public:
     CoreSchema();
 
-    CoreModule *newModule(std::string name, std::string type);
+    CoreModule *newModule(std::string type);
     void addModule(CoreModule *module);
     void removeModule(CoreModule *module);
-    CoreModule *module(std::string name) const;
     void unprepare() { mPrepared = false; }
     void step();
 
@@ -30,7 +29,7 @@ public:
 protected:
     CoreModuleFactory *mModuleFactory;
 
-    std::map<std::string, CoreModule *> mModules;
+    std::unordered_set<CoreModule *> mModules;
     std::map<std::string, CoreValue> mInputs;
     std::map<std::string, CoreValue> mOutputs;
 

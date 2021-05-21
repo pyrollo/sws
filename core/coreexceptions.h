@@ -9,7 +9,7 @@ public:
     virtual const char* what() const throw() { return mMsg.c_str(); }
     std::string mMsg;
 };
-
+/*
 class CoreDuplicateNameEx: public CoreException
 {
 public:
@@ -17,7 +17,7 @@ public:
         mMsg = "Name \"" + name + "\" already in use.";
     }
 };
-
+*/
 class CoreUnknownTypeEx: public CoreException
 {
 public:
@@ -54,7 +54,7 @@ class CoreNotSameSchemaEx: public CoreException
 {
 public:
     CoreNotSameSchemaEx() {
-        mMsg = "Can't connect between different schemas.";
+        mMsg = "Not the same schema.";
     }
 };
 

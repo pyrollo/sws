@@ -1,7 +1,7 @@
 #ifndef DRAWNSCHEMA_H
 #define DRAWNSCHEMA_H
 #include "drawnitem.h"
-#include <map>
+#include <unordered_set>
 
 class CoreSchema;
 class DrawnModule;
@@ -19,7 +19,7 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
-    DrawnModule *newModule(std::string name, std::string type);
+    DrawnModule *newModule(std::string type);
     void removeModule(DrawnModule *module);
 
     void highlightConnectable(DrawnPlug * plug);
@@ -28,7 +28,7 @@ public:
 protected:
     CoreSchema *mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
-    std::map<std::string, DrawnModule *> mModules;
+    std::unordered_set<DrawnModule *>mModules;
 };
 
 #endif // DRAWNSCHEMA_H

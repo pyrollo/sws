@@ -1,15 +1,26 @@
 #include "guischemaview.h"
+#include "guischemascene.h"
+#include "draw/drawnschema.h"
+#include "draw/drawnmodule.h"
 #include <QWheelEvent>
 #include <QEvent>
 #include <QScrollBar>
 #include <cmath>
 #include <iostream>
+#include <QMimeData>
 
 GuiSchemaView::GuiSchemaView(QWidget *parent = nullptr):
-    QGraphicsView(parent)
+    QGraphicsView(parent), mSchemaScene(nullptr)
 {
     scale(10.0, 10.0);
     setDragMode(QGraphicsView::ScrollHandDrag);
+    setAcceptDrops(true);
+}
+
+void GuiSchemaView::setScene(GuiSchemaScene *scene)
+{
+    mSchemaScene = scene;
+    QGraphicsView::setScene(scene);
 }
 
 void GuiSchemaView::wheelEvent(QWheelEvent* event)
@@ -34,6 +45,26 @@ void GuiSchemaView::wheelEvent(QWheelEvent* event)
     const QPointF move = p1mouse - event->pos(); // The move
     horizontalScrollBar()->setValue(move.x() + horizontalScrollBar()->value());
     verticalScrollBar()->setValue(move.y() + verticalScrollBar()->value());
+}
+
+void GuiSchemaView::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("sws/moduletype"))
+        event->acceptProposedAction();
+}
+
+void GuiSchemaView::dragMoveEvent(QDragMoveEvent *event)
+{
+    (void)(event);
+}
+
+void GuiSchemaView::dropEvent(QDropEvent *event)
+{
+    std::string moduletype = event->mimeData()->data("sws/moduletype").toStdString();
+    QPointF pos = mapToScene(event->pos());
+    DrawnModule *module = mSchemaScene->schema()->newModule(moduletype);
+    module->moveBy(pos.x(), pos.y());
+    event->acceptProposedAction();
 }
 
 // QGraphicsScene::itemsBoundingRect

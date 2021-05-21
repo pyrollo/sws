@@ -5,13 +5,16 @@
 #include "modules/drawnmoduleadd.h"
 #include "modules/drawnmodulemultiply.h"
 
+#define ADDMODULECLASS(CLASS) \
+    mFactories[CLASS::mType] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
+
 DrawnModuleFactory::DrawnModuleFactory()
 {
-    mFactories["constant"] = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleConstant(schema, coreModule); };
-    mFactories["input"]    = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleInput(schema, coreModule); };
-    mFactories["output"]   = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleOutput(schema, coreModule); };
-    mFactories["add"]      = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleAdd(schema, coreModule); };
-    mFactories["multiply"] = [](DrawnSchema *schema, CoreModule *coreModule) { return new DrawnModuleMultiply(schema, coreModule); };
+    ADDMODULECLASS(DrawnModuleConstant)
+    ADDMODULECLASS(DrawnModuleInput)
+    ADDMODULECLASS(DrawnModuleOutput)
+    ADDMODULECLASS(DrawnModuleAdd)
+    ADDMODULECLASS(DrawnModuleMultiply)
 }
 
 DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)

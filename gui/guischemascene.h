@@ -14,6 +14,7 @@ public:
 
     void removeSchema();
     void setSchema(DrawnSchema *schema);
+    DrawnSchema *schema() const { return mSchema; }
 
     void setProbeWidget(QLabel *widget);
     void setProbe(QString label, CoreValue value);

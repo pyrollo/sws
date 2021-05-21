@@ -125,9 +125,8 @@ void DrawnModule::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
 
         QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData;
-
-        mimeData->setText("toto");
+        QMimeData *mimeData = new QMimeData();
+        mimeData->setData("sws/moduletype", QByteArray::fromStdString(getType()));
         drag->setMimeData(mimeData);
 
         QRectF rect = boundingRect();
