@@ -4,6 +4,7 @@
 #include "coreinput.h"
 #include "coreoutput.h"
 #include "coremodulefactory.h"
+#include "core.h"
 
 CoreSchema::CoreSchema() :
     mTime(0), mPrepared(false)
@@ -108,4 +109,48 @@ void CoreSchema::disconnect(CoreInput *input, CoreOutput *output)
     output->halfDisconnect(input);
     input->halfDisconnect(output);
     mPrepared = false;
+}
+
+CoreValue *CoreSchema::newInput(std::string name, CoreValue value)
+{
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
+    if (mInputs.find(name) != mInputs.end())
+        throw CoreDuplicateNameEx(name);
+
+    mInputs[name] = value;
+    // TODO: warn upstream about schema in/out modification
+    return &mInputs[name];
+}
+
+void CoreSchema::deleteInput(std::string name)
+{
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
+    if (!mInputs.erase(name))
+        throw CoreUnknownInputEx(name);
+
+    // TODO: warn upstream about schema in/out modification
+}
+
+CoreValue *CoreSchema::newOutput(std::string name, CoreValue value)
+{
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
+    if (mOutputs.find(name) != mOutputs.end())
+        throw CoreDuplicateNameEx(name);
+
+    mOutputs[name] = value;
+    // TODO: warn upstream about schema in/out modification
+    return &mOutputs[name];
+}
+
+void CoreSchema::deleteOutput(std::string name)
+{
+    std::lock_guard<std::mutex> lock(mStepMutex);
+
+    if (!mOutputs.erase(name))
+        throw CoreUnknownOutputEx(name);
+
+    // TODO: warn upstream about schema in/out modification
 }

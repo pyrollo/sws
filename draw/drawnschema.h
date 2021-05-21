@@ -10,6 +10,7 @@ class DrawnPlug;
 
 class DrawnSchema : public DrawnItem
 {
+    Q_OBJECT
 public:
     DrawnSchema(CoreSchema *coreSchema);
     ~DrawnSchema();
@@ -24,6 +25,13 @@ public:
 
     void highlightConnectable(DrawnPlug * plug);
     void unHighlight();
+
+    void notifyInputsChanged() { emit inputsChanged(); }
+    void notifyOutputsChanged() { emit outputsChanged(); }
+
+signals:
+    void inputsChanged();
+    void outputsChanged();
 
 protected:
     CoreSchema *mCoreSchema;

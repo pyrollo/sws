@@ -50,6 +50,23 @@ public:
     }
 };
 
+class CoreDuplicateNameEx: public CoreException
+{
+public:
+    CoreDuplicateNameEx(std::string name) {
+        mMsg = "Name \"" + name + "\" already in use.";
+    }
+};
+
+class CoreNoSchemaEx: public CoreException
+{
+public:
+    CoreNoSchemaEx() {
+        mMsg = "No schema, schema needed.";
+    }
+};
+
+
 class CoreNotSameSchemaEx: public CoreException
 {
 public:

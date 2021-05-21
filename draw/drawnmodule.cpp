@@ -142,6 +142,6 @@ void DrawnModule::mousePressEvent(QGraphicsSceneMouseEvent *event)
         painter.end();
         drag->setPixmap(pix);
 
-        Qt::DropAction dropAction = drag->exec();
+        drag->exec();
     }
 }

@@ -33,7 +33,7 @@ public:
     static QBrush bWireSelected()    { return QBrush(QColor("#884")); } //Plug color when selected wire plugged in
 
     // Fonts
-    static QFont fModule() { return QFont("SansSerif", 6); }
+    static QFont fModule() { return QFont("SansSerif", 5); }
 };
 
 #endif // GUISTYLE_H

@@ -8,6 +8,7 @@ class DrawnModuleOutput : public DrawnModuleRectangle
 public:
     DrawnModuleOutput(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif // DRAWNMODULEOUTPUT_H

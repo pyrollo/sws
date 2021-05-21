@@ -25,6 +25,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     scene->setProbeWidget(ui->probeLabel);
     ui->schemaView->setScene(scene);
 
+    connect(schema, &DrawnSchema::inputsChanged, this, &GuiMainWindow::updateInputsList);
+    connect(schema, &DrawnSchema::outputsChanged, this, &GuiMainWindow::updateOutputsList);
+
     // Modules library view
     QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
     moduleLibraryScene->setBackgroundBrush(GuiStyle::bBackground());
@@ -72,3 +75,15 @@ void GuiMainWindow::handleButtonStartStop()
     }
 }
 
+void GuiMainWindow::updateInputsList()
+{
+    for (auto it: mCoreSchema->inputs())
+        printf("Input %s = %f\n", it.first.c_str(), it.second);
+    fflush(stdout);
+}
+void GuiMainWindow::updateOutputsList()
+{
+    for (auto it: mCoreSchema->outputs())
+        printf("Output %s = %f\n", it.first.c_str(), it.second);
+    fflush(stdout);
+}

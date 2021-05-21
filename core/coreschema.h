@@ -29,6 +29,14 @@ public:
     CoreValue getTime() { return mTime; }
     void setTime(CoreValue time) { mTime = time; }
 
+    CoreValue *newInput(std::string name, CoreValue value);
+    void deleteInput(std::string name);
+    const std::map<std::string, CoreValue> &inputs() { return mInputs; }
+
+    CoreValue *newOutput(std::string name, CoreValue value);
+    void deleteOutput(std::string name);
+    const std::map<std::string, CoreValue> &outputs() { return mOutputs; }
+
 protected:
     CoreModuleFactory *mModuleFactory;
 

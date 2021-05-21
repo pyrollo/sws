@@ -18,6 +18,8 @@ public:
     ~GuiMainWindow();
     void handleButtonStartStop();
 
+    void updateInputsList();
+    void updateOutputsList();
 private:
     Ui::GuiMainWindow *ui;
     CoreSchema *mCoreSchema;
