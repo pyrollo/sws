@@ -5,6 +5,7 @@
 #include "../core/coreoutput.h"
 #include "../core/coreschema.h"
 #include <algorithm>
+#include <cmath>
 #include "../gui/guistyle.h"
 #include <QPainter>
 #include <QPainterPathStroker>
@@ -28,6 +29,7 @@ DrawnWire::~DrawnWire()
         mConnectedInput->removeConnectedWire(this);
 }
 
+
 void DrawnWire::connectTo(DrawnOutput *output)
 {
     if (mConnectedOutput || !output)
@@ -40,8 +42,7 @@ void DrawnWire::connectTo(DrawnOutput *output)
     mConnectedOutput->addConnectedWire(this);
 
     connect(mConnectedOutput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
-    updateBoundingRect();
-    update();
+    updatePath();
 }
 
 void DrawnWire::connectTo(DrawnInput *input)
@@ -56,8 +57,7 @@ void DrawnWire::connectTo(DrawnInput *input)
     mConnectedInput->addConnectedWire(this);
 
     connect(mConnectedInput, SIGNAL(positionChanged()), this, SLOT(endpointsmoved()));
-    updateBoundingRect();
-    update();
+    updatePath();
 }
 
 void DrawnWire::connectTo(DrawnPlug *plug)
@@ -76,53 +76,20 @@ void DrawnWire::connectTo(DrawnPlug *plug)
 
 Q_SLOT void DrawnWire::endpointsmoved()
 {
-    updateBoundingRect();
-    update();
-}
-
-void DrawnWire::updateBoundingRect()
-{
-    prepareGeometryChange();
-    float margin = GuiStyle::pWire().widthF() * 0.5f;
-    mFrom = QPointF(0, 0);
-    mTo = QPointF(0, 0);
-
-    if (!mDragging && (!mConnectedInput || !mConnectedOutput)) {
-        mBoundingRect = QRectF(0, 0, 0, 0);
-        return;
-     }
-
-    if (mConnectedInput) {
-        mFrom = mapFromItem(mConnectedInput, mConnectedInput->connectionPoint());
-        if (mDragging)
-            mTo = mDragpoint;
-    }
-
-    if (mConnectedOutput) {
-        mTo = mapFromItem(mConnectedOutput, mConnectedOutput->connectionPoint());
-        if (mDragging)
-            mFrom = mDragpoint;
-    }
-
-    mBoundingRect = QRectF(QPointF(std::min(mFrom.x(), mTo.x()), std::min(mFrom.y(), mTo.y())),
-            QPointF(std::max(mFrom.x(), mTo.x()), std::max(mFrom.y(), mTo.y())))
-            .marginsAdded(QMarginsF(margin, margin, margin, margin));
+    updatePath();
 }
 
 void DrawnWire::drag(QPointF scenePoint)
 {
     mDragging = true;
     mDragpoint = mapFromScene(scenePoint);
-
-    updateBoundingRect();
-    update();
+    updatePath();
 }
 
 void DrawnWire::endDrag()
 {
     mDragging = false;
-    updateBoundingRect();
-    update();
+    updatePath();
 }
 
 QVariant DrawnWire::itemChange(GraphicsItemChange change, const QVariant &value)
@@ -144,21 +111,164 @@ QVariant DrawnWire::itemChange(GraphicsItemChange change, const QVariant &value)
     return QGraphicsItem::itemChange(change, value);
 }
 
+bool DrawnWire::isDrawable() const
+{
+    return (mDragging && (mConnectedOutput || mConnectedInput)) ||
+            (mConnectedInput && mConnectedOutput);
+}
+QTransform DrawnWire::transformFromPlug(DrawnPlug* plug) const
+{
+    QPointF t = mapFromItem(plug, plug->connectionPoint());
+    return rotateFromPlug(plug).translate(-t.x(), -t.y());
+}
+
+QTransform DrawnWire::rotateFromPlug(DrawnPlug* plug) const
+{
+    switch(plug->getOrientation()) {
+    case DrawnPlug::left:
+        return QTransform(-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0);
+    case DrawnPlug::top:
+        return QTransform(0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    case DrawnPlug::right:
+        return QTransform(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
+    case DrawnPlug::bottom:
+        return QTransform(0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    }
+    return QTransform(); // Should never happen
+}
+
+//TODO: tgtdir and/or transformations could be obtained from plugs (transformations are used for drawing)
+
 QPainterPath DrawnWire::path() const
 {
+    static const float lateral = 2.0f;
+    static const float extension = 1.0f;
+
+    if (!isDrawable())
+        return QPainterPath();
+
+    QTransform transform;
+    QPointF tgt; // Source is 0,0, target is that point (in transformed coordinates)
+    QPointF tgtdir; // Target orientation as vector
+
+    if (!mDragging || mConnectedOutput)
+        transform = transformFromPlug(mConnectedOutput);
+    else
+        transform = transformFromPlug(mConnectedInput);
+
+    if (mDragging) {
+        tgt = transform.map(mDragpoint);
+        if (tgt.x() < extension)
+            tgtdir = QPointF(1.0f, 0.0f);
+        else
+            tgtdir = QPointF(-1.0f, 0.0f);
+    } else {
+        tgt = transform.map(mapFromItem(mConnectedInput, mConnectedInput->connectionPoint()));
+        tgtdir = rotateFromPlug(mConnectedOutput).map(
+                    rotateFromPlug(mConnectedInput).inverted().map(QPointF(1.0, 0.0)));
+    }
+    tgtdir = tgtdir * extension;
+
     QPainterPath path;
-    path.moveTo(mFrom);
-    path.lineTo(QPointF((mFrom.x() + mTo.x())/2, mFrom.y()));
-    path.lineTo(QPointF((mFrom.x() + mTo.x())/2, mTo.y()));
-    path.lineTo(mTo);
-    return path;
+    path.moveTo(0.0f, 0.0f);
+
+    // Same orientation
+    if (tgtdir.x() > 0.0f) {
+        float x = fmax(tgt.x(), 0.0) + extension;
+        path.lineTo(x, 0.0f);
+        path.lineTo(x, tgt.y());
+    }
+
+    // Opposite orientation
+    else if (tgtdir.x() < 0.0f) {
+        // Face to face - Zigzag
+        if (tgt.x() > 0) {
+            path.lineTo(tgt.x() * 0.5f, 0.0f);
+            path.lineTo(tgt.x() * 0.5f, tgt.y());
+        }
+        // Back to back
+        else {
+            if (fabs(tgt.y()) < lateral * 2.0) {
+                // Not enough room to zigzag, go around
+                float y = fmin(tgt.y(), 0.0) - lateral;
+                path.lineTo(extension, 0.0f);
+                path.lineTo(extension, y);
+                path.lineTo(tgt.x() - extension, y);
+                path.lineTo(tgt.x() - extension, tgt.y());
+            } else {
+                // Zigzag between
+                path.lineTo(extension, 0.0f);
+                path.lineTo(extension, tgt.y() * 0.5);
+                path.lineTo(tgt.x() - extension, tgt.y() * 0.5);
+                path.lineTo(tgt.x() - extension, tgt.y());
+            }
+        }
+    }
+
+    // Other cases
+    else
+    {
+        if (tgt.x() >= 0.0f)
+            // Source and target facing to crossing point
+            if (tgt.y() * tgtdir.y() < 0.0f) {
+                path.lineTo(tgt.x(), 0.0f);
+            } else {
+                path.lineTo(tgt.x() * 0.5f, 0.0f);
+                path.lineTo(tgt.x() * 0.5f, tgt.y() + tgtdir.y());
+                path.lineTo(tgt + tgtdir);
+            }
+       else
+            if (tgt.y() * tgtdir.y() < 0.0f) {
+                path.lineTo(extension, 0.0f);
+                path.lineTo(extension, tgt.y() * 0.5f);
+                path.lineTo(tgt.x(), tgt.y() * 0.5f);
+            } else {
+                path.lineTo(extension, 0.0f);
+                path.lineTo(extension, tgt.y() + tgtdir.y());
+                path.lineTo(tgt + tgtdir);
+            }
+    }
+
+    // End path and traspose it back to scene coordinates
+    path.lineTo(tgt);
+    return transform.inverted().map(path);
+}
+
+void DrawnWire::updatePath()
+{
+    if (mConnectedInput) {
+        mTo = mapFromItem(mConnectedInput, mConnectedInput->connectionPoint());
+        if (mDragging)
+            mFrom = mDragpoint;
+    }
+
+    if (mConnectedOutput) {
+        mFrom = mapFromItem(mConnectedOutput, mConnectedOutput->connectionPoint());
+        if (mDragging)
+            mTo = mDragpoint;
+    }
+
+    // TODO: improve that (maybe some more cases, just use an empty path or put it in path())
+    if (!mDragging && (!mConnectedInput || !mConnectedOutput)) {
+        mBoundingRect = QRectF(0, 0, 0, 0);
+        mPath = QPainterPath();
+        update();
+        return;
+    }
+
+    mPath = path();
+    float margin = GuiStyle::pWire().widthF();
+    prepareGeometryChange();
+    mBoundingRect = mPath.boundingRect().marginsAdded(QMargins(margin, margin, margin, margin));
+//    printf("Bounding Rect (%f, %f) %f x %f\n", mBoundingRect.x(), mBoundingRect.y(), mBoundingRect.width(), mBoundingRect.height()); fflush(stdout);
+    update();
 }
 
 QPainterPath DrawnWire::shape() const
 {
     QPainterPathStroker stroker;
     stroker.setWidth(0.3f); // TODO: Put that in a setting (distance around wire to select them)
-    return stroker.createStroke(path());
+    return stroker.createStroke(mPath);
 }
 
 void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -173,5 +283,5 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         painter->setPen(GuiStyle::pWire());
     }
 
-    painter->drawPath(path());
+    painter->drawPath(mPath);
 }

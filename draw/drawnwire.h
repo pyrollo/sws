@@ -46,8 +46,13 @@ protected:
     DrawnOutput *mConnectedOutput;
     DrawnInput *mConnectedInput;
 
-    void updateBoundingRect();
+    QTransform transformFromPlug(DrawnPlug* plug) const;
+    QTransform rotateFromPlug(DrawnPlug* plug) const;
+
+    void updatePath();
+    bool isDrawable() const;
     QPainterPath path() const;
+    QPainterPath mPath;
 };
 
 #endif // DRAWNWIRE_H

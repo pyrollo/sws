@@ -26,39 +26,35 @@ void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsIt
     painter->drawPath(path);
 }
 
-void DrawnModuleRectangle::positionPlug(DrawnItem *plug, Side side, float position)
+void DrawnModuleRectangle::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation, float position)
 {
-    switch(side) {
-    case top:
-        plug->setRotation(90);
+    plug->setOrientation(orientation);
+    switch(orientation) {
+    case DrawnPlug::top:
         plug->moveBy(position, 0.0f);
         break;
-    case right:
-        plug->setRotation(180);
+    case DrawnPlug::right:
         plug->moveBy(mWidth, position);
         break;
-    case bottom:
-        plug->setRotation(270);
+    case DrawnPlug::bottom:
         plug->moveBy(position, mHeight);
         break;
-    case left:
-        plug->setRotation(0);
+    case DrawnPlug::left:
         plug->moveBy(0.0f, position);
         break;
     }
 }
 
-
-DrawnInput *DrawnModuleRectangle::newInput(std::string name, Side side, float position)
+DrawnInput *DrawnModuleRectangle::newInput(std::string name, DrawnPlug::Orientation orientation, float position)
 {
     DrawnInput *input = DrawnModule::newInput(name);
-    positionPlug(input, side, position);
+    positionPlug(input, orientation, position);
     return input;
 }
 
-DrawnOutput *DrawnModuleRectangle::newOutput(std::string name, Side side, float position)
+DrawnOutput *DrawnModuleRectangle::newOutput(std::string name, DrawnPlug::Orientation orientation, float position)
 {
     DrawnOutput *output = DrawnModule::newOutput(name);
-    positionPlug(output, side, position);
+    positionPlug(output, orientation, position);
     return output;
 }

@@ -26,40 +26,36 @@ void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->drawPath(path);
 }
 
-void DrawnModuleRound::positionPlug(DrawnItem *plug, Side side)
+void DrawnModuleRound::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation)
 {
     float margin = GuiStyle::pModule().widthF() * 0.5;
-
-    switch(side) {
-    case top:
-        plug->setRotation(90);
+    plug->setOrientation(orientation);
+    switch(orientation) {
+    case DrawnPlug::top:
         plug->moveBy(1.0f, margin);
         break;
-    case right:
-        plug->setRotation(180);
+    case DrawnPlug::right:
         plug->moveBy(2.0f - margin, 1.0f);
         break;
-    case bottom:
-        plug->setRotation(270);
+    case DrawnPlug::bottom:
         plug->moveBy(1.0f, 2.0f - margin);
         break;
-    case left:
-        plug->setRotation(0);
+    case DrawnPlug::left:
         plug->moveBy(margin, 1.0f);
         break;
     }
 }
 
-DrawnInput *DrawnModuleRound::newInput(std::string name, Side side)
+DrawnInput *DrawnModuleRound::newInput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnInput *input = DrawnModule::newInput(name);
-    positionPlug(input, side);
+    positionPlug(input, orientation);
     return input;
 }
 
-DrawnOutput *DrawnModuleRound::newOutput(std::string name, Side side)
+DrawnOutput *DrawnModuleRound::newOutput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnOutput *output = DrawnModule::newOutput(name);
-    positionPlug(output, side);
+    positionPlug(output, orientation);
     return output;
 }

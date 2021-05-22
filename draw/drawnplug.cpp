@@ -9,7 +9,7 @@
 #include <QMessageBox>
 
 DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
-    DrawnItem(parentModule), mModule(parentModule), mWire(nullptr), mHighlighted(false)
+    DrawnItem(parentModule), mModule(parentModule), mOrientation(top), mWire(nullptr), mHighlighted(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
     if (mModule->schema())
@@ -31,6 +31,12 @@ QRectF DrawnPlug::boundingRect() const
 QPointF DrawnPlug::connectionPoint() const
 {
     return QPointF(0, 0);
+}
+
+void DrawnPlug::setOrientation(Orientation orientation)
+{
+    setRotation(angleFromOrientation(orientation));
+    mOrientation = orientation;
 }
 
 void DrawnPlug::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -141,4 +147,73 @@ bool DrawnPlug::connected()
     return !mConnectedWires.empty();
 }
 
+bool DrawnPlug::hasSameOrientation(DrawnPlug *plug)
+{
+    return plug->mOrientation == mOrientation;
+}
+
+bool DrawnPlug::hasOppositeOrientation(DrawnPlug *plug)
+{
+    return plug->mOrientation == oppositeOrientation(mOrientation);
+}
+
+DrawnPlug::Orientation DrawnPlug::oppositeOrientation(Orientation orientation) {
+    return (DrawnPlug::Orientation)((orientation + 2)%4);
+}
+
+int DrawnPlug::angleFromOrientation(Orientation orientation)
+{
+    return orientation * 90;
+}
+
+DrawnPlug::Orientation DrawnPlug::rotateOrientation(Orientation orientation, Orientation by)
+{
+    return (DrawnPlug::Orientation)((orientation + by)%4);
+}
+
+void DrawnPlug::rotatePoint(QPointF &point, Orientation by)
+{
+    float y;
+    switch(by) {
+    case right:
+        return;
+    case bottom:
+        y = point.y();
+        point.setY(-point.x());
+        point.setX(y);
+        return;
+    case left:
+        point.setX(-point.x());
+        point.setY(-point.y());
+        return;
+    case top:
+        y = point.y();
+        point.setY(point.x());
+        point.setX(- y);
+        return;
+    }
+}
+
+void DrawnPlug::unrotatePoint(QPointF &point, Orientation by)
+{
+    float y;
+    switch(by) {
+    case right:
+        return;
+    case bottom:
+        y = point.y();
+        point.setY(point.x());
+        point.setX(-y);
+        return;
+    case left:
+        point.setX(-point.x());
+        point.setY(-point.y());
+        return;
+    case top:
+        y = point.y();
+        point.setY(-point.x());
+        point.setX(y);
+        return;
+    }
+}
 

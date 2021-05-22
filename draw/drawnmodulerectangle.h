@@ -9,17 +9,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
 protected:
-    enum Side { top, right, bottom, left };
-
     float mWidth;
     float mHeight;
 
     DrawnModuleRectangle(DrawnSchema *parentSchema, CoreModule *coreModule, float width, float height);
 
-    DrawnInput *newInput(std::string name, Side side, float position);
-    DrawnOutput *newOutput(std::string name, Side side, float position);
+    DrawnInput *newInput(std::string name, DrawnPlug::Orientation orientation, float position);
+    DrawnOutput *newOutput(std::string name, DrawnPlug::Orientation orientation, float position);
 
-    void positionPlug(DrawnItem *plug, Side side, float position);
+    void positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation, float position);
 };
 
 #endif // DRAWNMODULERECTANGLE_H

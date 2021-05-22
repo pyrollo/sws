@@ -4,8 +4,8 @@
 DrawnModuleClip::DrawnModuleClip(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
 {
-    newInput("operand", left, 1.0f);
-    newOutput("result", right, 1.0f);
+    newInput("operand", DrawnPlug::left, 1.0f);
+    newOutput("result", DrawnPlug::right, 1.0f);
 }
 
 void DrawnModuleClip::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

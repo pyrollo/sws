@@ -9,7 +9,7 @@
 DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 2.0f)
 {
-    newInput("value", left, 1.0f);
+    newInput("value", DrawnPlug::left, 1.0f);
 }
 
 void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -8,7 +8,7 @@
 DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 1.0f)
 {
-    newOutput("value", right, 0.5f);
+    newOutput("value", DrawnPlug::right, 0.5f);
 }
 
 void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

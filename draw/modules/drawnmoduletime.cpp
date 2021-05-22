@@ -3,7 +3,7 @@
 DrawnModuleTime::DrawnModuleTime(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRound(schema, coreModule)
 {
-    newOutput("time", right);
+    newOutput("time", DrawnPlug::right);
 }
 
 void DrawnModuleTime::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
