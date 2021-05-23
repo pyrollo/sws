@@ -9,6 +9,11 @@ CoreModuleInput::CoreModuleInput(CoreSchema *schema) :
     mOutputValue = newOutput("value");
 }
 
+CoreModuleInput::~CoreModuleInput()
+{
+    unexport();
+}
+
 void CoreModuleInput::step()
 {
     if (mSchemaInput)
@@ -21,9 +26,25 @@ void CoreModuleInput::exportName(std::string name)
         throw CoreNoSchemaEx();
 
     if (mName != name) {
-        if (mSchemaInput)
-            mSchema->deleteInput(mName);
+        auto inputs = mSchema->inputs();
+        if (inputs.find(name) != inputs.end())
+            throw CoreDuplicateNameEx(name);
+
+        unexport();
         mName = name;
         mSchemaInput = mSchema->newInput(mName, mOutputValue->value());
     }
+}
+
+void CoreModuleInput::unexport()
+{
+    if (!mSchemaInput)
+        return;
+
+    if (!mSchema)
+        throw CoreNoSchemaEx();
+
+    mSchema->deleteInput(mName);
+    mName = "";
+    mSchemaInput = nullptr;
 }

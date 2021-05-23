@@ -47,6 +47,12 @@
       </item>
       <item>
        <widget class="GuiSchemaView" name="schemaView">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
@@ -57,6 +63,33 @@
          <enum>QGraphicsView::AnchorUnderMouse</enum>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Speaker output</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="GuiOutputComboBox" name="speakerOutputComboBox"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -142,6 +175,11 @@
    <class>GuiSchemaView</class>
    <extends>QGraphicsView</extends>
    <header location="global">gui/guischemaview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GuiOutputComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">gui/guioutputcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

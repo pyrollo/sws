@@ -11,6 +11,15 @@ DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema, CoreModule *coreMo
     newOutput("value", DrawnPlug::right, 1.0f);
 }
 
+DrawnModuleInput::~DrawnModuleInput()
+{
+    if (mCoreModule) {
+        ((CoreModuleInput *)mCoreModule)->unexport();
+        if (mSchema)
+            mSchema->notifyOutputsChanged();
+    }
+}
+
 void DrawnModuleInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     (void)(option); (void)(widget);

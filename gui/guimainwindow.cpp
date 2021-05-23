@@ -55,6 +55,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     ui->schemaView->scale(scale, scale);
 
+    ui->speakerOutputComboBox->setSchema(schema);
+
     connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
 }
 

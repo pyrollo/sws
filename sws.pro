@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    audio/audiooutput.cpp \
     core/coreinput.cpp \
     core/coremachine.cpp \
     core/coremodule.cpp \
@@ -49,12 +50,14 @@ SOURCES += \
     draw/modules/drawnmoduleoutput.cpp \
     draw/modules/drawnmoduletime.cpp \
     gui/guimainwindow.cpp \
+    gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
     gui/guistyle.cpp \
     main.cpp
 
 HEADERS += \
+    audio/audiooutput.h \
     core/core.h \
     core/coreexceptions.h \
     core/coreinput.h \
@@ -90,6 +93,7 @@ HEADERS += \
     draw/modules/drawnmoduleoutput.h \
     draw/modules/drawnmoduletime.h \
     gui/guimainwindow.h \
+    gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
     gui/guistyle.h

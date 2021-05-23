@@ -8,8 +8,10 @@ class CoreModuleInput : public CoreModule
 {
 public:
     CoreModuleInput(CoreSchema *schema);
+    ~CoreModuleInput();
     void step();
     void exportName(std::string name);
+    void unexport();
     std::string exportedName() { return mName; }
 
 protected:
