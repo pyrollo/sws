@@ -1,6 +1,7 @@
 #include "gui/guimainwindow.h"
 
 #include <QApplication>
+#include "core/coresamplebuffer.h"
 
 int main(int argc, char *argv[])
 {

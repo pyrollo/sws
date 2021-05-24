@@ -2,6 +2,7 @@
 #include "coremodule.h"
 #include "coreschema.h"
 #include <chrono>
+#include <cmath>
 
 CoreMachine::CoreMachine(CoreSchema *schema, CoreValue stepTime):
     mSchema(schema), mStepTime(stepTime), mThread(nullptr), mRunning(false)
@@ -10,12 +11,24 @@ CoreMachine::CoreMachine(CoreSchema *schema, CoreValue stepTime):
 
 void CoreMachine::run()
 {
+    std::chrono::time_point<std::chrono::steady_clock> last, now;
+    int steps;
+    double nanoHzFrequency = 0.000000001f / mStepTime;
+
+    last = std::chrono::steady_clock::now();
+
     while (mRunning) {
-        // TODO: Catch exception and stop machine
-        mSchema->setTime(mSchema->getTime() + mStepTime);
-        mSchema->step();
-        // TODO: Improve this to a regulated duration
-        std::this_thread::sleep_for(std::chrono::milliseconds(int(mStepTime*1000)));
+        now = std::chrono::steady_clock::now();
+        steps = int(round(nanoHzFrequency * std::chrono::nanoseconds(now - last).count()));
+        last = now;
+        while (steps-- > 0) {
+            // TODO: Catch exception and stop machine
+            mSchema->setTime(mSchema->getTime() + mStepTime);
+            mSchema->step();
+        }
+
+        // TODO: Manage 10ms period at class level
+        std::this_thread::sleep_until(last + std::chrono::milliseconds(10));
     }
 }
 

@@ -10,6 +10,7 @@
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
 #include "guistyle.h"
+#include "audio/audiooutput.h"
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -49,7 +50,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     ui->modulesLibraryView->setScene(moduleLibraryScene);
     ui->modulesLibraryView->setTransform(QTransform().scale(scale, scale));
-    mCoreMachine = new CoreMachine(mCoreSchema, 0.1);
+    mCoreMachine = new CoreMachine(mCoreSchema, 1.0f/44100.0f);
     mCoreMachine->start();
     ui->pushButtonStartStop->setText("Stop");
 
@@ -58,6 +59,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     ui->speakerOutputComboBox->setSchema(schema);
 
     connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
+
+    AudioOutput test(nullptr);
 }
 
 GuiMainWindow::~GuiMainWindow()

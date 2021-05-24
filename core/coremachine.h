@@ -3,6 +3,7 @@
 #include "core.h"
 #include <thread>
 #include <mutex>
+#include <time.h>
 
 class CoreModule;
 class CoreSchema;
