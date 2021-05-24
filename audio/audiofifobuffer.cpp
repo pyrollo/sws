@@ -33,7 +33,7 @@ qint64 AudioFifoBuffer::writeData(const char *data, qint64 maxSize)
     if (maxSize <= 0)
         return written;
 
-    if (mWritePos > mReadPos) {
+    if (mWritePos >= mReadPos) {
         chunksize = std::min(maxSize, mBufferSize - mWritePos);
         written += writeDataNoCheck(data + written, chunksize);
         maxSize -= chunksize;
@@ -41,6 +41,26 @@ qint64 AudioFifoBuffer::writeData(const char *data, qint64 maxSize)
 
     chunksize = std::min(maxSize, mReadPos - mWritePos);
     written += writeDataNoCheck(data + written, chunksize);
+
+    return written;
+}
+
+qint64 AudioFifoBuffer::fill(char value, qint64 size)
+{
+    qint64 written = 0;
+
+    if (size <= 0)
+        return 0;
+
+    while (written < size) {
+        mBuffer[mWritePos] = value;
+        mWritePos++;
+        written++;
+        if (mWritePos == mBufferSize)
+            mWritePos = 0;
+        if (mWritePos == mReadPos)
+            return written;
+    }
     return written;
 }
 
@@ -66,7 +86,7 @@ qint64 AudioFifoBuffer::readData(char *data, qint64 maxSize)
         return read;
 
     if (mReadPos > mWritePos) {
-        chunksize = std::min(maxSize, mReadPos - mWritePos);
+        chunksize = std::min(maxSize, mBufferSize - mReadPos);
         read += readDataNoCheck(data + read, chunksize);
         maxSize -= chunksize;
     }

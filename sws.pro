@@ -17,13 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     audio/audiofifobuffer.cpp \
-    audio/audiooutput.cpp \
     core/coreinput.cpp \
     core/coremachine.cpp \
     core/coremodule.cpp \
     core/coremodulefactory.cpp \
     core/coreoutput.cpp \
     core/coreplug.cpp \
+    core/coresamplebuffer.cpp \
     core/coreschema.cpp \
     core/modules/coremoduleadd.cpp \
     core/modules/coremoduleclip.cpp \
@@ -59,7 +59,6 @@ SOURCES += \
 
 HEADERS += \
     audio/audiofifobuffer.h \
-    audio/audiooutput.h \
     core/core.h \
     core/coreexceptions.h \
     core/coreinput.h \

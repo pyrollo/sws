@@ -2,6 +2,8 @@
 #define DRAWNMODULEOUTPUT_H
 #include "../drawnmodulerectangle.h"
 
+class CoreModuleOutput;
+
 class DrawnModuleOutput : public DrawnModuleRectangle
 {
     MODULE_TYPE("output")
@@ -10,6 +12,9 @@ public:
     ~DrawnModuleOutput();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    CoreModuleOutput *core() { return (CoreModuleOutput *)mCoreModule; }
+protected:
+    std::string mName;
 };
 
 #endif // DRAWNMODULEOUTPUT_H

@@ -8,7 +8,7 @@
 // - 16 bits only
 // - Fixed size (8192 bytes)
 
-class AudioFifoBuffer : public QIODevice, CoreSampleBuffer
+class AudioFifoBuffer : public QIODevice, public CoreSampleBuffer
 {
     Q_OBJECT
     Q_DISABLE_COPY(AudioFifoBuffer)
@@ -18,6 +18,8 @@ public:
 
     void writeSample(CoreValue sample);
     CoreValue readSample();
+
+    qint64 fill(char value, qint64 size);
 
 protected:
     QAudioFormat::Endian mEndianness;

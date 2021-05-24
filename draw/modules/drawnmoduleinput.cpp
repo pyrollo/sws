@@ -2,21 +2,21 @@
 #include "../drawnschema.h"
 #include "gui/guistyle.h"
 #include "core/modules/coremoduleinput.h"
+#include "core/coreschema.h"
 #include <QPainter>
 #include <QInputDialog>
 
 DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 2.0f)
+    DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 2.0f), mName("")
 {
     newOutput("value", DrawnPlug::right, 1.0f);
 }
 
 DrawnModuleInput::~DrawnModuleInput()
 {
-    if (mCoreModule) {
-        ((CoreModuleInput *)mCoreModule)->unexport();
-        if (mSchema)
-            mSchema->notifyOutputsChanged();
+    if (mCoreModule && mSchema) {
+            mSchema->core()->setInputName(core(), "");
+            mSchema->notifyInputsChanged();
     }
 }
 
@@ -40,10 +40,7 @@ void DrawnModuleInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setFont(GuiStyle::fModule());
     QRectF textRect(8.0f, 1.0f, 31.0f, 18.0f);
 
-    QString name = "Input";
-
-    if (mCoreModule)
-        name = QString::fromStdString(((CoreModuleInput *)core())->exportedName());
+    QString name = QString::fromStdString(mCoreModule?mName:"Input");
 
     painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, name);
@@ -56,13 +53,12 @@ void DrawnModuleInput::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    CoreModuleInput *coreModule = (CoreModuleInput *)core();
-
     bool ok;
-    QString newName = QInputDialog::getText(nullptr, "Input module", "Exported name:",
-            QLineEdit::Normal, QString::fromStdString(coreModule->exportedName()), &ok);
-    if (ok && newName != "") {
-        coreModule->exportName(newName.toStdString());
+    std::string name = QInputDialog::getText(nullptr, "Input module", "Exported name:",
+            QLineEdit::Normal, QString::fromStdString(mName), &ok).toStdString();
+    if (ok && name != mName) {
+        mSchema->core()->setInputName(core(), name);
+        mName = name;
         schema()->notifyInputsChanged();
         update();
     }

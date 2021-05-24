@@ -260,7 +260,6 @@ void DrawnWire::updatePath()
     float margin = GuiStyle::pWire().widthF();
     prepareGeometryChange();
     mBoundingRect = mPath.boundingRect().marginsAdded(QMargins(margin, margin, margin, margin));
-//    printf("Bounding Rect (%f, %f) %f x %f\n", mBoundingRect.x(), mBoundingRect.y(), mBoundingRect.width(), mBoundingRect.height()); fflush(stdout);
     update();
 }
 

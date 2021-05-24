@@ -4,6 +4,8 @@
 #include <QMainWindow>
 class CoreSchema;
 class CoreMachine;
+class AudioFifoBuffer;
+class QAudioOutput;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -17,12 +19,11 @@ public:
     GuiMainWindow(QWidget *parent = nullptr);
     ~GuiMainWindow();
     void handleButtonStartStop();
-
-    void updateInputsList();
-    void updateOutputsList();
 private:
     Ui::GuiMainWindow *ui;
     CoreSchema *mCoreSchema;
     CoreMachine *mCoreMachine;
+    AudioFifoBuffer *mAudioOutputBuffer;
+    QAudioOutput *mAudioOutput;
 };
 #endif // GUIMAINWINDOW_H

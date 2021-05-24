@@ -2,16 +2,18 @@
 #include "../coreexceptions.h"
 #include "../coreoutput.h"
 #include "../coreschema.h"
+#include "../coresamplebuffer.h"
 
 CoreModuleInput::CoreModuleInput(CoreSchema *schema) :
-    CoreModule(schema), mName(""), mSchemaInput(nullptr)
+    CoreModule(schema), mSchemaInput(nullptr), mReadBuffer(nullptr)
 {
     mOutputValue = newOutput("value");
 }
 
 CoreModuleInput::~CoreModuleInput()
 {
-    unexport();
+    if (mSchema)
+        setName("");
 }
 
 void CoreModuleInput::step()
@@ -20,31 +22,22 @@ void CoreModuleInput::step()
         mOutputValue->setValue(*mSchemaInput);
 }
 
-void CoreModuleInput::exportName(std::string name)
+void CoreModuleInput::setName(std::string name)
 {
     if (!mSchema)
         throw CoreNoSchemaEx();
 
-    if (mName != name) {
-        auto inputs = mSchema->inputs();
-        if (inputs.find(name) != inputs.end())
-            throw CoreDuplicateNameEx(name);
-
-        unexport();
-        mName = name;
-        mSchemaInput = mSchema->newInput(mName, mOutputValue->value());
-    }
+    mSchema->setInputName(this, name);
 }
 
-void CoreModuleInput::unexport()
+CoreValue CoreModuleInput::value()
 {
-    if (!mSchemaInput)
-        return;
+    return mOutputValue->value();
+}
 
-    if (!mSchema)
-        throw CoreNoSchemaEx();
-
-    mSchema->deleteInput(mName);
-    mName = "";
-    mSchemaInput = nullptr;
+void CoreModuleInput::readFromBuffer(CoreSampleBuffer *buffer)
+{
+    mReadBuffer = buffer;
+    if (mReadBuffer)
+        mReadBuffer->setReader(this);
 }

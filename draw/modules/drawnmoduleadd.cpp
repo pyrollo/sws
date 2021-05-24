@@ -4,12 +4,9 @@
 DrawnModuleAdd::DrawnModuleAdd(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
 {
-    newInput("operand1", DrawnPlug::right, 0.5f);
-    newInput("operand2", DrawnPlug::top, 1.5f);
-    newOutput("result", DrawnPlug::left, 1.0f);
-//    newInput("operand1", DrawnPlug::left, 0.5f);
-//    newInput("operand2", DrawnPlug::left, 1.5f);
-//    newOutput("result", DrawnPlug::right, 1.0f);
+    newInput("operand1", DrawnPlug::left, 0.5f);
+    newInput("operand2", DrawnPlug::left, 1.5f);
+    newOutput("result", DrawnPlug::right, 1.0f);
 }
 
 void DrawnModuleAdd::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

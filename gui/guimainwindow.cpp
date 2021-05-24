@@ -10,7 +10,12 @@
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
 #include "guistyle.h"
-#include "audio/audiooutput.h"
+
+#include <QAudioFormat>
+#include <QAudioOutput>
+#include <QAudioDeviceInfo>
+#include <stdexcept>
+#include "audio/audiofifobuffer.h"
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,9 +30,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     scene->setSchema(schema);
     scene->setProbeWidget(ui->probeLabel);
     ui->schemaView->setScene(scene);
-
-    connect(schema, &DrawnSchema::inputsChanged, this, &GuiMainWindow::updateInputsList);
-    connect(schema, &DrawnSchema::outputsChanged, this, &GuiMainWindow::updateOutputsList);
 
     // Modules library view
     QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
@@ -50,22 +52,39 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 
     ui->modulesLibraryView->setScene(moduleLibraryScene);
     ui->modulesLibraryView->setTransform(QTransform().scale(scale, scale));
-    mCoreMachine = new CoreMachine(mCoreSchema, 1.0f/44100.0f);
-    mCoreMachine->start();
-    ui->pushButtonStartStop->setText("Stop");
-
     ui->schemaView->scale(scale, scale);
 
+    // Prepare audio device & buffer
+    QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice();
+    QAudioFormat format = device.preferredFormat();
+    format.setChannelCount(1);
+    format.setCodec("audio/pcm");
+    format.setSampleSize(16);
+    mAudioOutput = new QAudioOutput(device, format);
+    mAudioOutputBuffer = new AudioFifoBuffer(format.byteOrder());
+    mAudioOutputBuffer->open(QIODevice::ReadOnly);
+    mAudioOutput->start(mAudioOutputBuffer);
+    mAudioOutputBuffer->fill(0, mAudioOutput->periodSize()/2);
     ui->speakerOutputComboBox->setSchema(schema);
+    ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
+    // Prepare machine
+    mCoreMachine = new CoreMachine(mCoreSchema, 1.0f/float(format.sampleRate()));
+    mCoreMachine->start();
+
+    // Other UI stuff
+    ui->pushButtonStartStop->setText("Stop");
     connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
-
-    AudioOutput test(nullptr);
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
+    mAudioOutput->stop();
     mCoreMachine->stop();
+    delete mCoreSchema;
+    delete mCoreMachine;
+    delete mAudioOutputBuffer;
+    delete mAudioOutput;
     delete ui;
 }
 
@@ -80,15 +99,3 @@ void GuiMainWindow::handleButtonStartStop()
     }
 }
 
-void GuiMainWindow::updateInputsList()
-{
-    for (auto it: mCoreSchema->inputs())
-        printf("Input %s = %f\n", it.first.c_str(), it.second);
-    fflush(stdout);
-}
-void GuiMainWindow::updateOutputsList()
-{
-    for (auto it: mCoreSchema->outputs())
-        printf("Output %s = %f\n", it.first.c_str(), it.second);
-    fflush(stdout);
-}

@@ -11,6 +11,8 @@ class CoreModuleFactory;
 class CoreModule;
 class CoreInput;
 class CoreOutput;
+class CoreModuleOutput;
+class CoreModuleInput;
 
 class CoreSchema
 {
@@ -29,20 +31,20 @@ public:
     CoreValue getTime() { return mTime; }
     void setTime(CoreValue time) { mTime = time; }
 
-    CoreValue *newInput(std::string name, CoreValue value);
-    void deleteInput(std::string name);
-    const std::map<std::string, CoreValue> &inputs() { return mInputs; }
+    void setInputName(CoreModuleInput *module, std::string name);
+    const std::map<std::string, CoreModuleInput *> &inputs() { return mInputs; }
+    CoreModuleInput *input(std::string name) { return mInputs.at(name); }
 
-    CoreValue *newOutput(std::string name, CoreValue value);
-    void deleteOutput(std::string name);
-    const std::map<std::string, CoreValue> &outputs() { return mOutputs; }
+    void setOutputName(CoreModuleOutput *module, std::string name);
+    const std::map<std::string, CoreModuleOutput *> &outputs() { return mOutputs; }
+    CoreModuleOutput *output(std::string name) { return mOutputs.at(name); }
 
 protected:
     CoreModuleFactory *mModuleFactory;
 
     std::unordered_set<CoreModule *> mModules;
-    std::map<std::string, CoreValue> mInputs;
-    std::map<std::string, CoreValue> mOutputs;
+    std::map<std::string, CoreModuleInput *> mInputs;
+    std::map<std::string, CoreModuleOutput *> mOutputs;
     CoreValue mTime;
 
     std::vector<CoreModule *> mScheduledModules;

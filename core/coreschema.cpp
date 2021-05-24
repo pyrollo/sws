@@ -111,46 +111,56 @@ void CoreSchema::disconnect(CoreInput *input, CoreOutput *output)
     mPrepared = false;
 }
 
-CoreValue *CoreSchema::newInput(std::string name, CoreValue value)
+void CoreSchema::setOutputName(CoreModuleOutput *module, std::string name)
 {
+    std::string oldname = "";
+
     std::lock_guard<std::mutex> lock(mStepMutex);
 
-    if (mInputs.find(name) != mInputs.end())
-        throw CoreDuplicateNameEx(name);
+    // Check module is not yet registered
+    for (auto it : mOutputs)
+        if (it.second == module) {
+            oldname = it.first;
+            break;
+        }
 
-    mInputs[name] = value;
-    // TODO: warn upstream about schema in/out modification
-    return &mInputs[name];
-}
+    if (oldname == name)
+        return;
 
-void CoreSchema::deleteInput(std::string name)
-{
-    std::lock_guard<std::mutex> lock(mStepMutex);
-
-    if (!mInputs.erase(name))
-        throw CoreUnknownInputEx(name);
-
-    // TODO: warn upstream about schema in/out modification
-}
-
-CoreValue *CoreSchema::newOutput(std::string name, CoreValue value)
-{
-    std::lock_guard<std::mutex> lock(mStepMutex);
-
+    // Check if new name is available
     if (mOutputs.find(name) != mOutputs.end())
         throw CoreDuplicateNameEx(name);
 
-    mOutputs[name] = value;
-    // TODO: warn upstream about schema in/out modification
-    return &mOutputs[name];
+    if (oldname != "")
+        mOutputs.erase(oldname);
+
+    mOutputs[name] = module;
 }
 
-void CoreSchema::deleteOutput(std::string name)
+void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
 {
+    std::string oldname = "";
+
     std::lock_guard<std::mutex> lock(mStepMutex);
 
-    if (!mOutputs.erase(name))
-        throw CoreUnknownOutputEx(name);
+    // Check module is not yet registered
+    for (auto it : mInputs)
+        if (it.second == module) {
+            oldname = it.first;
+            break;
+        }
 
-    // TODO: warn upstream about schema in/out modification
+    if (oldname == name)
+        return;
+
+    // Check if new name is available
+    if (mInputs.find(name) != mInputs.end())
+        throw CoreDuplicateNameEx(name);
+
+    if (oldname != "")
+        mInputs.erase(oldname);
+
+    mInputs[name] = module;
 }
+
+
