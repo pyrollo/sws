@@ -41,8 +41,8 @@ bool CoreSchema::queuable(CoreModule *module, std::unordered_set<CoreModule *> &
 {
     // Check that all upstream modules are queued
     if (module->interconnected())
-        for (auto input: module->inputs()) {
-            CoreModule *connectedModule = input->connectedModule();
+        for (auto it: module->inputs()) {
+            CoreModule *connectedModule = it.second->connectedModule();
             if (connectedModule && unscheduledModules.find(connectedModule) != unscheduledModules.end())
                 return false;
         }

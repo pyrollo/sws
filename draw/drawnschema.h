@@ -29,6 +29,8 @@ public:
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
 
+    const std::unordered_set<DrawnModule *> &modules() { return mModules; }
+
 signals:
     void inputsChanged();
     void outputsChanged();
@@ -36,7 +38,7 @@ signals:
 protected:
     CoreSchema *mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
-    std::unordered_set<DrawnModule *>mModules;
+    std::unordered_set<DrawnModule *> mModules;
 };
 
 #endif // DRAWNSCHEMA_H

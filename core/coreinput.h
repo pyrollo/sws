@@ -18,6 +18,7 @@ public:
     bool isUpstream(CoreModule *module) const;
     bool isConnected() const { return mConnectedTo != nullptr; }
     CoreModule *connectedModule() const;
+    CoreOutput *connectedOutput() const { return mConnectedTo; }
 
     // Internal use only
     void halfConnect(CoreOutput *output);

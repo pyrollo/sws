@@ -39,6 +39,8 @@ public:
     const std::map<std::string, CoreModuleOutput *> &outputs() { return mOutputs; }
     CoreModuleOutput *output(std::string name) { return mOutputs.at(name); }
 
+    const std::unordered_set<CoreModule *> &modules() { return mModules; }
+
 protected:
     CoreModuleFactory *mModuleFactory;
 

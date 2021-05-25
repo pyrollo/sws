@@ -1,4 +1,4 @@
-QT       += core gui multimedia
+QT       += core gui multimedia xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -52,6 +52,7 @@ SOURCES += \
     draw/modules/drawnmoduleoutput.cpp \
     draw/modules/drawnmodulesinus.cpp \
     draw/modules/drawnmoduletime.cpp \
+    file/fileserializer.cpp \
     gui/guimainwindow.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
@@ -98,6 +99,7 @@ HEADERS += \
     draw/modules/drawnmoduleoutput.h \
     draw/modules/drawnmodulesinus.h \
     draw/modules/drawnmoduletime.h \
+    file/fileserializer.h \
     gui/guimainwindow.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
@@ -114,3 +116,7 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    file/core.xsd \
+    file/coreandgui.xsd

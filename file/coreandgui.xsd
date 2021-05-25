@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="schema">
+    <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+            <xs:element name="module">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="gui">
+                            <xs:complexType>
+                                <xs:attribute name="x" use="required"/>
+                                <xs:attribute name="y" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="id" use="required"/>
+                    <xs:attribute name="type" use="required"/>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="connect">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="from" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:attribute name="module" use="required"/>
+                                <xs:attribute name="output" use="required"/>
+                            </xs:complexType>
+                       </xs:element>
+                        <xs:element name="to" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:attribute name="module" use="required"/>
+                                <xs:attribute name="input" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="input">
+                <xs:complexType>
+                    <xs:attribute name="name" use="required"/>
+                    <xs:attribute name="module" use="required"/>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="output">
+                <xs:complexType>
+                    <xs:attribute name="name" use="required"/>
+                    <xs:attribute name="module" use="required"/>
+                </xs:complexType>
+            </xs:element>
+
+        </xs:choice>
+    </xs:complexType>
+</xs:element>
+
+</xs:schema>

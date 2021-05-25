@@ -7,27 +7,33 @@
 #include "draw/drawnoutput.h"
 #include "draw/drawnwire.h"
 #include "draw/drawnmodulefactory.h"
+#include "file/fileserializer.h"
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
 #include "guistyle.h"
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
 
+#include "audio/audiofifobuffer.h"
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QAudioDeviceInfo>
 #include <stdexcept>
-#include "audio/audiofifobuffer.h"
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::GuiMainWindow), mCoreSchema(nullptr)
+    : QMainWindow(parent), ui(new Ui::GuiMainWindow),
+      mSchema(nullptr), mCoreSchema(nullptr), mCoreMachine(nullptr),
+      mAudioOutputBuffer(nullptr), mAudioOutput(nullptr),
+      mCurrentFilePath("")
 {
     ui->setupUi(this);
 
     // Workscheet view
     mCoreSchema = new CoreSchema();
-    DrawnSchema *schema = new DrawnSchema(mCoreSchema);
+    mSchema = new DrawnSchema(mCoreSchema);
     GuiSchemaScene* scene = new GuiSchemaScene();
-    scene->setSchema(schema);
+    scene->setSchema(mSchema);
     scene->setProbeWidget(ui->probeLabel);
     ui->schemaView->setScene(scene);
 
@@ -35,7 +41,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
     moduleLibraryScene->setBackgroundBrush(GuiStyle::bBackground());
 
-    DrawnModuleFactory *factory = schema->getModuleFactory();
+    DrawnModuleFactory *factory = mSchema->getModuleFactory();
     float y = 1.0f;
     for (auto moduletype: factory->listModules()) {
         DrawnModule *module = factory->newModule(moduletype);
@@ -65,7 +71,7 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     mAudioOutputBuffer->open(QIODevice::ReadOnly);
     mAudioOutput->start(mAudioOutputBuffer);
     mAudioOutputBuffer->fill(0, mAudioOutput->periodSize()/2);
-    ui->speakerOutputComboBox->setSchema(schema);
+    ui->speakerOutputComboBox->setSchema(mSchema);
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
     // Prepare machine
@@ -75,6 +81,13 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     // Other UI stuff
     ui->pushButtonStartStop->setText("Stop");
     connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
+
+    // Menu actions
+    connect(ui->actionNew,    &QAction::triggered, this, &GuiMainWindow::handleFileNew);
+    connect(ui->actionOpen,   &QAction::triggered, this, &GuiMainWindow::handleFileOpen);
+    connect(ui->actionSave,   &QAction::triggered, this, &GuiMainWindow::handleFileSave);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &GuiMainWindow::handleFileSaveAs);
+    connect(ui->actionQuit,   &QAction::triggered, this, &GuiMainWindow::handleFileQuit);
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -99,3 +112,48 @@ void GuiMainWindow::handleButtonStartStop()
     }
 }
 
+void GuiMainWindow::handleFileNew()
+{
+}
+
+void GuiMainWindow::handleFileOpen()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+        tr("Open file"), QString(), tr("SWS files (*.sws)"));
+
+    if (fileName == "")
+        return;
+}
+
+void GuiMainWindow::handleFileSave()
+{
+    if (mCurrentFilePath == "") {
+        handleFileSaveAs();
+        return;
+    }
+
+    QFile file(mCurrentFilePath);
+    FileSerializer fs(mSchema);
+
+    if (file.open(QFile::WriteOnly | QFile::Text)) {
+        QTextStream stream(&file);
+        stream << fs.serialize();
+        file.close();
+    }
+}
+
+void GuiMainWindow::handleFileSaveAs()
+{
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save file"), QString(), tr("SWS files (*.sws)"));
+
+    if (fileName != "") {
+        mCurrentFilePath = fileName;
+        handleFileSave();
+     }
+}
+
+void GuiMainWindow::handleFileQuit()
+{
+    QApplication::quit();
+}

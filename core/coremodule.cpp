@@ -14,26 +14,32 @@ CoreModule::~CoreModule()
 {
     if (mSchema)
         mSchema->removeModule(this);
+
+    for (auto it : mInputs)
+        delete it.second;
+
+    for (auto it : mOutputs)
+        delete it.second;
 }
 
 CoreInput *CoreModule::newInput(std::string name, CoreValue defaultValue)
 {
     CoreInput *input = new CoreInput(this, defaultValue);
-    mInputs[name] = std::unique_ptr<CoreInput>(input);
+    mInputs[name] = input;
     return input;
 }
 
 CoreOutput *CoreModule::newOutput(std::string name)
 {
     CoreOutput *output = new CoreOutput(this);
-    mOutputs[name] = std::unique_ptr<CoreOutput>(output);
+    mOutputs[name] = output;
     return output;
 }
 
 CoreInput *CoreModule::input(std::string name) const
 {
     try {
-        return mInputs.at(name).get();
+        return mInputs.at(name);
     } catch(const std::out_of_range&) {
         throw CoreUnknownInputEx(name);
     }
@@ -42,7 +48,7 @@ CoreInput *CoreModule::input(std::string name) const
 CoreOutput *CoreModule::output(std::string name) const
 {
     try {
-        return mOutputs.at(name).get();
+        return mOutputs.at(name);
     } catch(const std::out_of_range&) {
         throw CoreUnknownOutputEx(name);
     }
@@ -96,7 +102,7 @@ bool CoreModule::isDownstream(CoreModule *module) const
 
     return false;
 }
-
+/*
 const std::vector<CoreInput *> CoreModule::inputs() const
 {
     std::vector<CoreInput *> result;
@@ -106,3 +112,4 @@ const std::vector<CoreInput *> CoreModule::inputs() const
 
     return result;
 }
+*/

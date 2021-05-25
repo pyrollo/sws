@@ -31,15 +31,16 @@ public:
     bool isUpstream(CoreModule *module) const;
     bool isDownstream(CoreModule *module) const;
 
-    const std::vector<CoreInput *> inputs() const;
+    const std::map<std::string, CoreInput *> inputs() const { return mInputs; }
+    const std::map<std::string, CoreOutput *> outputs() const { return mOutputs; }
 
 protected:
     CoreInput  *newInput(std::string name, CoreValue defaultValue);
     CoreOutput *newOutput(std::string name);
 
     CoreSchema *mSchema;
-    std::map<std::string, std::unique_ptr<CoreInput>> mInputs;
-    std::map<std::string, std::unique_ptr<CoreOutput>> mOutputs;
+    std::map<std::string, CoreInput *> mInputs;
+    std::map<std::string, CoreOutput *> mOutputs;
 };
 
 #endif // COREMODULE_H
