@@ -6,6 +6,7 @@
 #include "modules/drawnmoduleclip.h"
 #include "modules/drawnmoduleadd.h"
 #include "modules/drawnmodulemultiply.h"
+#include "modules/drawnmodulesinus.h"
 
 #define ADDMODULECLASS(CLASS) \
     mFactories[CLASS::mType] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
@@ -19,6 +20,7 @@ DrawnModuleFactory::DrawnModuleFactory()
     ADDMODULECLASS(DrawnModuleClip)
     ADDMODULECLASS(DrawnModuleAdd)
     ADDMODULECLASS(DrawnModuleMultiply)
+    ADDMODULECLASS(DrawnModuleSinus)
 }
 
 DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)

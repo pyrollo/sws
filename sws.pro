@@ -31,6 +31,7 @@ SOURCES += \
     core/modules/coremoduleinput.cpp \
     core/modules/coremodulemultiply.cpp \
     core/modules/coremoduleoutput.cpp \
+    core/modules/coremodulesinus.cpp \
     core/modules/coremoduletime.cpp \
     core/value.cpp \
     draw/drawninput.cpp \
@@ -49,6 +50,7 @@ SOURCES += \
     draw/modules/drawnmoduleinput.cpp \
     draw/modules/drawnmodulemultiply.cpp \
     draw/modules/drawnmoduleoutput.cpp \
+    draw/modules/drawnmodulesinus.cpp \
     draw/modules/drawnmoduletime.cpp \
     gui/guimainwindow.cpp \
     gui/guioutputcombobox.cpp \
@@ -75,6 +77,7 @@ HEADERS += \
     core/modules/coremoduleinput.h \
     core/modules/coremodulemultiply.h \
     core/modules/coremoduleoutput.h \
+    core/modules/coremodulesinus.h \
     core/modules/coremoduletime.h \
     core/value.h \
     draw/drawninput.h \
@@ -93,6 +96,7 @@ HEADERS += \
     draw/modules/drawnmoduleinput.h \
     draw/modules/drawnmodulemultiply.h \
     draw/modules/drawnmoduleoutput.h \
+    draw/modules/drawnmodulesinus.h \
     draw/modules/drawnmoduletime.h \
     gui/guimainwindow.h \
     gui/guioutputcombobox.h \

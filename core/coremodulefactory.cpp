@@ -7,6 +7,7 @@
 #include "modules/coremoduleclip.h"
 #include "modules/coremoduleadd.h"
 #include "modules/coremodulemultiply.h"
+#include "modules/coremodulesinus.h"
 
 class CoreSchema;
 
@@ -20,6 +21,7 @@ CoreModuleFactory::CoreModuleFactory(CoreSchema *schema) :
     mFactories["clip"]     = [](CoreSchema *schema) { return new CoreModuleClip(schema); };
     mFactories["add"]      = [](CoreSchema *schema) { return new CoreModuleAdd(schema); };
     mFactories["multiply"] = [](CoreSchema *schema) { return new CoreModuleMultiply(schema); };
+    mFactories["sinus"]    = [](CoreSchema *schema) { return new CoreModuleSinus(schema); };
 }
 
 CoreModule *CoreModuleFactory::newModule(std::string type)
