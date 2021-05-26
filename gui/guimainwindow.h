@@ -2,11 +2,12 @@
 #define GUIMAINWINDOW_H
 
 #include <QMainWindow>
-class CoreSchema;
-class CoreMachine;
+#include "core/coremachine.h"
+
 class DrawnSchema;
 class AudioFifoBuffer;
 class QAudioOutput;
+class GuiSchemaScene;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GuiMainWindow; }
@@ -20,7 +21,6 @@ public:
     GuiMainWindow(QWidget *parent = nullptr);
     ~GuiMainWindow();
 public slots:
-    void handleButtonStartStop();
     void handleFileNew();
     void handleFileOpen();
     void handleFileSave();
@@ -29,8 +29,8 @@ public slots:
 private:
     Ui::GuiMainWindow *ui;
     DrawnSchema *mSchema;
-    CoreSchema *mCoreSchema;
-    CoreMachine *mCoreMachine;
+    CoreMachine mCoreMachine;
+
     AudioFifoBuffer *mAudioOutputBuffer;
     QAudioOutput *mAudioOutput;
 

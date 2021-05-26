@@ -22,7 +22,7 @@ public:
     static QPen pWireConnecting()  { return QPen(QColor("#6A6"), .1); }
 
     // Brushes
-    static QBrush bBackground()      { return QBrush(QColor("#223")); }
+    static QBrush bBackground()      { return QBrush(QColor("#4B4B64")); }
     static QBrush bModule()          { return QBrush(QColor("#224")); }
     static QBrush bModuleSelected()  { return QBrush(QColor("#442")); }
     static QBrush bPlug()            { return QBrush(QColor("#224")); }

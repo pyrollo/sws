@@ -26,6 +26,15 @@ public:
     }
 };
 
+class CoreMachinIsRunningEx: public CoreException
+{
+public:
+    CoreMachinIsRunningEx() {
+        mMsg = "Machine is running, operation forbidden.";
+    }
+};
+
+
 class CoreUnknownModuleEx: public CoreException
 {
 public:

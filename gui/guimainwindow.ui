@@ -18,7 +18,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QGraphicsView" name="modulesLibraryView">
+       <widget class="GuiModuleLibraryView" name="modulesLibraryView">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -94,14 +94,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
-      <item>
-       <widget class="QPushButton" name="pushButtonStartStop">
-        <property name="text">
-         <string>Start</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -211,6 +204,11 @@
    <class>GuiOutputComboBox</class>
    <extends>QComboBox</extends>
    <header location="global">gui/guioutputcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GuiModuleLibraryView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">gui/guimodulelibraryview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

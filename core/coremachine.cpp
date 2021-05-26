@@ -1,12 +1,33 @@
 #include "coremachine.h"
 #include "coremodule.h"
 #include "coreschema.h"
+#include "coreexceptions.h"
 #include <chrono>
 #include <cmath>
 
-CoreMachine::CoreMachine(CoreSchema *schema, CoreValue stepTime):
-    mSchema(schema), mStepTime(stepTime), mThread(nullptr), mRunning(false)
+CoreMachine::CoreMachine():
+    mSchema(nullptr), mStepTime(1.0), mThread(nullptr), mRunning(false)
 {
+}
+
+void CoreMachine::setStepTime(CoreValue stepTime)
+{
+    std::lock_guard<std::mutex> lock(mThreadControlMutex);
+
+    if (mRunning)
+        throw CoreMachinIsRunningEx();
+
+    mStepTime = stepTime;
+}
+
+void CoreMachine::setSchema(CoreSchema *schema)
+{
+    std::lock_guard<std::mutex> lock(mThreadControlMutex);
+
+    if (mRunning)
+        throw CoreMachinIsRunningEx();
+
+    mSchema = schema;
 }
 
 void CoreMachine::run()

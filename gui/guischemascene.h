@@ -9,10 +9,9 @@ class QLabel;
 class GuiSchemaScene : public QGraphicsScene
 {
 public:
-    GuiSchemaScene();
+    GuiSchemaScene(QObject *parent = nullptr);
     void keyPressEvent(QKeyEvent *keyEvent);
 
-    void removeSchema();
     void setSchema(DrawnSchema *schema);
     DrawnSchema *schema() const { return mSchema; }
 

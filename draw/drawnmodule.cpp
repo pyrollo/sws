@@ -22,14 +22,14 @@ DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
 }
 
 DrawnModule::~DrawnModule() {
+    if (mSchema)
+        mSchema->removeModule(this);
+
     for (auto it : mInputs)
         delete it.second;
 
     for (auto it : mOutputs)
         delete it.second;
-
-    if (mSchema)
-        mSchema->removeModule(this);
 
     if (mCoreModule)
         delete mCoreModule;

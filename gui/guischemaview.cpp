@@ -9,23 +9,18 @@
 #include <iostream>
 #include <QMimeData>
 
-GuiSchemaView::GuiSchemaView(QWidget *parent = nullptr):
-    QGraphicsView(parent), mSchemaScene(nullptr)
+GuiSchemaView::GuiSchemaView(QWidget *parent):
+    QGraphicsView(parent), mScene()
 {
     setDragMode(QGraphicsView::ScrollHandDrag);
     setAcceptDrops(true);
-}
-
-void GuiSchemaView::setScene(GuiSchemaScene *scene)
-{
-    mSchemaScene = scene;
-    QGraphicsView::setScene(scene);
+    setScene(&mScene);
 }
 
 void GuiSchemaView::wheelEvent(QWheelEvent* event)
 {
-    const qreal minzoom = 1;
-    const qreal maxzoom = 300.0;
+    const qreal minzoom = 3; //1.0f;
+    const qreal maxzoom = 30; //300.0f;
 
     const QPointF p0scene = mapToScene(event->pos());
 
@@ -61,9 +56,8 @@ void GuiSchemaView::dropEvent(QDropEvent *event)
 {
     std::string moduletype = event->mimeData()->data("sws/moduletype").toStdString();
     QPointF pos = mapToScene(event->pos());
-    DrawnModule *module = mSchemaScene->schema()->newModule(moduletype);
+    DrawnModule *module = mScene.schema()->newModule(moduletype);
     module->moveBy(pos.x(), pos.y());
     event->acceptProposedAction();
 }
 
-// QGraphicsScene::itemsBoundingRect

@@ -11,7 +11,11 @@ class CoreSchema;
 class CoreMachine
 {
 public:
-    CoreMachine(CoreSchema *schema, CoreValue stepTime);
+    CoreMachine();
+
+    void setSchema(CoreSchema *schema);
+    void setStepTime(CoreValue stepTime);
+
     void start();
     void stop();
     bool isRunning() { return mRunning; }

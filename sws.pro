@@ -54,6 +54,8 @@ SOURCES += \
     draw/modules/drawnmoduletime.cpp \
     file/fileserializer.cpp \
     gui/guimainwindow.cpp \
+    gui/guimodulelibraryscene.cpp \
+    gui/guimodulelibraryview.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
@@ -101,6 +103,8 @@ HEADERS += \
     draw/modules/drawnmoduletime.h \
     file/fileserializer.h \
     gui/guimainwindow.h \
+    gui/guimodulelibraryscene.h \
+    gui/guimodulelibraryview.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \

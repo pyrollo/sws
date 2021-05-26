@@ -6,10 +6,10 @@
 #include "draw/drawninput.h"
 #include "draw/drawnoutput.h"
 #include "draw/drawnwire.h"
-#include "draw/drawnmodulefactory.h"
 #include "file/fileserializer.h"
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
+#include "guimodulelibraryview.h"
 #include "guistyle.h"
 #include <QFile>
 #include <QFileDialog>
@@ -23,42 +23,13 @@
 
 GuiMainWindow::GuiMainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::GuiMainWindow),
-      mSchema(nullptr), mCoreSchema(nullptr), mCoreMachine(nullptr),
+      mSchema(nullptr), mCoreMachine(),
       mAudioOutputBuffer(nullptr), mAudioOutput(nullptr),
       mCurrentFilePath("")
 {
-    ui->setupUi(this);
-
     // Workscheet view
-    mCoreSchema = new CoreSchema();
-    mSchema = new DrawnSchema(mCoreSchema);
-    GuiSchemaScene* scene = new GuiSchemaScene();
-    scene->setSchema(mSchema);
-    scene->setProbeWidget(ui->probeLabel);
-    ui->schemaView->setScene(scene);
-
-    // Modules library view
-    QGraphicsScene* moduleLibraryScene = new QGraphicsScene();
-    moduleLibraryScene->setBackgroundBrush(GuiStyle::bBackground());
-
-    DrawnModuleFactory *factory = mSchema->getModuleFactory();
-    float y = 1.0f;
-    for (auto moduletype: factory->listModules()) {
-        DrawnModule *module = factory->newModule(moduletype);
-        QRectF rect = module->boundingRect();
-        module->moveBy(-0.5 * rect.width(), y);
-        y += rect.height() + 1.0f;
-        moduleLibraryScene->addItem(module);
-    }
-
-    QRectF sceneRect = moduleLibraryScene->sceneRect();
-    sceneRect = sceneRect.marginsAdded(QMarginsF(.5f, .5f, .5f, .5f));
-    moduleLibraryScene->setSceneRect(sceneRect);
-    float scale = ui->modulesLibraryView->rect().width() / sceneRect.width();
-
-    ui->modulesLibraryView->setScene(moduleLibraryScene);
-    ui->modulesLibraryView->setTransform(QTransform().scale(scale, scale));
-    ui->schemaView->scale(scale, scale);
+    ui->setupUi(this);
+    ui->schemaView->setProbeWidget(ui->probeLabel);
 
     // Prepare audio device & buffer
     QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice();
@@ -71,16 +42,8 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     mAudioOutputBuffer->open(QIODevice::ReadOnly);
     mAudioOutput->start(mAudioOutputBuffer);
     mAudioOutputBuffer->fill(0, mAudioOutput->periodSize()/2);
-    ui->speakerOutputComboBox->setSchema(mSchema);
+    mCoreMachine.setStepTime(1.0f/float(format.sampleRate()));
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
-
-    // Prepare machine
-    mCoreMachine = new CoreMachine(mCoreSchema, 1.0f/float(format.sampleRate()));
-    mCoreMachine->start();
-
-    // Other UI stuff
-    ui->pushButtonStartStop->setText("Stop");
-    connect(ui->pushButtonStartStop, &QPushButton::released, this, &GuiMainWindow::handleButtonStartStop);
 
     // Menu actions
     connect(ui->actionNew,    &QAction::triggered, this, &GuiMainWindow::handleFileNew);
@@ -88,32 +51,48 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     connect(ui->actionSave,   &QAction::triggered, this, &GuiMainWindow::handleFileSave);
     connect(ui->actionSaveAs, &QAction::triggered, this, &GuiMainWindow::handleFileSaveAs);
     connect(ui->actionQuit,   &QAction::triggered, this, &GuiMainWindow::handleFileQuit);
+
+    // Start with a new file
+    handleFileNew();
 }
 
 GuiMainWindow::~GuiMainWindow()
 {
     mAudioOutput->stop();
-    mCoreMachine->stop();
-    delete mCoreSchema;
-    delete mCoreMachine;
+    mCoreMachine.stop();
+    if (mSchema)
+        delete mSchema;
+
     delete mAudioOutputBuffer;
     delete mAudioOutput;
     delete ui;
 }
 
-void GuiMainWindow::handleButtonStartStop()
-{
-    if (mCoreMachine->isRunning()) {
-        mCoreMachine->stop();
-        ui->pushButtonStartStop->setText("Start");
-    } else {
-        mCoreMachine->start();
-        ui->pushButtonStartStop->setText("Stop");
-    }
-}
-
 void GuiMainWindow::handleFileNew()
 {
+    // Stop machine before any operation
+    mCoreMachine.stop();
+
+    // Delete old schemas
+    if (mSchema) {
+        ui->speakerOutputComboBox->setSchema(nullptr); // TODO: ComboBox should be connected to view rather than schema
+        ui->schemaView->setSchema(nullptr);
+        ui->modulesLibraryView->setFactory(nullptr);
+        delete mSchema;
+    }
+
+    // New schemas
+    mSchema = new DrawnSchema();
+
+    ui->modulesLibraryView->setFactory(mSchema->getModuleFactory());
+    ui->speakerOutputComboBox->setSchema(mSchema); // TODO: ComboBox should be connected to view rather than schema
+    ui->schemaView->setSchema(mSchema);
+    ui->schemaView->setTransform(QTransform());
+    ui->schemaView->scale(ui->modulesLibraryView->getScale(), ui->modulesLibraryView->getScale());
+
+    // Restart machine
+    mCoreMachine.setSchema(mSchema->core());
+    mCoreMachine.start();
 }
 
 void GuiMainWindow::handleFileOpen()

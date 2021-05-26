@@ -8,8 +8,8 @@
 
 #include <QPainter>
 
-DrawnSchema::DrawnSchema(CoreSchema *coreSchema) :
-    DrawnItem(nullptr), mCoreSchema(coreSchema)
+DrawnSchema::DrawnSchema() :
+    DrawnItem(nullptr), mCoreSchema()
 {
     mModuleFactory = new DrawnModuleFactory();
 }
@@ -18,20 +18,12 @@ DrawnSchema::~DrawnSchema()
 {
     while (mModules.size())
         delete *(mModules.begin());
+
+    delete mModuleFactory;
 }
 
 void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    (void)(option); (void)(widget);
-
-    QColor fgcolor(150, 150, 200);
-    QColor bgcolor(75, 75, 100);
-
-    QPainterPath path;
-    path.addRect(boundingRect());
-
-    painter->setPen(QPen(fgcolor, .2));
-    painter->setBrush(QBrush(bgcolor));
-    painter->drawPath(path);
+    (void)(painter); (void)(option); (void)(widget);
 }
 
 QRectF DrawnSchema::boundingRect() const

@@ -1,9 +1,9 @@
 #ifndef DRAWNSCHEMA_H
 #define DRAWNSCHEMA_H
 #include "drawnitem.h"
+#include "core/coreschema.h"
 #include <unordered_set>
 
-class CoreSchema;
 class DrawnModule;
 class DrawnModuleFactory;
 class DrawnPlug;
@@ -12,10 +12,10 @@ class DrawnSchema : public DrawnItem
 {
     Q_OBJECT
 public:
-    DrawnSchema(CoreSchema *coreSchema);
+    DrawnSchema();
     ~DrawnSchema();
 
-    CoreSchema *core() { return mCoreSchema; }
+    CoreSchema *core() { return &mCoreSchema; }
     DrawnModuleFactory *getModuleFactory() { return mModuleFactory; }
 
     QRectF boundingRect() const;
@@ -36,7 +36,7 @@ signals:
     void outputsChanged();
 
 protected:
-    CoreSchema *mCoreSchema;
+    CoreSchema mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
     std::unordered_set<DrawnModule *> mModules;
 };
