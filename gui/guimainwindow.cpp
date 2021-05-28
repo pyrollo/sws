@@ -7,6 +7,7 @@
 #include "draw/drawnoutput.h"
 #include "draw/drawnwire.h"
 #include "file/fileserializer.h"
+#include "file/filedeserializer.h"
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
 #include "guimodulelibraryview.h"
@@ -68,40 +69,75 @@ GuiMainWindow::~GuiMainWindow()
     delete ui;
 }
 
-void GuiMainWindow::handleFileNew()
+bool GuiMainWindow::changeSchema(DrawnSchema *schema)
 {
-    // Stop machine before any operation
-    mCoreMachine.stop();
+    if (mSchema == schema)
+        return true;
 
-    // Delete old schemas
     if (mSchema) {
+        // TODO: Add here save / discard actions if not saved schema (return false if user cancels)
+
+        // Stop machine before any operation
+        mCoreMachine.stop();
+
+        // Delete old schema
         ui->speakerOutputComboBox->setSchema(nullptr); // TODO: ComboBox should be connected to view rather than schema
         ui->schemaView->setSchema(nullptr);
         ui->modulesLibraryView->setFactory(nullptr);
         delete mSchema;
+        mSchema = nullptr;
     }
 
-    // New schemas
-    mSchema = new DrawnSchema();
+    mSchema = schema;
 
-    ui->modulesLibraryView->setFactory(mSchema->getModuleFactory());
-    ui->speakerOutputComboBox->setSchema(mSchema); // TODO: ComboBox should be connected to view rather than schema
-    ui->schemaView->setSchema(mSchema);
-    ui->schemaView->setTransform(QTransform());
-    ui->schemaView->scale(ui->modulesLibraryView->getScale(), ui->modulesLibraryView->getScale());
+    if (mSchema) {
+        ui->modulesLibraryView->setFactory(mSchema->getModuleFactory());
+        ui->speakerOutputComboBox->setSchema(mSchema); // TODO: ComboBox should be connected to view rather than schema
+        ui->schemaView->setSchema(mSchema);
+        ui->schemaView->setTransform(QTransform());
+        ui->schemaView->scale(ui->modulesLibraryView->getScale(), ui->modulesLibraryView->getScale());
 
-    // Restart machine
-    mCoreMachine.setSchema(mSchema->core());
-    mCoreMachine.start();
+        // Restart machine
+        mCoreMachine.setSchema(mSchema->core());
+        mCoreMachine.start();
+    }
+
+    return true;
+}
+
+void GuiMainWindow::handleFileNew()
+{
+    DrawnSchema *schema = new DrawnSchema();
+    if (!changeSchema(schema))
+        delete schema;
 }
 
 void GuiMainWindow::handleFileOpen()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
+    // TODO: Factorize with handleFileNew
+
+    QString filePath = QFileDialog::getOpenFileName(this,
         tr("Open file"), QString(), tr("SWS files (*.sws)"));
 
-    if (fileName == "")
+    if (filePath == "")
         return;
+
+    // TODO: manage file access errors
+
+    QFile file(filePath);
+    file.open(QIODevice::ReadOnly);
+    QByteArray data = file.readAll();
+    file.close();
+
+    // TODO: manage file format errors
+
+    FileDeserializer deserializer(data);
+    DrawnSchema *schema = deserializer.deserializeToDrawnSchema();
+
+    if (!changeSchema(schema))
+        delete schema;
+    else
+        mCurrentFilePath = filePath;
 }
 
 void GuiMainWindow::handleFileSave()
@@ -123,16 +159,18 @@ void GuiMainWindow::handleFileSave()
 
 void GuiMainWindow::handleFileSaveAs()
 {
-    QString fileName = QFileDialog::getSaveFileName(this,
+    QString filePath = QFileDialog::getSaveFileName(this,
         tr("Save file"), QString(), tr("SWS files (*.sws)"));
 
-    if (fileName != "") {
-        mCurrentFilePath = fileName;
+    if (filePath != "") {
+        // TODO: Add .sws extension if none specified
+        mCurrentFilePath = filePath;
         handleFileSave();
      }
 }
 
 void GuiMainWindow::handleFileQuit()
 {
-    QApplication::quit();
+    if (changeSchema(nullptr))
+        QApplication::quit();
 }

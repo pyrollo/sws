@@ -52,6 +52,7 @@ SOURCES += \
     draw/modules/drawnmoduleoutput.cpp \
     draw/modules/drawnmodulesinus.cpp \
     draw/modules/drawnmoduletime.cpp \
+    file/filedeserializer.cpp \
     file/fileserializer.cpp \
     gui/guimainwindow.cpp \
     gui/guimodulelibraryscene.cpp \
@@ -101,6 +102,7 @@ HEADERS += \
     draw/modules/drawnmoduleoutput.h \
     draw/modules/drawnmodulesinus.h \
     draw/modules/drawnmoduletime.h \
+    file/filedeserializer.h \
     file/fileserializer.h \
     gui/guimainwindow.h \
     gui/guimodulelibraryscene.h \

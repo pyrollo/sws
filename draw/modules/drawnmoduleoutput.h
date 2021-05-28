@@ -12,9 +12,10 @@ public:
     ~DrawnModuleOutput();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void setName(QString name);
     CoreModuleOutput *core() { return (CoreModuleOutput *)mCoreModule; }
 protected:
-    std::string mName;
+    QString mName;
 };
 
 #endif // DRAWNMODULEOUTPUT_H

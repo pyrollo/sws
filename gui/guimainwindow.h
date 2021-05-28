@@ -26,7 +26,7 @@ public slots:
     void handleFileSave();
     void handleFileSaveAs();
     void handleFileQuit();
-private:
+protected:
     Ui::GuiMainWindow *ui;
     DrawnSchema *mSchema;
     CoreMachine mCoreMachine;
@@ -35,5 +35,7 @@ private:
     QAudioOutput *mAudioOutput;
 
     QString mCurrentFilePath;
+
+    bool changeSchema(DrawnSchema *schema);
 };
 #endif // GUIMAINWINDOW_H

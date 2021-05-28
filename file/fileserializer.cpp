@@ -11,7 +11,6 @@
 FileSerializer::FileSerializer(DrawnSchema *schema):
     mSchema(schema)
 {
-
 }
 
 QString FileSerializer::serialize()
@@ -67,6 +66,22 @@ QString FileSerializer::serialize()
             xto.setAttribute("module", QString::number(coreModules[toModule]));
             xto.setAttribute("input", QString::fromStdString(it.first));
         }
+    }
+
+    // Create input elements
+    for (auto it: mSchema->core()->inputs()) {
+        QDomElement xinput = xdoc.createElement("input");
+        xschema.appendChild(xinput);
+        xinput.setAttribute("module", coreModules[(CoreModule *)it.second]);
+        xinput.setAttribute("name", QString::fromStdString(it.first));
+    }
+
+    // Create output elements
+    for (auto it: mSchema->core()->outputs()) {
+        QDomElement xinput = xdoc.createElement("output");
+        xschema.appendChild(xinput);
+        xinput.setAttribute("module", coreModules[(CoreModule *)it.second]);
+        xinput.setAttribute("name", QString::fromStdString(it.first));
     }
 
     return xdoc.toString();

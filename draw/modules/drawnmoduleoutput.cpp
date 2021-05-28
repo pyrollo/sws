@@ -39,10 +39,19 @@ void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->setFont(GuiStyle::fModule());
     QRectF textRect(1.0f, 1.0f, 31.0f, 18.0f);
 
-    QString name = QString::fromStdString(mCoreModule?mName:"Output");
-
     painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
-    painter->drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, name);
+    painter->drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, mCoreModule?mName:"Output");
+}
+
+// TODO : Factorize DrawnModuleInput and DrawnModuleOutput
+void DrawnModuleOutput::setName(QString name) {
+    if (name == mName)
+        return;
+
+    mName = name;
+    mSchema->core()->setOutputName(core(), mName.toStdString());
+    schema()->notifyInputsChanged();
+    update();
 }
 
 void DrawnModuleOutput::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
@@ -53,12 +62,8 @@ void DrawnModuleOutput::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     }
 
     bool ok;
-    std::string name = QInputDialog::getText(nullptr, "Output module", "Exported name:",
-            QLineEdit::Normal, QString::fromStdString(mName), &ok).toStdString();
-    if (ok && name != mName) {
-        mSchema->core()->setOutputName(core(), name);
-        mName = name;
-        schema()->notifyOutputsChanged();
-        update();
-    }
+    QString name = QInputDialog::getText(nullptr, "Output module", "Exported name:",
+            QLineEdit::Normal, mName, &ok);
+    if (ok)
+        setName(name);
 }
