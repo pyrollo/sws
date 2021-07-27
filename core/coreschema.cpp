@@ -134,7 +134,9 @@ void CoreSchema::setOutputName(CoreModuleOutput *module, std::string name)
     if (oldname != "")
         mOutputs.erase(oldname);
 
-    mOutputs[name] = module;
+    // Register only named outputs
+    if (name != "")
+        mOutputs[name] = module;
 }
 
 void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
@@ -160,7 +162,9 @@ void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
     if (oldname != "")
         mInputs.erase(oldname);
 
-    mInputs[name] = module;
+    // Register only named inputs
+    if (name != "")
+        mInputs[name] = module;
 }
 
 
