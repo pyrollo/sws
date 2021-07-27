@@ -5,6 +5,7 @@
 #include "core/coremodule.h"
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
+#include "core/modules/coremoduleconstant.h"
 
 #include <QtXml>
 
@@ -23,6 +24,7 @@ QString FileSerializer::serialize()
     std::map<DrawnModule *, int> drawnModules;
     std::map<CoreModule *, int> coreModules;
 
+    // Map core and drawn modules to generated IDs for this file
     int id = 1;
     for (auto module: mSchema->modules()) {
         drawnModules[module] = id;
@@ -37,10 +39,23 @@ QString FileSerializer::serialize()
         xmodule.setAttribute("id", QString::number(drawnModules[module]));
         xmodule.setAttribute("type", QString::fromStdString(module->getType()));
 
+        // Some module type specific stuff
+        if (strcmp(module->getType(), "constant") == 0) {
+            QDomElement xinternal = xdoc.createElement("internal");
+            xmodule.appendChild(xinternal);
+            xinternal.setAttribute("value", ((CoreModuleConstant *)module->core())->getValue());
+        }
+
+        // GUI specific stuff
         QDomElement xgui = xdoc.createElement("gui");
         xmodule.appendChild(xgui);
-        xgui.setAttribute("x", module->pos().x());
-        xgui.setAttribute("y", module->pos().y());
+
+        // setAttributes(float) looks buggy : it uses locale decimal separator instead of dot and adds extra digits
+        QString buffer;
+        buffer.setNum(module->pos().x());
+        xgui.setAttribute("x", buffer);
+        buffer.setNum(module->pos().y());
+        xgui.setAttribute("y", buffer);
     }
 
     // Create connect elements

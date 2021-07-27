@@ -6,6 +6,7 @@
 #include "draw/modules/drawnmoduleoutput.h"
 #include "core/coreschema.h"
 #include "core/coremodule.h"
+#include "core/modules/coremoduleconstant.h"
 //#include "core/modules/coremoduleinput.h"
 //#include "core/modules/coremoduleoutput.h"
 
@@ -24,6 +25,7 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
 {
     DrawnSchema *schema = new DrawnSchema();
     std::map<QString, DrawnModule *> drawnModules;
+    QDomNodeList xfound;
 
     QDomElement xroot = mDocument.documentElement();
     for (int index = 0; index < xroot.childNodes().count(); index++) {
@@ -33,9 +35,19 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
             if (xelement.tagName() == "module") {
                 DrawnModule *module = schema->newModule(xelement.attribute("type").toStdString());
                 drawnModules[xelement.attribute("id")] = module;
-                QDomNodeList xchild = xelement.childNodes();
-                if (xchild.count()) {
-                    QDomElement xgui = xchild.at(0).toElement();
+
+                // Some module type specific stuff
+                xfound = xelement.elementsByTagName("internal");
+                if (xfound.count()) {
+                    if (strcmp(module->getType(), "constant") == 0) {
+                        QDomElement xinternal = xfound.at(0).toElement();
+                        ((CoreModuleConstant *)module->core())->setValue(xinternal.attribute("value").toFloat());
+                    }
+                }
+                // GUI Specific stuff
+                xfound = xelement.elementsByTagName("gui");
+                if (xfound.count()) {
+                    QDomElement xgui = xfound.at(0).toElement();
                     module->moveBy(xgui.attribute("x").toFloat(), xgui.attribute("y").toFloat());
                 }
             }

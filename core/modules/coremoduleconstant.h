@@ -10,6 +10,7 @@ public:
     CoreModuleConstant(CoreSchema *schema);
     void step() {}
     void setValue(CoreValue value);
+    CoreValue getValue() { return mOutputValue->value(); }
 protected:
     CoreOutput *mOutputValue;
 };
