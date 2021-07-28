@@ -50,7 +50,7 @@ void DrawnModuleOutput::setName(QString name) {
 
     mName = name;
     mSchema->core()->setOutputName(core(), mName.toStdString());
-    schema()->notifyInputsChanged();
+    schema()->notifyOutputsChanged();
     update();
 }
 
