@@ -1,7 +1,7 @@
 #ifndef COREMODULETIME_H
 #define COREMODULETIME_H
 
-#include "../coremodule.h"
+#include "core/coremodule.h"
 
 class CoreModuleTime : public CoreModule
 {

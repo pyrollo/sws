@@ -1,7 +1,7 @@
 #ifndef GUISCHEMASCENE_H
 #define GUISCHEMASCENE_H
 #include <QGraphicsScene>
-#include "core/core.h"
+#include "value/value.h"
 
 class DrawnSchema;
 class QLabel;
@@ -16,7 +16,7 @@ public:
     DrawnSchema *schema() const { return mSchema; }
 
     void setProbeWidget(QLabel *widget);
-    void setProbe(QString label, CoreValue value);
+    void setProbe(QString label, Value value);
     void clearProbe();
 protected:
     DrawnSchema *mSchema;

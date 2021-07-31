@@ -1,7 +1,7 @@
 #ifndef COREMODULECLIP_H
 #define COREMODULECLIP_H
 
-#include "../coremodule.h"
+#include "core/coremodule.h"
 
 class CoreModuleClip : public CoreModule
 {

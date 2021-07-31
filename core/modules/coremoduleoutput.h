@@ -1,8 +1,8 @@
 #ifndef COREMODULEOUTPUT_H
 #define COREMODULEOUTPUT_H
 
-#include "../core.h"
-#include "../coremodule.h"
+#include "value/value.h"
+#include "core/coremodule.h"
 
 class CoreSampleBuffer;
 
@@ -12,7 +12,7 @@ public:
     CoreModuleOutput(CoreSchema *schema);
     ~CoreModuleOutput();
     void step();
-    CoreValue value();
+    Value value();
     void setName(std::string name);
 //    std::string exportedName() { return mName; }
 
@@ -21,7 +21,7 @@ public:
 protected:
     CoreInput *mInputValue;
 //    std::string mName;
-    CoreValue *mSchemaOutput;
+    Value *mSchemaOutput;
     CoreSampleBuffer *mWriteBuffer;
 };
 

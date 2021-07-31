@@ -1,10 +1,10 @@
 #include "drawnschema.h"
 #include "drawnmodule.h"
 #include "drawnmodulefactory.h"
-#include "../core/coreschema.h"
-#include "../core/coreinput.h"
-#include "../core/coreoutput.h"
-#include "../core/coremodule.h"
+#include "core/coreschema.h"
+#include "core/coreinput.h"
+#include "core/coreoutput.h"
+#include "core/coremodule.h"
 
 #include <QPainter>
 

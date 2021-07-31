@@ -1,17 +1,15 @@
 #include "coremoduleclip.h"
-#include "../coreinput.h"
-#include "../coreoutput.h"
-#include <cmath>
+#include "core/coreinput.h"
+#include "core/coreoutput.h"
 
 CoreModuleClip::CoreModuleClip(CoreSchema *schema):
     CoreModule(schema)
 {
-    mInputOperand = newInput("operand", 0);
+    mInputOperand = newInput("operand", 0.0f);
     mOutputResult = newOutput("result");
 }
 
 void CoreModuleClip::step()
 {
-    double integral;
-    mOutputResult->setValue(modf(mInputOperand->value(), &integral));
+    mOutputResult->setValue(mInputOperand->value().moduloOne());
 }

@@ -1,6 +1,6 @@
 #ifndef COREMACHINE_H
 #define COREMACHINE_H
-#include "core.h"
+#include "value/value.h"
 #include <thread>
 #include <mutex>
 #include <time.h>
@@ -14,7 +14,7 @@ public:
     CoreMachine();
 
     void setSchema(CoreSchema *schema);
-    void setStepTime(CoreValue stepTime);
+    void setStepTime(Value stepTime);
 
     void start();
     void stop();
@@ -22,7 +22,7 @@ public:
 
 protected:
     CoreSchema *mSchema;
-    CoreValue mStepTime;
+    Value mStepTime;
 
     std::thread *mThread;
     bool mRunning;

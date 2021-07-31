@@ -1,5 +1,5 @@
 #include "coremoduleconstant.h"
-#include "../coreoutput.h"
+#include "core/coreoutput.h"
 
 CoreModuleConstant::CoreModuleConstant(CoreSchema *schema) :
     CoreModule(schema)
@@ -7,7 +7,7 @@ CoreModuleConstant::CoreModuleConstant(CoreSchema *schema) :
     mOutputValue = newOutput("value");
 }
 
-void CoreModuleConstant::setValue(CoreValue value)
+void CoreModuleConstant::setValue(Value value)
 {
     mOutputValue->setValue(value);
 }

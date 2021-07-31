@@ -1,6 +1,6 @@
 #ifndef COREPLUG_H
 #define COREPLUG_H
-#include "core.h"
+#include "value/value.h"
 
 class CoreModule;
 
@@ -10,7 +10,7 @@ public:
     CorePlug(CoreModule *module);
     virtual ~CorePlug() {}
 
-    virtual CoreValue value() const = 0;
+    virtual Value value() const = 0;
     CoreModule *module() const { return mModule; }
 
 protected:

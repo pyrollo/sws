@@ -6,6 +6,7 @@
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
 #include "core/modules/coremoduleconstant.h"
+#include "value/string.h"
 
 #include <QtXml>
 
@@ -43,7 +44,8 @@ QString FileSerializer::serialize()
         if (strcmp(module->getType(), "constant") == 0) {
             QDomElement xinternal = xdoc.createElement("internal");
             xmodule.appendChild(xinternal);
-            xinternal.setAttribute("value", ((CoreModuleConstant *)module->core())->getValue());
+            xinternal.setAttribute("value", valueToQString(
+                    ((CoreModuleConstant *)module->core())->getValue()));
         }
 
         // GUI specific stuff

@@ -4,7 +4,7 @@
 #include "coreschema.h"
 #include "coreexceptions.h"
 
-CoreInput::CoreInput(CoreModule *module, CoreValue defaultValue) :
+CoreInput::CoreInput(CoreModule *module, Value defaultValue) :
     CorePlug(module), mDefaultValue(defaultValue), mConnectedTo(nullptr)
 {
 }
@@ -15,7 +15,7 @@ CoreInput::~CoreInput()
         mModule->schema()->disconnect(this, mConnectedTo);
 }
 
-CoreValue CoreInput::value() const {
+Value CoreInput::value() const {
     if (mConnectedTo)
         return mConnectedTo->value();
     else

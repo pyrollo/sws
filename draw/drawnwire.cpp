@@ -1,9 +1,9 @@
 #include "drawnwire.h"
 #include "drawnoutput.h"
 #include "drawninput.h"
-#include "../core/coreinput.h"
-#include "../core/coreoutput.h"
-#include "../core/coreschema.h"
+#include "core/coreinput.h"
+#include "core/coreoutput.h"
+#include "core/coreschema.h"
 #include <algorithm>
 #include <cmath>
 #include "../gui/guistyle.h"

@@ -1,12 +1,12 @@
 #include "coremoduleadd.h"
-#include "../coreinput.h"
-#include "../coreoutput.h"
+#include "core/coreinput.h"
+#include "core/coreoutput.h"
 
 CoreModuleAdd::CoreModuleAdd(CoreSchema *schema) :
     CoreModule(schema)
 {
-    mInputOperand1 = newInput("operand1", 0);
-    mInputOperand2 = newInput("operand2", 0);
+    mInputOperand1 = newInput("operand1", 0.0f);
+    mInputOperand2 = newInput("operand2", 0.0f);
     mOutputResult = newOutput("result");
 }
 

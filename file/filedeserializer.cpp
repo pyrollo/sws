@@ -9,6 +9,7 @@
 #include "core/modules/coremoduleconstant.h"
 //#include "core/modules/coremoduleinput.h"
 //#include "core/modules/coremoduleoutput.h"
+#include "value/string.h"
 
 #include <QtXml>
 
@@ -41,7 +42,8 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
                 if (xfound.count()) {
                     if (strcmp(module->getType(), "constant") == 0) {
                         QDomElement xinternal = xfound.at(0).toElement();
-                        ((CoreModuleConstant *)module->core())->setValue(xinternal.attribute("value").toFloat());
+                        ((CoreModuleConstant *)module->core())->setValue(
+                                valueFromQString(xinternal.attribute("value")));
                     }
                 }
                 // GUI Specific stuff

@@ -1,6 +1,6 @@
 #include "coremoduletime.h"
-#include "../coreoutput.h"
-#include "../coreschema.h"
+#include "core/coreoutput.h"
+#include "core/coreschema.h"
 
 CoreModuleTime::CoreModuleTime(CoreSchema *schema) :
     CoreModule(schema)

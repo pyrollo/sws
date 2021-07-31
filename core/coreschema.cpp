@@ -4,10 +4,10 @@
 #include "coreinput.h"
 #include "coreoutput.h"
 #include "coremodulefactory.h"
-#include "core.h"
+#include "value/value.h"
 
 CoreSchema::CoreSchema() :
-    mTime(0), mPrepared(false)
+    mTime(0.0f), mPrepared(false)
 {
     mModuleFactory = new CoreModuleFactory(this);
 }

@@ -1,8 +1,8 @@
 #include "coremoduleinput.h"
-#include "../coreexceptions.h"
-#include "../coreoutput.h"
-#include "../coreschema.h"
-#include "../coresamplebuffer.h"
+#include "core/coreexceptions.h"
+#include "core/coreoutput.h"
+#include "core/coreschema.h"
+#include "core/coresamplebuffer.h"
 
 CoreModuleInput::CoreModuleInput(CoreSchema *schema) :
     CoreModule(schema), mSchemaInput(nullptr), mReadBuffer(nullptr)
@@ -30,7 +30,7 @@ void CoreModuleInput::setName(std::string name)
     mSchema->setInputName(this, name);
 }
 
-CoreValue CoreModuleInput::value()
+Value CoreModuleInput::value()
 {
     return mOutputValue->value();
 }

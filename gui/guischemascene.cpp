@@ -42,13 +42,13 @@ void GuiSchemaScene::setProbeWidget(QLabel *widget)
     clearProbe();
 }
 
-void GuiSchemaScene::setProbe(QString label, CoreValue value)
+void GuiSchemaScene::setProbe(QString label, Value value)
 {
     if (!mProbeWidget)
         return;
 
     QString text;
-    QTextStream(&text) << label << ": " << value;
+    QTextStream(&text) << label << ": " << QString::fromStdString(value.toString());
     mProbeWidget->setText(text);
 }
 

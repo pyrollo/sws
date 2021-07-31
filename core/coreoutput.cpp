@@ -5,7 +5,7 @@
 #include "coreexceptions.h"
 
 CoreOutput::CoreOutput(CoreModule *module) :
-    CorePlug(module), mValue(0)
+    CorePlug(module), mValue(0.0f)
 {
 }
 

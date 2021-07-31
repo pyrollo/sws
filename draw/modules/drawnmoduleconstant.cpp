@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QInputDialog>
 #include <QTextStream>
+#include "value/string.h"
 
 DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 1.0f)
@@ -19,7 +20,7 @@ void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     QString value;
     if (mCoreModule)
-        QTextStream(&value) << core()->output("value")->value();
+        QTextStream(&value) << QString::fromStdString(core()->output("value")->value().toString());
     else
         value = "Constant";
 
@@ -35,10 +36,12 @@ void DrawnModuleConstant::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     }
 
     bool ok;
-    double value = QInputDialog::getDouble(nullptr, "Constant module",
-            "Value:", core()->output("value")->value(), -2147483647, 2147483647, 6, &ok);
+    QString text = QInputDialog::getText(nullptr, "Constant module",
+        "Value:", QLineEdit::Normal,
+        QString::fromStdString(core()->output("value")->value().toString()), &ok);
+
     if (ok) {
-        core()->output("value")->setValue(value);
+        core()->output("value")->setValue(valueFromQString(text));
         update();
     }
 }

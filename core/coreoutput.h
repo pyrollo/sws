@@ -11,8 +11,8 @@ public:
     CoreOutput(CoreModule *module);
     ~CoreOutput();
 
-    CoreValue value() const { return mValue; }
-    void setValue(CoreValue value) { mValue = value; }
+    Value value() const { return mValue; }
+    void setValue(Value value) { mValue = value; }
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list);
     bool isDownstream(CoreModule *module) const;
@@ -22,7 +22,7 @@ public:
     void halfDisconnect(CoreInput *input);
 
 protected:
-    CoreValue mValue;
+    Value mValue;
     std::unordered_set<CoreInput *> mConnectedTo;
 };
 

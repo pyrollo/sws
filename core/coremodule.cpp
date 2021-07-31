@@ -22,7 +22,7 @@ CoreModule::~CoreModule()
         delete it.second;
 }
 
-CoreInput *CoreModule::newInput(std::string name, CoreValue defaultValue)
+CoreInput *CoreModule::newInput(std::string name, Value defaultValue)
 {
     CoreInput *input = new CoreInput(this, defaultValue);
     mInputs[name] = input;

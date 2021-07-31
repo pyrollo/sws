@@ -1,6 +1,6 @@
 #ifndef COREMODULE_H
 #define COREMODULE_H
-#include "core.h"
+#include "value/value.h"
 #include "coreinput.h"
 #include "coreoutput.h"
 #include <map>
@@ -35,7 +35,7 @@ public:
     const std::map<std::string, CoreOutput *> outputs() const { return mOutputs; }
 
 protected:
-    CoreInput  *newInput(std::string name, CoreValue defaultValue);
+    CoreInput  *newInput(std::string name, Value defaultValue);
     CoreOutput *newOutput(std::string name);
 
     CoreSchema *mSchema;

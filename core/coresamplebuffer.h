@@ -1,6 +1,6 @@
 #ifndef CORESAMPLEBUFFER_H
 #define CORESAMPLEBUFFER_H
-#include "core.h"
+#include "value/value.h"
 
 // TODO: Add a "sample producer" class?
 class CoreModuleOutput;
@@ -12,8 +12,8 @@ public:
     CoreSampleBuffer();
     virtual ~CoreSampleBuffer() {}
 
-    virtual void writeSample(CoreValue sample) = 0;
-    virtual CoreValue readSample() = 0;
+    virtual void writeSample(Value sample) = 0;
+    virtual Value readSample() = 0;
 
     void setWriter(CoreModuleOutput *output);
     void setReader(CoreModuleInput *input);

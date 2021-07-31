@@ -1,7 +1,7 @@
 #ifndef COREMODULEMULTIPLY_H
 #define COREMODULEMULTIPLY_H
 
-#include "../coremodule.h"
+#include "core/coremodule.h"
 
 class CoreModuleMultiply : public CoreModule
 {

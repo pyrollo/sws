@@ -33,7 +33,6 @@ SOURCES += \
     core/modules/coremoduleoutput.cpp \
     core/modules/coremodulesinus.cpp \
     core/modules/coremoduletime.cpp \
-    core/value.cpp \
     draw/drawninput.cpp \
     draw/drawnitem.cpp \
     draw/drawnmodule.cpp \
@@ -61,11 +60,11 @@ SOURCES += \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
     gui/guistyle.cpp \
-    main.cpp
+    main.cpp \
+    value/value.cpp
 
 HEADERS += \
     audio/audiofifobuffer.h \
-    core/core.h \
     core/coreexceptions.h \
     core/coreinput.h \
     core/coremachine.h \
@@ -83,7 +82,6 @@ HEADERS += \
     core/modules/coremoduleoutput.h \
     core/modules/coremodulesinus.h \
     core/modules/coremoduletime.h \
-    core/value.h \
     draw/drawninput.h \
     draw/drawnitem.h \
     draw/drawnmodule.h \
@@ -110,7 +108,9 @@ HEADERS += \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
-    gui/guistyle.h
+    gui/guistyle.h \
+    value/string.h \
+    value/value.h
 
 FORMS += \
     gui/guimainwindow.ui

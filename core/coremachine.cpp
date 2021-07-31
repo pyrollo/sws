@@ -10,7 +10,7 @@ CoreMachine::CoreMachine():
 {
 }
 
-void CoreMachine::setStepTime(CoreValue stepTime)
+void CoreMachine::setStepTime(Value stepTime)
 {
     std::lock_guard<std::mutex> lock(mThreadControlMutex);
 
@@ -34,7 +34,7 @@ void CoreMachine::run()
 {
     std::chrono::time_point<std::chrono::steady_clock> last, now;
     int steps;
-    double nanoHzFrequency = 0.000000001f / mStepTime;
+    double nanoHzFrequency = 0.000000001f / mStepTime.toDouble();
 
     last = std::chrono::steady_clock::now();
 

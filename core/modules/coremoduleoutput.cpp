@@ -1,13 +1,13 @@
 #include "coremoduleoutput.h"
-#include "../coreexceptions.h"
-#include "../coreinput.h"
-#include "../coreschema.h"
-#include "../coresamplebuffer.h"
+#include "core/coreexceptions.h"
+#include "core/coreinput.h"
+#include "core/coreschema.h"
+#include "core/coresamplebuffer.h"
 
 CoreModuleOutput::CoreModuleOutput(CoreSchema *schema) :
     CoreModule(schema), mSchemaOutput(nullptr), mWriteBuffer(nullptr)
 {
-    mInputValue = newInput("value", 0);
+    mInputValue = newInput("value", 0.0f);
 }
 
 CoreModuleOutput::~CoreModuleOutput()
@@ -30,7 +30,7 @@ void CoreModuleOutput::setName(std::string name)
     mSchema->setOutputName(this, name);
 }
 
-CoreValue CoreModuleOutput::value()
+Value CoreModuleOutput::value()
 {
     return mInputValue->value();
 }

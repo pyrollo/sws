@@ -1,7 +1,7 @@
 #ifndef COREMODULEADD_H
 #define COREMODULEADD_H
 
-#include "../coremodule.h"
+#include "core/coremodule.h"
 
 class CoreModuleAdd : public CoreModule
 {

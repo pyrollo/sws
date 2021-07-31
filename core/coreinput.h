@@ -9,10 +9,10 @@ class CoreModule;
 class CoreInput : public CorePlug
 {
 public:
-    CoreInput(CoreModule *module, CoreValue defaultValue);
+    CoreInput(CoreModule *module, Value defaultValue);
     ~CoreInput();
 
-    CoreValue value() const;
+    Value value() const;
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list) const;
     bool isUpstream(CoreModule *module) const;
@@ -25,7 +25,7 @@ public:
     void halfDisconnect(CoreOutput *output);
 
 protected:
-    CoreValue mDefaultValue;
+    Value mDefaultValue;
     CoreOutput *mConnectedTo;
 
 };

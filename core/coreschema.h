@@ -1,6 +1,6 @@
 #ifndef CORESCHEMA_H
 #define CORESCHEMA_H
-#include "core.h"
+#include "value/value.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -28,8 +28,8 @@ public:
     void connect(CoreInput *input, CoreOutput *output);
     void disconnect(CoreInput *input, CoreOutput *output);
 
-    CoreValue getTime() { return mTime; }
-    void setTime(CoreValue time) { mTime = time; }
+    Value getTime() { return mTime; }
+    void setTime(Value time) { mTime = time; }
 
     void setInputName(CoreModuleInput *module, std::string name);
     const std::map<std::string, CoreModuleInput *> &inputs() { return mInputs; }
@@ -47,7 +47,7 @@ protected:
     std::unordered_set<CoreModule *> mModules;
     std::map<std::string, CoreModuleInput *> mInputs;
     std::map<std::string, CoreModuleOutput *> mOutputs;
-    CoreValue mTime;
+    Value mTime;
 
     std::vector<CoreModule *> mScheduledModules;
     bool mPrepared;

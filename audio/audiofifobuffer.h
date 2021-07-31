@@ -16,8 +16,8 @@ public:
     AudioFifoBuffer(QAudioFormat::Endian endianness, QObject *parent = 0);
     ~AudioFifoBuffer();
 
-    void writeSample(CoreValue sample);
-    CoreValue readSample();
+    void writeSample(Value sample);
+    Value readSample();
 
     qint64 fill(char value, qint64 size);
 

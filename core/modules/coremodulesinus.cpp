@@ -1,5 +1,5 @@
 #include "coremodulesinus.h"
-#include <cmath>
+#include "math.h"
 
 CoreModuleSinus::CoreModuleSinus(CoreSchema *schema) :
     CoreModule(schema)
@@ -10,5 +10,5 @@ CoreModuleSinus::CoreModuleSinus(CoreSchema *schema) :
 
 void CoreModuleSinus::step()
 {
-    mOutputResult->setValue(sin(mInputOperand->value() * M_PI * 2.0));
+    mOutputResult->setValue(Value(sin(mInputOperand->value().moduloOne().toDouble()) * M_PI * 2.0));
 }

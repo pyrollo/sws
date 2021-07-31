@@ -1,7 +1,7 @@
 #ifndef COREMODULESINUS_H
 #define COREMODULESINUS_H
 
-#include "../coremodule.h"
+#include "core/coremodule.h"
 
 class CoreModuleSinus : public CoreModule
 {

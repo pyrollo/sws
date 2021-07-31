@@ -97,10 +97,14 @@ qint64 AudioFifoBuffer::readData(char *data, qint64 maxSize)
 }
 
 
-void AudioFifoBuffer::writeSample(CoreValue sample)
+void AudioFifoBuffer::writeSample(Value sample)
 {
+    static Value max(1.0f);
+    static Value min(-1.0f);
+
     // Clamp value
-    qint16 intSample = (qint16)(((sample > 1.0f)?1.0:(sample < -1.0)?-1.0:sample) * 32767);
+    // TODO: To be improved. Maybe a special operation in value
+    qint16 intSample = (qint16)(sample.limit(min, max).toDouble() * 32767);
 
     // Endian management
     switch(mEndianness) {
@@ -116,7 +120,7 @@ void AudioFifoBuffer::writeSample(CoreValue sample)
     writeData((char *)&intSample, 2);
 }
 
-CoreValue AudioFifoBuffer::readSample()
+Value AudioFifoBuffer::readSample()
 {
     qint16 intSample = 0;
 
@@ -133,7 +137,7 @@ CoreValue AudioFifoBuffer::readSample()
         break;
     }
 
-    return CoreValue(intSample) / 32767;
+    return Value(((double)intSample) / 32767);
 }
 
 
