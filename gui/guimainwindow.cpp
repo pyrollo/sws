@@ -64,6 +64,9 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     mCoreMachine.setStepTime(1.0f/float(format.sampleRate()));
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
+    // Connect oscilloscope
+    ui->speakerOutputComboBox->setOscilloscopeBuffer(ui->oscilloscope->getSampleBuffer());
+
     // Menu actions
     connect(ui->actionNew,    &QAction::triggered, this, &GuiMainWindow::handleFileNew);
     connect(ui->actionOpen,   &QAction::triggered, this, &GuiMainWindow::handleFileOpen);

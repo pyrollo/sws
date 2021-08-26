@@ -21,14 +21,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/coreschema.h"
 #include "core/modules/coremoduleoutput.h"
 #include "audio/audiofifobuffer.h"
+#include "gui/oscilloscopebuffer.h"
 
 GuiOutputComboBox::GuiOutputComboBox(QWidget *parent):
-    QComboBox(parent), mSchema(nullptr), mAudioBuffer(nullptr), mSelectedOutput(nullptr)
+    QComboBox(parent), mSchema(nullptr),
+    mAudioBuffer(nullptr), mOscilloscopeBuffer(nullptr),
+    mSelectedOutput(nullptr)
 {
     insertItem(0, QString("<None>"));
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GuiOutputComboBox::onIndexChanged);
 }
+
 void GuiOutputComboBox::populate()
 {
     CoreModuleOutput *selected = mSelectedOutput;
@@ -68,23 +72,48 @@ void GuiOutputComboBox::setSchema(DrawnSchema *schema)
 
 void GuiOutputComboBox::setAudioBuffer(AudioFifoBuffer *buffer)
 {
+    if (mAudioBuffer)
+        mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
+
     mAudioBuffer = buffer;
-    if (!mAudioBuffer || !mSchema)
-        setCurrentIndex(0);
+    connectBuffer();
+}
+
+void GuiOutputComboBox::setOscilloscopeBuffer(OscilloscopeBuffer *buffer)
+{
+    if (mOscilloscopeBuffer)
+        mSchema->core()->disconnectReadingBuffer(mOscilloscopeBuffer);
+
+    mOscilloscopeBuffer = buffer;
+    connectBuffer();
+}
+
+void GuiOutputComboBox::connectBuffer()
+{
+    if (!mSchema)
+        return;
+
+    if (currentIndex()) {
+        mSelectedOutput = mSchema->core()->output(currentText().toStdString());
+        if (mAudioBuffer)
+            mSchema->core()->connectReadingBuffer(mAudioBuffer, mSelectedOutput->plug());
+        if (mOscilloscopeBuffer)
+            mSchema->core()->connectReadingBuffer(mOscilloscopeBuffer, mSelectedOutput->plug());
+    } else {
+        mSelectedOutput = nullptr;
+        if (mAudioBuffer)
+            mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
+        if (mOscilloscopeBuffer)
+            mSchema->core()->disconnectReadingBuffer(mOscilloscopeBuffer);
+    }
 }
 
 void GuiOutputComboBox::onIndexChanged(int index)
 {
-    if ((!mAudioBuffer || !mSchema) && index != 0) {
+    if ((!mSchema) && index != 0) {
         setCurrentIndex(0);
         return;
     }
 
-    if (index) {
-        mSelectedOutput = mSchema->core()->output(currentText().toStdString());
-        mSchema->core()->connectReadingBuffer(mAudioBuffer, mSelectedOutput->plug());
-    } else {
-        mSelectedOutput = nullptr;
-        mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
-    }
+    connectBuffer();
 }

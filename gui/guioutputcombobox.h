@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DrawnSchema;
 class CoreModuleOutput;
+class OscilloscopeBuffer;
 
 // Sound stuff that should go elsewhere later
 class AudioFifoBuffer;
@@ -32,6 +33,7 @@ public:
     GuiOutputComboBox(QWidget *parent = nullptr);
     void setSchema(DrawnSchema *schema);
     void setAudioBuffer(AudioFifoBuffer *buffer);
+    void setOscilloscopeBuffer(OscilloscopeBuffer *buffer);
 public slots:
     void outputsChanged();
     void onIndexChanged(int index);
@@ -42,10 +44,14 @@ protected:
     // Sound stuff that should go elsewhere later
     AudioFifoBuffer *mAudioBuffer;
 
+    //
+    OscilloscopeBuffer *mOscilloscopeBuffer;
+
     // Last selected output
     CoreModuleOutput *mSelectedOutput;
 
     void populate();
+    void connectBuffer();
 };
 
 #endif // GUIOUTPUTCOMBOBOX_H

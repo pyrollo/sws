@@ -56,10 +56,12 @@ SOURCES += \
     gui/guimainwindow.cpp \
     gui/guimodulelibraryscene.cpp \
     gui/guimodulelibraryview.cpp \
+    gui/guioscilloscope.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
     gui/guistyle.cpp \
+    gui/oscilloscopebuffer.cpp \
     main.cpp \
     value/value.cpp
 
@@ -105,10 +107,12 @@ HEADERS += \
     gui/guimainwindow.h \
     gui/guimodulelibraryscene.h \
     gui/guimodulelibraryview.h \
+    gui/guioscilloscope.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
     gui/guistyle.h \
+    gui/oscilloscopebuffer.h \
     value/string.h \
     value/value.h
 
