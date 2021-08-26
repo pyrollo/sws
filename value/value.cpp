@@ -1,7 +1,9 @@
 #include "value.h"
 #include <cmath>
+#include <limits>
 
 #define PRECISION 1000000
+static Value invPrecision((double)1/PRECISION);
 
 // Constructors
 
@@ -34,6 +36,22 @@ Value& Value::operator=(const double v) {
 double Value::toDouble() const
 {
     return (double)value/PRECISION;
+}
+
+// To Int conversions (to be improved)
+
+int Value::toInt() const
+{
+    static Value max((double)std::numeric_limits<int>::max());
+    static Value min((double)std::numeric_limits<int>::min());
+    return (int)(limit(min, max) * invPrecision).value;
+}
+
+short Value::toShort() const
+{
+    static Value max((double)std::numeric_limits<short>::max());
+    static Value min((double)std::numeric_limits<short>::min());
+    return (short)(limit(min, max) * invPrecision).value;
 }
 
 // String conversion
@@ -159,7 +177,7 @@ Value& Value::operator /(Value div)
     }
 */
 
-Value Value::moduloOne()
+Value Value::moduloOne() const
 {
     if (value>0)
         return Value(value%PRECISION);
@@ -178,7 +196,7 @@ Value Value::moduloOne()
         return (op1>op2)?op1:op2;
     }
 */
-Value Value::limit(Value min, Value max)
+Value Value::limit(Value min, Value max) const
 {
     Value result;
     result.value = (value>max.value)?max.value:(value<min.value)?min.value:value;

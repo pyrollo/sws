@@ -99,12 +99,11 @@ qint64 AudioFifoBuffer::readData(char *data, qint64 maxSize)
 
 void AudioFifoBuffer::writeSample(Value sample)
 {
-    static Value max(1.0f);
-    static Value min(-1.0f);
+    static Value scale(32767.0f);
 
     // Clamp value
     // TODO: To be improved. Maybe a special operation in value
-    qint16 intSample = (qint16)(sample.limit(min, max).toDouble() * 32767);
+    qint16 intSample = (sample * scale).toShort();
 
     // Endian management
     switch(mEndianness) {

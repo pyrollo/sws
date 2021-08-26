@@ -16,6 +16,8 @@ public:
 
     std::string toString() const;
     double toDouble() const;
+    int toInt() const;
+    short toShort() const;
 
     // Operations
 
@@ -25,9 +27,9 @@ public:
 
 //    value& operator %(const value op1, const value op2);
 
-    Value modulo(Value div);
-    Value moduloOne();
-    Value limit(Value min, Value max);
+    Value modulo(Value div) const;
+    Value moduloOne() const;
+    Value limit(Value min, Value max) const;
 
 private:
     void setFromDouble(const double v);
