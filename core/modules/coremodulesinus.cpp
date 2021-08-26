@@ -10,5 +10,5 @@ CoreModuleSinus::CoreModuleSinus(CoreSchema *schema) :
 
 void CoreModuleSinus::step()
 {
-    mOutputResult->setValue(Value(sin(mInputOperand->value().moduloOne().toDouble()) * M_PI * 2.0));
+    mOutputResult->setValue(Value(sin(mInputOperand->value().moduloOne().toDouble() * M_PI * 2.0)));
 }
