@@ -1,6 +1,4 @@
 #include "coremodulemultiply.h"
-#include "core/coreinput.h"
-#include "core/coreoutput.h"
 
 CoreModuleMultiply::CoreModuleMultiply(CoreSchema *schema) :
     CoreModule(schema)

@@ -1,6 +1,4 @@
 #include "coremoduleadd.h"
-#include "core/coreinput.h"
-#include "core/coreoutput.h"
 
 CoreModuleAdd::CoreModuleAdd(CoreSchema *schema) :
     CoreModule(schema)

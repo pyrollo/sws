@@ -1,6 +1,5 @@
 #include "coremoduleoutput.h"
 #include "core/coreexceptions.h"
-#include "core/coreinput.h"
 #include "core/coreschema.h"
 #include "core/coresamplebuffer.h"
 

@@ -1,5 +1,4 @@
 #include "coremoduletime.h"
-#include "core/coreoutput.h"
 #include "core/coreschema.h"
 
 CoreModuleTime::CoreModuleTime(CoreSchema *schema) :

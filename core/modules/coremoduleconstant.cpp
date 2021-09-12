@@ -1,5 +1,4 @@
 #include "coremoduleconstant.h"
-#include "core/coreoutput.h"
 
 CoreModuleConstant::CoreModuleConstant(CoreSchema *schema) :
     CoreModule(schema)

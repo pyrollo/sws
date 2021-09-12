@@ -1,6 +1,4 @@
 #include "coremoduleclip.h"
-#include "core/coreinput.h"
-#include "core/coreoutput.h"
 
 CoreModuleClip::CoreModuleClip(CoreSchema *schema):
     CoreModule(schema)
