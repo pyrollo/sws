@@ -4,6 +4,7 @@
 #include "coreinput.h"
 #include "coreoutput.h"
 #include "coremodulefactory.h"
+#include "coresamplebuffer.h"
 #include "value/value.h"
 
 CoreSchema::CoreSchema() :
@@ -33,8 +34,18 @@ void CoreSchema::removeModule(CoreModule *module)
     if (module->schema() != this)
         throw CoreNotSameSchemaEx();
 
-    if (mModules.erase(module))
+    if (mModules.erase(module)) {
+        {   // Disconnect reading buffers if any
+            std::lock_guard<std::mutex> lock(mBuffersMutex);
+            for (auto it = mReadingBuffers.begin(); it != mReadingBuffers.end();)
+                if (it->second.first == module)
+                    it = mReadingBuffers.erase(it);
+                else
+                    it ++;
+        }
+
         mPrepared = false;
+    }
 }
 
 bool CoreSchema::queuable(CoreModule *module, std::unordered_set<CoreModule *> &unscheduledModules)
@@ -82,6 +93,10 @@ void CoreSchema::step()
     // Actual step operation
     for (auto module: mScheduledModules)
         module->step();
+
+    // Read buffers update
+    for (auto it : mReadingBuffers)
+        it.first->writeSample(it.second.second->value());
 }
 
 void CoreSchema::connect(CoreInput *input, CoreOutput *output)
@@ -167,4 +182,25 @@ void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
         mInputs[name] = module;
 }
 
+void CoreSchema::connectReadingBuffer(CoreSampleBuffer *buffer, CorePlug *plug)
+{
+    std::lock_guard<std::mutex> lock(mBuffersMutex);
+
+    // Disconnect first
+    mReadingBuffers.erase(buffer);
+
+    // Check module & plug
+    if (plug->module()->schema() != this)
+        throw CoreNotSameSchemaEx();
+
+    mReadingBuffers[buffer].first = plug->module();
+    mReadingBuffers[buffer].second = plug;
+}
+
+void CoreSchema::disconnectReadingBuffer(CoreSampleBuffer *buffer)
+{
+    std::lock_guard<std::mutex> lock(mBuffersMutex);
+
+    mReadingBuffers.erase(buffer);
+}
 

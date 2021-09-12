@@ -14,13 +14,6 @@ public:
 
     virtual void writeSample(Value sample) = 0;
     virtual Value readSample() = 0;
-
-    void setWriter(CoreModuleOutput *output);
-    void setReader(CoreModuleInput *input);
-
-protected:
-    CoreModuleOutput *mCurrentWriter;
-    CoreModuleInput  *mCurrentReader;
 };
 
 #endif // CORESAMPLEBUFFER_H

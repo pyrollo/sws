@@ -5,7 +5,7 @@
 #include "core/coresamplebuffer.h"
 
 CoreModuleInput::CoreModuleInput(CoreSchema *schema) :
-    CoreModule(schema), mSchemaInput(nullptr), mReadBuffer(nullptr)
+    CoreModule(schema), mSchemaInput(this, 0.0f)
 {
     mOutputValue = newOutput("value");
 }
@@ -18,8 +18,7 @@ CoreModuleInput::~CoreModuleInput()
 
 void CoreModuleInput::step()
 {
-    if (mSchemaInput)
-        mOutputValue->setValue(*mSchemaInput);
+    mOutputValue->setValue(mSchemaInput.value());
 }
 
 void CoreModuleInput::setName(std::string name)
@@ -30,14 +29,3 @@ void CoreModuleInput::setName(std::string name)
     mSchema->setInputName(this, name);
 }
 
-Value CoreModuleInput::value()
-{
-    return mOutputValue->value();
-}
-
-void CoreModuleInput::readFromBuffer(CoreSampleBuffer *buffer)
-{
-    mReadBuffer = buffer;
-    if (mReadBuffer)
-        mReadBuffer->setReader(this);
-}

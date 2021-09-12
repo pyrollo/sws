@@ -54,7 +54,7 @@ void GuiOutputComboBox::onIndexChanged(int index)
     }
 
     if (index)
-        mSchema->core()->output(currentText().toStdString())->writeToBuffer(mAudioBuffer);
+        mSchema->core()->connectReadingBuffer(mAudioBuffer, mSchema->core()->output(currentText().toStdString())->plug());
     else
-        mAudioBuffer->setWriter(nullptr);
+        mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
 }

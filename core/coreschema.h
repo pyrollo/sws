@@ -11,8 +11,10 @@ class CoreModuleFactory;
 class CoreModule;
 class CoreInput;
 class CoreOutput;
+class CorePlug;
 class CoreModuleOutput;
 class CoreModuleInput;
+class CoreSampleBuffer;
 
 class CoreSchema
 {
@@ -41,12 +43,16 @@ public:
 
     const std::unordered_set<CoreModule *> &modules() { return mModules; }
 
+    void connectReadingBuffer(CoreSampleBuffer *buffer, CorePlug *plug);
+    void disconnectReadingBuffer(CoreSampleBuffer *buffer);
+
 protected:
     CoreModuleFactory *mModuleFactory;
 
     std::unordered_set<CoreModule *> mModules;
     std::map<std::string, CoreModuleInput *> mInputs;
     std::map<std::string, CoreModuleOutput *> mOutputs;
+
     Value mTime;
 
     std::vector<CoreModule *> mScheduledModules;
@@ -54,6 +60,9 @@ protected:
     std::mutex mStepMutex;
 
     bool queuable(CoreModule *module, std::unordered_set<CoreModule *> &unscheduledModules);
+
+    std::mutex mBuffersMutex;
+    std::map<CoreSampleBuffer *, std::pair<CoreModule *, CorePlug *>> mReadingBuffers;
 
 };
 

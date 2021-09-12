@@ -12,17 +12,12 @@ public:
     CoreModuleOutput(CoreSchema *schema);
     ~CoreModuleOutput();
     void step();
-    Value value();
     void setName(std::string name);
-//    std::string exportedName() { return mName; }
-
-    void writeToBuffer(CoreSampleBuffer *buffer);
+    CorePlug *plug() { return &mSchemaOutput; }
 
 protected:
     CoreInput *mInputValue;
-//    std::string mName;
-    Value *mSchemaOutput;
-    CoreSampleBuffer *mWriteBuffer;
+    CoreOutput mSchemaOutput;
 };
 
 #endif // COREMODULEOUTPUT_H
