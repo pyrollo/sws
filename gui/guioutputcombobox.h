@@ -19,7 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef GUIOUTPUTCOMBOBOX_H
 #define GUIOUTPUTCOMBOBOX_H
 #include <QComboBox>
+
 class DrawnSchema;
+class CoreModuleOutput;
 
 // Sound stuff that should go elsewhere later
 class AudioFifoBuffer;
@@ -39,6 +41,11 @@ protected:
 
     // Sound stuff that should go elsewhere later
     AudioFifoBuffer *mAudioBuffer;
+
+    // Last selected output
+    CoreModuleOutput *mSelectedOutput;
+
+    void populate();
 };
 
 #endif // GUIOUTPUTCOMBOBOX_H

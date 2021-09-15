@@ -23,25 +23,35 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "audio/audiofifobuffer.h"
 
 GuiOutputComboBox::GuiOutputComboBox(QWidget *parent):
-    QComboBox(parent), mSchema(nullptr), mAudioBuffer(nullptr)
+    QComboBox(parent), mSchema(nullptr), mAudioBuffer(nullptr), mSelectedOutput(nullptr)
 {
     insertItem(0, QString("<None>"));
     connect(this, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &GuiOutputComboBox::onIndexChanged);
 }
-
-void GuiOutputComboBox::outputsChanged()
+void GuiOutputComboBox::populate()
 {
-    if (!mSchema || !mSchema->core())
-        return;
+    CoreModuleOutput *selected = mSelectedOutput;
+    setCurrentIndex(0);
 
     for (int index = count(); index > 0; index--)
         removeItem(index);
 
-    int index = 1;
-    for (auto it : mSchema->core()->outputs())
-        insertItem(index++, QString::fromStdString(it.first));
+    if (!mSchema || !mSchema->core())
+        return;
 
+    int index = 1;
+    for (auto it : mSchema->core()->outputs()) {
+        insertItem(index, QString::fromStdString(it.first));
+        if (mSchema->core()->output(it.first) == selected)
+            setCurrentIndex(index);
+        index++;
+    }
+}
+
+void GuiOutputComboBox::outputsChanged()
+{
+    populate();
 }
 
 void GuiOutputComboBox::setSchema(DrawnSchema *schema)
@@ -52,7 +62,7 @@ void GuiOutputComboBox::setSchema(DrawnSchema *schema)
     mSchema = schema;
     if (mSchema) {
         connect(mSchema, &DrawnSchema::outputsChanged, this, &GuiOutputComboBox::outputsChanged);
-        outputsChanged();
+        populate();
     }
 }
 
@@ -63,7 +73,6 @@ void GuiOutputComboBox::setAudioBuffer(AudioFifoBuffer *buffer)
         setCurrentIndex(0);
 }
 
-
 void GuiOutputComboBox::onIndexChanged(int index)
 {
     if ((!mAudioBuffer || !mSchema) && index != 0) {
@@ -71,8 +80,11 @@ void GuiOutputComboBox::onIndexChanged(int index)
         return;
     }
 
-    if (index)
-        mSchema->core()->connectReadingBuffer(mAudioBuffer, mSchema->core()->output(currentText().toStdString())->plug());
-    else
+    if (index) {
+        mSelectedOutput = mSchema->core()->output(currentText().toStdString());
+        mSchema->core()->connectReadingBuffer(mAudioBuffer, mSelectedOutput->plug());
+    } else {
+        mSelectedOutput = nullptr;
         mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
+    }
 }
