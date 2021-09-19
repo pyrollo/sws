@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "ui_guimainwindow.h"
 #include "guischemascene.h"
 #include "guimodulelibraryview.h"
+#include "guioscilloscopedock.h"
 #include "guistyle.h"
 #include <QFile>
 #include <QFileDialog>
@@ -48,7 +49,6 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
 {
     // Workscheet view
     ui->setupUi(this);
-    ui->schemaView->setProbeWidget(ui->probeLabel);
 
     // Prepare audio device & buffer
     QAudioDeviceInfo device = QAudioDeviceInfo::defaultOutputDevice();
@@ -64,15 +64,13 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     mCoreMachine.setStepTime(1.0f/float(format.sampleRate()));
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
-    // Connect oscilloscope
-    ui->speakerOutputComboBox->setOscilloscopeBuffer(ui->oscilloscope->getSampleBuffer());
-
-    // Menu actions
-    connect(ui->actionNew,    &QAction::triggered, this, &GuiMainWindow::handleFileNew);
-    connect(ui->actionOpen,   &QAction::triggered, this, &GuiMainWindow::handleFileOpen);
-    connect(ui->actionSave,   &QAction::triggered, this, &GuiMainWindow::handleFileSave);
-    connect(ui->actionSaveAs, &QAction::triggered, this, &GuiMainWindow::handleFileSaveAs);
-    connect(ui->actionQuit,   &QAction::triggered, this, &GuiMainWindow::handleFileQuit);
+    // Menu and toolbar actions
+    connect(ui->actionNew,          &QAction::triggered, this, &GuiMainWindow::handleFileNew);
+    connect(ui->actionOpen,         &QAction::triggered, this, &GuiMainWindow::handleFileOpen);
+    connect(ui->actionSave,         &QAction::triggered, this, &GuiMainWindow::handleFileSave);
+    connect(ui->actionSaveAs,       &QAction::triggered, this, &GuiMainWindow::handleFileSaveAs);
+    connect(ui->actionQuit,         &QAction::triggered, this, &GuiMainWindow::handleFileQuit);
+    connect(ui->actionOscilloscope, &QAction::triggered, this, &GuiMainWindow::handleOscilloscope);
 
     // Start with a new file
     handleFileNew();
@@ -101,7 +99,11 @@ bool GuiMainWindow::changeSchema(DrawnSchema *schema)
         // Stop machine before any operation
         mCoreMachine.stop();
 
+        emit schemaChanged(nullptr);
+
         // Delete old schema
+
+        // TODO : Use above signal instead
         ui->speakerOutputComboBox->setSchema(nullptr); // TODO: ComboBox should be connected to view rather than schema
         ui->schemaView->setSchema(nullptr);
         ui->modulesLibraryView->setFactory(nullptr);
@@ -112,6 +114,9 @@ bool GuiMainWindow::changeSchema(DrawnSchema *schema)
     mSchema = schema;
 
     if (mSchema) {
+        emit schemaChanged(mSchema);
+
+        // TODO : Use above signal instead
         ui->modulesLibraryView->setFactory(mSchema->getModuleFactory());
         ui->speakerOutputComboBox->setSchema(mSchema); // TODO: ComboBox should be connected to view rather than schema
         ui->schemaView->setSchema(mSchema);
@@ -194,4 +199,10 @@ void GuiMainWindow::handleFileQuit()
 {
     if (changeSchema(nullptr))
         QApplication::quit();
+}
+
+void GuiMainWindow::handleOscilloscope()
+{
+    GuiOscilloscopeDock *dock = new GuiOscilloscopeDock(ui->schemaView);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
 }

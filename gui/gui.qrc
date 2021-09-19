@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/mainwindow">
+        <file>svg/oscilloscope.svg</file>
+    </qresource>
+</RCC>

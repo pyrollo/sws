@@ -35,6 +35,17 @@ GuiSchemaView::GuiSchemaView(QWidget *parent):
     setScene(&mScene);
 }
 
+void GuiSchemaView::setSchema(DrawnSchema *schema)
+{
+    mScene.setSchema(schema);
+    emit schemaChanged();
+}
+
+DrawnSchema *GuiSchemaView::schema()
+{
+    return mScene.schema();
+}
+
 void GuiSchemaView::wheelEvent(QWheelEvent* event)
 {
     const qreal minzoom = 3; //1.0f;

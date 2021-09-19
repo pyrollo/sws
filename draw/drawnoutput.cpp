@@ -38,9 +38,9 @@ void DrawnOutput::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = true;
 
     if (mCoreOutput) {
-        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-        if (schemaScene)
-            schemaScene->setProbe(QString("output"), mCoreOutput->value());
+//        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+//        if (schemaScene)
+//            schemaScene->setProbe(QString("output"), mCoreOutput->value());
     }
 
     QGraphicsItem::hoverEnterEvent(event);
@@ -50,9 +50,9 @@ void DrawnOutput::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = false;
 
     if (mCoreOutput) {
-        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-        if (schemaScene)
-            schemaScene->clearProbe();
+//        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
+//        if (schemaScene)
+//            schemaScene->clearProbe();
     }
 
     QGraphicsItem::hoverLeaveEvent(event);

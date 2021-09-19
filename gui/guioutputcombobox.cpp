@@ -84,8 +84,8 @@ void GuiOutputComboBox::setOscilloscopeBuffer(OscilloscopeBuffer *buffer)
     if (mOscilloscopeBuffer)
         mSchema->core()->disconnectReadingBuffer(mOscilloscopeBuffer);
 
-    mOscilloscopeBuffer = buffer;
-    connectBuffer();
+//    mOscilloscopeBuffer = buffer;
+//    connectBuffer();
 }
 
 void GuiOutputComboBox::connectBuffer()

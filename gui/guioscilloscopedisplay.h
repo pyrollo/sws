@@ -1,16 +1,16 @@
-#ifndef GUIOSCILLOSCOPE_H
-#define GUIOSCILLOSCOPE_H
+#ifndef GUIOSCILLOSCOPEDISPLAY_H
+#define GUIOSCILLOSCOPEDISPLAY_H
 
 #include <QWidget>
 
 class OscilloscopeBuffer;
 
-class GuiOscilloscope : public QWidget
+class GuiOscilloscopeDisplay : public QWidget
 {
     Q_OBJECT
 public:
-    explicit GuiOscilloscope(QWidget *parent = nullptr);
-    ~GuiOscilloscope();
+    explicit GuiOscilloscopeDisplay(QWidget *parent = nullptr);
+    ~GuiOscilloscopeDisplay();
     OscilloscopeBuffer *getSampleBuffer() { return mSampleBuffer; }
 protected:
     void paintEvent(QPaintEvent *);
@@ -22,4 +22,4 @@ protected:
 signals:
 };
 
-#endif // GUIOSCILLOSCOPE_H
+#endif // GUIOSCILLOSCOPEDISPLAY_H

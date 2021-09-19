@@ -25,6 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModule;
 class DrawnModuleFactory;
 class DrawnPlug;
+class Prober;
 
 class DrawnSchema : public DrawnItem
 {
@@ -42,7 +43,11 @@ public:
     void removeModule(DrawnModule *module);
 
     void highlightConnectable(DrawnPlug * plug);
+    void highlightProbeable();
     void unHighlight();
+
+    void setProber(Prober *prober)  { mProber = prober; }
+    Prober *getProber() { return mProber; }
 
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
@@ -57,6 +62,8 @@ protected:
     CoreSchema mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
     std::unordered_set<DrawnModule *> mModules;
+    Prober *mProber;
+
 };
 
 #endif // DRAWNSCHEMA_H

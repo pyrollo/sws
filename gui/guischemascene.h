@@ -33,12 +33,8 @@ public:
     void setSchema(DrawnSchema *schema);
     DrawnSchema *schema() const { return mSchema; }
 
-    void setProbeWidget(QLabel *widget);
-    void setProbe(QString label, Value value);
-    void clearProbe();
 protected:
     DrawnSchema *mSchema;
-    QLabel *mProbeWidget;
 };
 
 #endif // GUISCHEMASCENE_H

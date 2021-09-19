@@ -25,6 +25,7 @@ class DrawnSchema;
 
 class GuiSchemaView : public QGraphicsView
 {
+    Q_OBJECT
 public:
     GuiSchemaView(QWidget *parent = nullptr);
 
@@ -33,8 +34,10 @@ public:
     void dropEvent(QDropEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
 
-    void setSchema(DrawnSchema *schema) { mScene.setSchema(schema); }
-    void setProbeWidget(QLabel *widget) { mScene.setProbeWidget(widget); }
+    void setSchema(DrawnSchema *schema);
+    DrawnSchema *schema();
+signals:
+    void schemaChanged();
 
 protected:
     GuiSchemaScene mScene;

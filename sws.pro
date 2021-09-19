@@ -56,12 +56,14 @@ SOURCES += \
     gui/guimainwindow.cpp \
     gui/guimodulelibraryscene.cpp \
     gui/guimodulelibraryview.cpp \
-    gui/guioscilloscope.cpp \
+    gui/guioscilloscopedisplay.cpp \
+    gui/guioscilloscopedock.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
     gui/guistyle.cpp \
     gui/oscilloscopebuffer.cpp \
+    gui/prober.cpp \
     main.cpp \
     value/value.cpp
 
@@ -107,17 +109,20 @@ HEADERS += \
     gui/guimainwindow.h \
     gui/guimodulelibraryscene.h \
     gui/guimodulelibraryview.h \
-    gui/guioscilloscope.h \
+    gui/guioscilloscopedisplay.h \
+    gui/guioscilloscopedock.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
     gui/guistyle.h \
     gui/oscilloscopebuffer.h \
+    gui/prober.h \
     value/string.h \
     value/value.h
 
 FORMS += \
-    gui/guimainwindow.ui
+    gui/guimainwindow.ui \
+    gui/guioscilloscopedock.ui
 
 TRANSLATIONS += \
     sws_en_US.ts
@@ -130,3 +135,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     file/core.xsd \
     file/coreandgui.xsd
+
+RESOURCES += \
+    gui/gui.qrc

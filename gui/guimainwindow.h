@@ -38,12 +38,18 @@ class GuiMainWindow : public QMainWindow
 public:
     GuiMainWindow(QWidget *parent = nullptr);
     ~GuiMainWindow();
+
+signals:
+    void schemaChanged(DrawnSchema *schema);
+
 public slots:
     void handleFileNew();
     void handleFileOpen();
     void handleFileSave();
     void handleFileSaveAs();
     void handleFileQuit();
+    void handleOscilloscope();
+
 protected:
     Ui::GuiMainWindow *ui;
     DrawnSchema *mSchema;

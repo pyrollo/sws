@@ -21,6 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnmodule.h"
 #include "gui/guistyle.h"
 #include "core/coreexceptions.h"
+#include "gui/prober.h"
+
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -59,7 +61,17 @@ void DrawnPlug::setOrientation(Orientation orientation)
 
 void DrawnPlug::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (mModule->schema() && pluggable()) {
+    if (!mModule->schema())
+        return;
+
+    if (mModule->schema()->getProber()) {
+        mModule->schema()->getProber()->setProbe(this);
+        mModule->schema()->setProber(nullptr);
+        mModule->schema()->unHighlight();
+        return;
+    }
+
+    if (pluggable()) {
         if (mWire)
             delete mWire;
         mWire = new DrawnWire(mModule->schema());
@@ -67,6 +79,7 @@ void DrawnPlug::mousePressEvent(QGraphicsSceneMouseEvent *event)
         mWire->drag(mapToScene(event->pos()));
         mModule->schema()->highlightConnectable(this);
         update();
+        return;
     }
 }
 

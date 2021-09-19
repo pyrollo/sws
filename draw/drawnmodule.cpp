@@ -97,7 +97,7 @@ DrawnOutput *DrawnModule::output(std::string name)
     }
 }
 
-void DrawnModule::hightlightInputs()
+void DrawnModule::highlightInputs()
 {
     if (mCoreModule)
         for (auto it : mInputs)
@@ -105,7 +105,7 @@ void DrawnModule::hightlightInputs()
                 it.second->setHighlighted(true);
 }
 
-void DrawnModule::hightlightOutputs()
+void DrawnModule::highlightOutputs()
 {
     if (mCoreModule)
         for (auto it : mOutputs)

@@ -1,10 +1,10 @@
-#include "guioscilloscope.h"
+#include "guioscilloscopedisplay.h"
 #include "oscilloscopebuffer.h"
 
 #include <QPainter>
 #include <QTimer>
 #include <algorithm>
-GuiOscilloscope::GuiOscilloscope(QWidget *parent) : QWidget(parent)
+GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) : QWidget(parent)
 {
     mSampleBuffer = new OscilloscopeBuffer(300);
     mIntBuffer = new int[mSampleBuffer->size()];
@@ -16,7 +16,7 @@ GuiOscilloscope::GuiOscilloscope(QWidget *parent) : QWidget(parent)
     mTimer->start();
 }
 
-GuiOscilloscope::~GuiOscilloscope()
+GuiOscilloscopeDisplay::~GuiOscilloscopeDisplay()
 {
     mTimer->stop();
     delete mTimer;
@@ -24,7 +24,7 @@ GuiOscilloscope::~GuiOscilloscope()
     delete mIntBuffer;
 }
 
-void GuiOscilloscope::paintEvent(QPaintEvent *) {
+void GuiOscilloscopeDisplay::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
     int width = std::min(size().width(), (int)mSampleBuffer->size());

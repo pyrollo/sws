@@ -77,29 +77,6 @@
          <widget class="GuiOutputComboBox" name="speakerOutputComboBox"/>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Oscilloscope</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="GuiOscilloscope" name="oscilloscope" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>300</width>
-            <height>200</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>300</width>
-            <height>200</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -113,45 +90,6 @@
          </spacer>
         </item>
        </layout>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0">
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="probeLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>No Item</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
       </item>
      </layout>
     </item>
@@ -190,6 +128,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionOscilloscope"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -216,6 +155,18 @@
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionOscilloscope">
+   <property name="icon">
+    <iconset resource="guimainwindow.qrc">
+     <normaloff>:/mainwindow/svg/oscilloscope.svg</normaloff>:/mainwindow/svg/oscilloscope.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Oscilloscope</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an oscilloscope</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -233,13 +184,9 @@
    <extends>QGraphicsView</extends>
    <header location="global">gui/guimodulelibraryview.h</header>
   </customwidget>
-  <customwidget>
-   <class>GuiOscilloscope</class>
-   <extends>QWidget</extends>
-   <header location="global">gui/guioscilloscope.h</header>
-   <container>1</container>
-  </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="guimainwindow.qrc"/>
+ </resources>
  <connections/>
 </ui>

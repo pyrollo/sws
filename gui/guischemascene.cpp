@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QTextStream>
 
 GuiSchemaScene::GuiSchemaScene(QObject *parent):
-    QGraphicsScene(-10, -10, 20, 20, parent), mSchema(nullptr), mProbeWidget(nullptr)
+    QGraphicsScene(-10, -10, 20, 20, parent), mSchema(nullptr)
 {
     setBackgroundBrush(GuiStyle::bBackground());
 }
@@ -52,28 +52,4 @@ void GuiSchemaScene::setSchema(DrawnSchema *schema)
         addItem(mSchema);
 
     update();
-}
-
-void GuiSchemaScene::setProbeWidget(QLabel *widget)
-{
-    mProbeWidget = widget;
-    clearProbe();
-}
-
-void GuiSchemaScene::setProbe(QString label, Value value)
-{
-    if (!mProbeWidget)
-        return;
-
-    QString text;
-    QTextStream(&text) << label << ": " << QString::fromStdString(value.toString());
-    mProbeWidget->setText(text);
-}
-
-void GuiSchemaScene::clearProbe()
-{
-    if (!mProbeWidget)
-        return;
-
-    mProbeWidget->setText("");
 }
