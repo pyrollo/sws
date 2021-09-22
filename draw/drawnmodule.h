@@ -33,7 +33,7 @@ class QMouseEvent;
 
 #define MODULE_TYPE(TYPE) \
 public: \
-    virtual const char *getType() const { return mType; } \
+    virtual const char *getType() const override { return mType; } \
     static constexpr char *mType = (char *)TYPE;
 
 class DrawnModule : public DrawnItem
@@ -56,7 +56,6 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 protected:
-    DrawnSchema *mSchema;
     CoreModule *mCoreModule;
 
     std::map<std::string, DrawnInput *> mInputs;

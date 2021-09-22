@@ -32,7 +32,7 @@ public:
 
     CoreInput *core() { return mCoreInput; }
 
-    bool pluggable() { return !connected(); }
+    bool pluggable() override { return !connected(); }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 

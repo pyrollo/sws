@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPixmap>
 
 DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
-    DrawnItem(schema, 1.0f), mSchema(schema), mCoreModule(coreModule)
+    DrawnItem(schema, 1.0f), mCoreModule(coreModule)
 {
     if (mSchema)
         setFlags(flags()|ItemIsSelectable|ItemIsMovable);

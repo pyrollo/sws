@@ -1,3 +1,21 @@
+/*
+Short Waves System - A numeric modular synthetizer
+Copyright (C) 2021 Pierre-Yves Rollo <dev@pyrollo.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "connectwireinteraction.h"
 #include "QGraphicsSceneMouseEvent"
 #include "QGraphicsScene"
@@ -15,27 +33,24 @@ ConnectWireInteraction::ConnectWireInteraction(DrawnSchema *schema, DrawnPlug *p
     mSchema->highlightConnectable(plug);
 }
 
-void ConnectWireInteraction::mouseMoveEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item)
+void ConnectWireInteraction::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *)
 {
-    (void)(item);
-    mWire->drag(e->scenePos());
-    e->accept();
+    mWire->drag(event->scenePos());
+    event->accept();
 }
 
-void ConnectWireInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item)
+void ConnectWireInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *)
 {
-    (void)(item);
-
-    auto items = mSchema->scene()->items(e->scenePos());
+    auto items = mSchema->scene()->items(event->scenePos());
     for (auto item: items) {
         DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
         if (plug) {
             try {
                 mWire->connectTo(plug);
                 break;
-            } catch(CoreException &e) {
+            } catch(CoreException &except) {
                 QMessageBox msgBox;
-                msgBox.setText(e.what());
+                msgBox.setText(except.what());
                 msgBox.exec();
             }
         }
@@ -45,5 +60,5 @@ void ConnectWireInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *e, Draw
         delete mWire;
     mSchema->unHighlight();
     mSchema->endInteraction();
-    e->accept();
+    event->accept();
 }

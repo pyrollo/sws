@@ -32,8 +32,6 @@ public:
     DrawnWire(DrawnSchema *parentSchema);
     ~DrawnWire();
 
-    DrawnSchema *schema() { return mSchema; }
-
     QRectF boundingRect() const { return mBoundingRect; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
@@ -52,8 +50,6 @@ public:
     QPainterPath shape() const;
 
 protected:
-    DrawnSchema *mSchema;
-
     QRectF mBoundingRect;
 
     bool mDragging;

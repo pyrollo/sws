@@ -30,7 +30,7 @@ public:
 
     CoreOutput *core() { return mCoreOutput; }
 
-    bool pluggable() { return true; }
+    bool pluggable() override { return true; }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 

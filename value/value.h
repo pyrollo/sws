@@ -25,12 +25,12 @@ class Value
 public:
     Value();
     Value(const double v);
-    Value(const std::string s);
+    Value(const std::string &str);
 
     // Conversions
 
     Value& operator =(const double v);
-    Value& operator =(const std::string s);
+    Value& operator =(const std::string &str);
 
     std::string toString() const;
     double toDouble() const;
@@ -51,7 +51,7 @@ public:
 
 private:
     void setFromDouble(const double v);
-    void setFromString(const std::string s);
+    void setFromString(const std::string &str);
 
     long int value;
 

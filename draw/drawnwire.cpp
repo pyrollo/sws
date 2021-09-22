@@ -29,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainterPathStroker>
 
 DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
-    DrawnItem(parentSchema), mSchema(parentSchema), mBoundingRect(0,0,0,0),
+    DrawnItem(parentSchema), mBoundingRect(0,0,0,0),
     mDragging(false), mDragpoint(0, 0),
     mConnectedOutput(nullptr), mConnectedInput(nullptr)
 {
@@ -40,7 +40,7 @@ DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
 DrawnWire::~DrawnWire()
 {
     if (mConnectedOutput && mConnectedInput)
-        schema()->core()->disconnect(mConnectedInput->core(), mConnectedOutput->core());
+        mSchema->core()->disconnect(mConnectedInput->core(), mConnectedOutput->core());
     if (mConnectedOutput)
         mConnectedOutput->removeConnectedWire(this);
     if (mConnectedInput)

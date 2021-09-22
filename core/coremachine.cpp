@@ -51,14 +51,13 @@ void CoreMachine::setSchema(CoreSchema *schema)
 void CoreMachine::run()
 {
     std::chrono::time_point<std::chrono::steady_clock> last, now;
-    int steps;
     double nanoHzFrequency = 0.000000001f / mStepTime.toDouble();
 
     last = std::chrono::steady_clock::now();
 
     while (mRunning) {
         now = std::chrono::steady_clock::now();
-        steps = int(round(nanoHzFrequency * std::chrono::nanoseconds(now - last).count()));
+        int steps = int(round(nanoHzFrequency * std::chrono::nanoseconds(now - last).count()));
         last = now;
         while (steps-- > 0) {
             // TODO: Catch exception and stop machine

@@ -23,7 +23,6 @@ SOURCES += \
     core/coremodulefactory.cpp \
     core/coreoutput.cpp \
     core/coreplug.cpp \
-    core/coresamplebuffer.cpp \
     core/coreschema.cpp \
     core/modules/coremoduleadd.cpp \
     core/modules/coremoduleclip.cpp \
@@ -63,7 +62,6 @@ SOURCES += \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
-    gui/guistyle.cpp \
     gui/oscilloscopebuffer.cpp \
     main.cpp \
     value/value.cpp

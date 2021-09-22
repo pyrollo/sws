@@ -29,7 +29,7 @@ public:
     CoreOutput(CoreModule *module);
     ~CoreOutput();
 
-    Value value() const { return mValue; }
+    Value value() const override { return mValue; }
     void setValue(Value value) { mValue = value; }
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list);

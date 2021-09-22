@@ -27,7 +27,7 @@ class CoreModuleInput;
 class CoreSampleBuffer
 {
 public:
-    CoreSampleBuffer();
+    CoreSampleBuffer() {}
     virtual ~CoreSampleBuffer() {}
 
     virtual void writeSample(Value sample) = 0;

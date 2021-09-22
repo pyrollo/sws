@@ -33,9 +33,9 @@ Value::Value(const double v)
     setFromDouble(v);
 }
 
-Value::Value(const std::string s)
+Value::Value(const std::string &str)
 {
-    setFromString(s);
+    setFromString(str);
 }
 
 Value::Value(long int val): value(val)
@@ -73,7 +73,7 @@ short Value::toShort() const
 }
 
 // String conversion
-void Value::setFromString(const std::string str) {
+void Value::setFromString(const std::string &str) {
     value = 0;
     bool negative = false;
     int precision = PRECISION;
@@ -114,7 +114,7 @@ void Value::setFromString(const std::string str) {
 }
 
 
-Value& Value::operator =(std::string str) {
+Value& Value::operator =(const std::string &str) {
     setFromString(str);
     return *this;
 }

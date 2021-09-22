@@ -30,7 +30,7 @@ public:
     CoreInput(CoreModule *module, Value defaultValue);
     ~CoreInput();
 
-    Value value() const;
+    Value value() const override;
 
     void listConnectedModules(std::unordered_set<CoreModule *> &list) const;
     bool isUpstream(CoreModule *module) const;

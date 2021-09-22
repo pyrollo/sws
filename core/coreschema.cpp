@@ -47,14 +47,14 @@ CoreModule *CoreSchema::newModule(std::string type)
 
 void CoreSchema::removeModule(CoreModule *module)
 {
-    std::lock_guard<std::mutex> lock(mStepMutex);
+    std::lock_guard<std::mutex> steplock(mStepMutex);
 
     if (module->schema() != this)
         throw CoreNotSameSchemaEx();
 
     if (mModules.erase(module)) {
         {   // Disconnect reading buffers if any
-            std::lock_guard<std::mutex> lock(mBuffersMutex);
+            std::lock_guard<std::mutex> bufferlock(mBuffersMutex);
             for (auto it = mReadingBuffers.begin(); it != mReadingBuffers.end();)
                 if (it->second.first == module)
                     it = mReadingBuffers.erase(it);
@@ -148,7 +148,7 @@ void CoreSchema::setOutputName(CoreModuleOutput *module, std::string name)
 {
     std::string oldname = "";
 
-    std::lock_guard<std::mutex> lock(mStepMutex);
+    std::lock_guard<std::mutex> steplock(mStepMutex);
 
     // Check module is not yet registered
     for (auto it : mOutputs)
@@ -176,7 +176,7 @@ void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
 {
     std::string oldname = "";
 
-    std::lock_guard<std::mutex> lock(mStepMutex);
+    std::lock_guard<std::mutex> steplock(mStepMutex);
 
     // Check module is not yet registered
     for (auto it : mInputs)
@@ -202,7 +202,7 @@ void CoreSchema::setInputName(CoreModuleInput *module, std::string name)
 
 void CoreSchema::connectReadingBuffer(CoreSampleBuffer *buffer, CorePlug *plug)
 {
-    std::lock_guard<std::mutex> lock(mBuffersMutex);
+    std::lock_guard<std::mutex> bufferlock(mBuffersMutex);
 
     // Disconnect first
     mReadingBuffers.erase(buffer);
@@ -217,7 +217,7 @@ void CoreSchema::connectReadingBuffer(CoreSampleBuffer *buffer, CorePlug *plug)
 
 void CoreSchema::disconnectReadingBuffer(CoreSampleBuffer *buffer)
 {
-    std::lock_guard<std::mutex> lock(mBuffersMutex);
+    std::lock_guard<std::mutex> bufferlock(mBuffersMutex);
 
     mReadingBuffers.erase(buffer);
 }
