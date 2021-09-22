@@ -19,13 +19,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DRAWNSCHEMA_H
 #define DRAWNSCHEMA_H
 #include "drawnitem.h"
+#include "interactions/defaultinteraction.h"
 #include "core/coreschema.h"
 #include <unordered_set>
 
 class DrawnModule;
 class DrawnModuleFactory;
 class DrawnPlug;
-class Prober;
+class DrawnSchemaInteraction;
 
 class DrawnSchema : public DrawnItem
 {
@@ -34,8 +35,18 @@ public:
     DrawnSchema();
     ~DrawnSchema();
 
+    DrawnSchema *schema() override { return this; }
+
     CoreSchema *core() { return &mCoreSchema; }
     DrawnModuleFactory *getModuleFactory() { return mModuleFactory; }
+
+    // Interaction management
+    void startInteraction(DrawnSchemaInteraction *interaction);
+    void endInteraction();
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
@@ -45,9 +56,6 @@ public:
     void highlightConnectable(DrawnPlug * plug);
     void highlightProbeable();
     void unHighlight();
-
-    void setProber(Prober *prober)  { mProber = prober; }
-    Prober *getProber() { return mProber; }
 
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
@@ -62,8 +70,8 @@ protected:
     CoreSchema mCoreSchema;
     DrawnModuleFactory *mModuleFactory;
     std::unordered_set<DrawnModule *> mModules;
-    Prober *mProber;
-
+    DefaultInteraction mDefaultInteraction;
+    DrawnSchemaInteraction *mInteraction;
 };
 
 #endif // DRAWNSCHEMA_H

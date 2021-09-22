@@ -117,9 +117,11 @@ void DrawnModule::unHighlightPlugs()
     if (mCoreModule) {
         for (auto it : mInputs) {
             it.second->setHighlighted(false);
+            it.second->setConnecting(false);
         }
         for (auto it : mOutputs) {
             it.second->setHighlighted(false);
+            it.second->setConnecting(false);
         }
     }
 }

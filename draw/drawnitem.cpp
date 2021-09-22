@@ -17,13 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnitem.h"
+#include "drawnschema.h"
 #include "../gui/guischemascene.h"
 #include <QApplication>
+#include <QGraphicsSceneMouseEvent>
 #include <cmath>
 
 DrawnItem::DrawnItem(DrawnItem *parent, float posGridSize):
-    QObject(), QGraphicsItem(parent), mIsHovered(false), mPosGridSize(posGridSize),
-    mPosGridAnchor(0.0f, 0.0f)
+    QObject(), QGraphicsItem(parent), mSchema(parent?parent->schema():nullptr),
+    mIsHovered(false), mPosGridSize(posGridSize), mPosGridAnchor(0.0f, 0.0f)
 {
     if (mPosGridSize > 0.0f)
         setFlags(flags() | QGraphicsItem::ItemSendsGeometryChanges);
@@ -52,6 +54,42 @@ void DrawnItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
 void DrawnItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
     mIsHovered = false;
     QGraphicsItem::hoverLeaveEvent(event);
+}
+
+void DrawnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (mSchema)
+        mSchema->mouseDoubleClickEvent(event, this);
+
+    if (!event->isAccepted())
+        QGraphicsItem::mouseDoubleClickEvent(event);
+}
+
+void DrawnItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (mSchema)
+        mSchema->mousePressEvent(event, this);
+
+    if (!event->isAccepted())
+        QGraphicsItem::mousePressEvent(event);
+}
+
+void DrawnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (mSchema)
+        mSchema->mouseMoveEvent(event, this);
+
+    if (!event->isAccepted())
+        QGraphicsItem::mouseMoveEvent(event);
+}
+
+void DrawnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (mSchema)
+        mSchema->mouseReleaseEvent(event, this);
+
+    if (!event->isAccepted())
+        QGraphicsItem::mouseReleaseEvent(event);
 }
 
 void DrawnItem::deleteAll()

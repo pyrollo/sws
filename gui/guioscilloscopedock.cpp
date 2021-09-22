@@ -3,9 +3,51 @@
 #include "guimainwindow.h"
 #include "guischemaview.h"
 #include "draw/drawnschema.h"
+#include "draw/drawnschemainteraction.h"
+#include "draw/drawnplug.h"
+#include <QGraphicsSceneMouseEvent>
+
+class ProbeShemaInteraction : public DrawnSchemaInteraction {
+public:
+
+    ProbeShemaInteraction(DrawnSchema *schema, GuiOscilloscopeDock *dock):
+        DrawnSchemaInteraction(schema), mDock(dock)
+    {}
+
+    ~ProbeShemaInteraction()
+    {
+    }
+
+    void init() override
+    {
+        mSchema->highlightProbeable();
+    }
+
+    void terminate() override
+    {
+        mSchema->unHighlight();
+        //mDock->enableProbeButton();
+        delete this;
+    }
+
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) override
+    {
+        DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
+        if (!plug)
+            return;
+
+        //TODO SET PROBE TO PLUG
+
+        mDock->turnOffProbeButton(); // This will end interaction with schema
+        e->accept();
+    }
+
+protected:
+    GuiOscilloscopeDock *mDock;
+};
 
 GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view)
-    : QDockWidget(view->parentWidget()), Prober(), ui(new Ui::GuiOscilloscopeDock), mView(view)
+    : QDockWidget(view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view), mProbeInteraction(nullptr)
 {
     ui->setupUi(this);
 
@@ -14,13 +56,17 @@ GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view)
 }
 
 GuiOscilloscopeDock::GuiOscilloscopeDock(const QString &title, GuiSchemaView *view)
-    : QDockWidget(title, view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view)
+    : QDockWidget(title, view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view), mProbeInteraction(nullptr)
 {
     ui->setupUi(this);
 }
 
 GuiOscilloscopeDock::~GuiOscilloscopeDock()
 {
+    if (mProbeInteraction)
+        // TODO: Sure there is a schema ?
+        mView->schema()->endInteraction();
+
     delete ui;
 }
 
@@ -34,29 +80,30 @@ void GuiOscilloscopeDock::closeEvent(QCloseEvent *event)
 void GuiOscilloscopeDock::setProbe(DrawnPlug *plug)
 {
     (void)(plug);
-    ui->probeButton->setChecked(false);
     printf("Probe set [to be implemented]!\n"); fflush(stdout);
 }
 
+void GuiOscilloscopeDock::turnOffProbeButton()
+{
+    ui->probeButton->setChecked(false);
+}
+
 void GuiOscilloscopeDock::handleSchemaChange() {
-    // MAYDO: Disconnect probing
+    // TODO: Cancel current interaction ?
 }
 
 void GuiOscilloscopeDock::handleProbe(bool checked) {
-    if (checked)
-    { printf("Probe on!\n"); fflush(stdout);}
-    else
-      {  printf("Probe off!\n"); fflush(stdout);}
-
     // Three cases: no schema, schema probing, schema not probing...
 
     if (mView->schema()) {
         if (checked) {
-            mView->schema()->setProber(this);
-            mView->schema()->highlightProbeable();
+            mProbeInteraction = new ProbeShemaInteraction(mView->schema(), this);
+            mView->schema()->startInteraction(mProbeInteraction);
         } else {
-            mView->schema()->setProber(nullptr);
-            mView->schema()->unHighlight();
+            if (mProbeInteraction) {
+                mView->schema()->endInteraction();
+                mProbeInteraction = nullptr;
+            }
         }
     }
 }

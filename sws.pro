@@ -43,6 +43,8 @@ SOURCES += \
     draw/drawnplug.cpp \
     draw/drawnschema.cpp \
     draw/drawnwire.cpp \
+    draw/interactions/connectwireinteraction.cpp \
+    draw/interactions/defaultinteraction.cpp \
     draw/modules/drawnmoduleadd.cpp \
     draw/modules/drawnmoduleclip.cpp \
     draw/modules/drawnmoduleconstant.cpp \
@@ -63,7 +65,6 @@ SOURCES += \
     gui/guischemaview.cpp \
     gui/guistyle.cpp \
     gui/oscilloscopebuffer.cpp \
-    gui/prober.cpp \
     main.cpp \
     value/value.cpp
 
@@ -95,7 +96,10 @@ HEADERS += \
     draw/drawnoutput.h \
     draw/drawnplug.h \
     draw/drawnschema.h \
+    draw/drawnschemainteraction.h \
     draw/drawnwire.h \
+    draw/interactions/connectwireinteraction.h \
+    draw/interactions/defaultinteraction.h \
     draw/modules/drawnmoduleadd.h \
     draw/modules/drawnmoduleclip.h \
     draw/modules/drawnmoduleconstant.h \
@@ -116,7 +120,6 @@ HEADERS += \
     gui/guischemaview.h \
     gui/guistyle.h \
     gui/oscilloscopebuffer.h \
-    gui/prober.h \
     value/string.h \
     value/value.h
 

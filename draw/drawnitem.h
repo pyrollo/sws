@@ -31,9 +31,17 @@ class DrawnItem : public QObject, public QGraphicsItem
 public:
     DrawnItem(DrawnItem *parent, float posGridSize = 0.0f);
 
+    virtual DrawnSchema *schema() { return mSchema; }
+
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     void deleteAll();
     void deleteSelected();
@@ -42,6 +50,8 @@ signals:
     void positionChanged();
 
 protected:
+    DrawnSchema *mSchema;
+
     bool mIsHovered;
     float mPosGridSize;
     QPointF mPosGridAnchor;

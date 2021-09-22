@@ -41,7 +41,7 @@ class DrawnModule : public DrawnItem
 public:
     ~DrawnModule();
     virtual const char *getType() const { return ""; }
-    DrawnSchema *schema() { return mSchema; }
+    DrawnSchema *schema() override { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 
     DrawnInput  *input(std::string name);

@@ -38,16 +38,13 @@ public:
     bool connected();
 
     QRectF boundingRect() const;
-    QPointF connectionPoint() const;
+    QPointF connectionPoint() const { return QPointF(0, 0); }
 
     void setOrientation(Orientation orientation);
     Orientation getOrientation() { return mOrientation; }
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
     void setHighlighted(bool highlighted);
+    void setConnecting(bool connecting);
 
     void addConnectedWire(DrawnWire *wire);
     void removeConnectedWire(DrawnWire *wire);
@@ -66,8 +63,8 @@ protected:
 
     DrawnModule *mModule;
     Orientation mOrientation;
-    DrawnWire *mWire;
     bool mHighlighted;
+    bool mConnecting;
     std::unordered_set<DrawnWire *>mConnectedWires;
 
     void setPenAndBrush(QPainter *painter);

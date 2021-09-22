@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnmodule.h"
 #include "gui/guistyle.h"
 #include "core/coreexceptions.h"
-#include "gui/prober.h"
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -29,7 +28,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QMessageBox>
 
 DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
-    DrawnItem(parentModule), mModule(parentModule), mOrientation(top), mWire(nullptr), mHighlighted(false)
+    DrawnItem(parentModule), mModule(parentModule),
+    mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
     if (mModule->schema())
@@ -48,85 +48,26 @@ QRectF DrawnPlug::boundingRect() const
     return QRectF(-margin, -margin - plugSize, margin + plugSize, plugSize * 2 + margin);
 }
 
-QPointF DrawnPlug::connectionPoint() const
-{
-    return QPointF(0, 0);
-}
-
 void DrawnPlug::setOrientation(Orientation orientation)
 {
     setRotation(angleFromOrientation(orientation));
     mOrientation = orientation;
 }
 
-void DrawnPlug::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (!mModule->schema())
-        return;
-
-    if (mModule->schema()->getProber()) {
-        mModule->schema()->getProber()->setProbe(this);
-        mModule->schema()->setProber(nullptr);
-        mModule->schema()->unHighlight();
-        return;
-    }
-
-    if (pluggable()) {
-        if (mWire)
-            delete mWire;
-        mWire = new DrawnWire(mModule->schema());
-        mWire->connectTo(this);
-        mWire->drag(mapToScene(event->pos()));
-        mModule->schema()->highlightConnectable(this);
-        update();
-        return;
-    }
-}
-
-void DrawnPlug::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (mWire) {
-        mWire->drag(mapToScene(event->pos()));
-    } else {
-        QGraphicsItem::mouseMoveEvent(event);
-    }
-}
-
-void DrawnPlug::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (mWire) {
-        auto items = scene()->items(event->scenePos());
-        for (auto item: items) {
-            DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
-            if (plug) {
-                try {
-                    mWire->connectTo(plug);
-                    break;
-                } catch(CoreException &e) {
-                    QMessageBox msgBox;
-                    msgBox.setText(e.what());
-                    msgBox.exec();
-                }
-            }
-        }
-
-        mWire->endDrag();
-        if (!mWire->isValid())
-            delete mWire;
-        mWire = nullptr;
-        module()->schema()->unHighlight();
-        update();
-    } else {
-        QGraphicsItem::mouseReleaseEvent(event);
-    }
-}
-
 void DrawnPlug::setHighlighted(bool highlighted)
 {
-    if (highlighted != mHighlighted) {
-        mHighlighted = highlighted;
-        update();
-    }
+    if (highlighted == mHighlighted)
+        return;
+    mHighlighted = highlighted;
+    update();
+}
+
+void DrawnPlug::setConnecting(bool connecting)
+{
+    if (connecting != mConnecting)
+        return;
+    mConnecting = connecting;
+    update();
 }
 
 void DrawnPlug::setPenAndBrush(QPainter *painter)
@@ -139,20 +80,14 @@ void DrawnPlug::setPenAndBrush(QPainter *painter)
         painter->setBrush(GuiStyle::bPlug());
     }
 
-    if (connected()) {
-//        painter->setPen(GuiStyle::pPlugConnected());
+    if (connected())
         painter->setBrush(GuiStyle::bPlugConnected());
-    }
 
-    if (mWire) {
-//        painter->setPen(GuiStyle::pPlugConnecting());
+    if (mConnecting)
         painter->setBrush(GuiStyle::bPlugConnecting());
-    }
 
-    if (mHighlighted) {
+    if (mHighlighted)
         painter->setPen(GuiStyle::pPlugConnectable());
-//        painter->setBrush(GuiStyle::bPlugConnectable());
-    }
 
     for (auto wire: mConnectedWires)
         if (wire->isSelected()) {

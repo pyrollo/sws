@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnschema.h"
 #include "drawnmodule.h"
 #include "drawnmodulefactory.h"
+#include "drawnschemainteraction.h"
 #include "core/coreschema.h"
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
@@ -27,9 +28,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnSchema::DrawnSchema() :
-    DrawnItem(nullptr), mCoreSchema(), mProber(nullptr)
+    DrawnItem(nullptr), mCoreSchema(), mModuleFactory(new DrawnModuleFactory()),
+    mDefaultInteraction(this), mInteraction(&mDefaultInteraction)
 {
-    mModuleFactory = new DrawnModuleFactory();
 }
 
 DrawnSchema::~DrawnSchema()
@@ -47,6 +48,37 @@ void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 QRectF DrawnSchema::boundingRect() const
 {
     return QRectF(-1000, -1000, 2000, 2000);
+}
+
+void DrawnSchema::startInteraction(DrawnSchemaInteraction *interaction)
+{
+    mInteraction->terminate();
+    mInteraction = interaction;
+    mInteraction->init();
+}
+void DrawnSchema::endInteraction()
+{
+    startInteraction(&mDefaultInteraction);
+}
+
+void DrawnSchema::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+{
+    mInteraction->mouseDoubleClickEvent(event, item);
+}
+
+void DrawnSchema::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+{
+    mInteraction->mousePressEvent(event, item);
+}
+
+void DrawnSchema::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+{
+    mInteraction->mouseMoveEvent(event, item);
+}
+
+void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+{
+    mInteraction->mouseReleaseEvent(event, item);
 }
 
 DrawnModule *DrawnSchema::newModule(std::string type)
@@ -83,6 +115,8 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
              if (list.find(module->core()) == list.end())
                 module->highlightInputs();
     }
+
+    plug->setConnecting(true);
 }
 
 void DrawnSchema::highlightProbeable()
