@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class CoreModuleConstant : public CoreModule
 {
 public:
-    CoreModuleConstant(CoreSchema *schema);
+    explicit CoreModuleConstant(CoreSchema *schema);
     void step() {}
     void setValue(Value value);
     Value getValue() { return mOutputValue->value(); }

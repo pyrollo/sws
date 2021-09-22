@@ -29,7 +29,7 @@ class DrawnItem : public QObject, public QGraphicsItem
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    DrawnItem(DrawnItem *parent, float posGridSize = 0.0f);
+    explicit DrawnItem(DrawnItem *parent, float posGridSize = 0.0f);
 
     virtual DrawnSchema *schema() { return mSchema; }
 

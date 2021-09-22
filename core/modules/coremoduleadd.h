@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class CoreModuleAdd : public CoreModule
 {
 public:
-    CoreModuleAdd(CoreSchema *schema);
+    explicit CoreModuleAdd(CoreSchema *schema);
     void step();
 
 protected:

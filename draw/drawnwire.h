@@ -29,7 +29,7 @@ class DrawnWire : public DrawnItem
 {
     Q_OBJECT
 public:
-    DrawnWire(DrawnSchema *parentSchema);
+    explicit DrawnWire(DrawnSchema *parentSchema);
     ~DrawnWire();
 
     QRectF boundingRect() const { return mBoundingRect; }

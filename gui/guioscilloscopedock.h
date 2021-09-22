@@ -36,7 +36,7 @@ class GuiOscilloscopeDock : public QDockWidget
     friend ProbeShemaInteraction;
 
 public:
-    GuiOscilloscopeDock(GuiSchemaView *view);
+    explicit GuiOscilloscopeDock(GuiSchemaView *view);
     GuiOscilloscopeDock(const QString &title, GuiSchemaView *view);
     ~GuiOscilloscopeDock();
     void closeEvent(QCloseEvent *event);

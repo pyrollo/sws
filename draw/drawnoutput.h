@@ -26,7 +26,7 @@ class CoreOutput;
 class DrawnOutput : public DrawnPlug
 {
 public:
-    DrawnOutput(DrawnModule *parent, CoreOutput *coreOutput = nullptr);
+    explicit DrawnOutput(DrawnModule *parent, CoreOutput *coreOutput = nullptr);
 
     CoreOutput *core() { return mCoreOutput; }
 

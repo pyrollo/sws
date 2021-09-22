@@ -27,7 +27,7 @@ class CoreSchema;
 class CoreModuleFactory
 {
 public:
-    CoreModuleFactory(CoreSchema *schema);
+    explicit CoreModuleFactory(CoreSchema *schema);
     CoreModule *newModule(std::string type);
 protected:
     CoreSchema *mSchema;

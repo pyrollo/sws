@@ -24,8 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <vector>
 #include <unordered_set>
 #include <mutex>
+#include "coremodulefactory.h"
 
-class CoreModuleFactory;
 class CoreModule;
 class CoreInput;
 class CoreOutput;
@@ -65,7 +65,7 @@ public:
     void disconnectReadingBuffer(CoreSampleBuffer *buffer);
 
 protected:
-    CoreModuleFactory *mModuleFactory;
+    CoreModuleFactory mModuleFactory;
 
     std::unordered_set<CoreModule *> mModules;
     std::map<std::string, CoreModuleInput *> mInputs;

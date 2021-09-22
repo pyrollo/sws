@@ -33,7 +33,7 @@ public:
 class FileDeserializer
 {
 public:
-    FileDeserializer(const QByteArray &data);
+    explicit FileDeserializer(const QByteArray &data);
     DrawnSchema *deserializeToDrawnSchema();
 protected:
     QDomDocument mDocument;

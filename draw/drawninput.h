@@ -28,7 +28,7 @@ class CoreInput;
 class DrawnInput : public DrawnPlug
 {
 public:
-    DrawnInput(DrawnModule *parent, CoreInput *coreInput = nullptr);
+    explicit DrawnInput(DrawnModule *parent, CoreInput *coreInput = nullptr);
 
     CoreInput *core() { return mCoreInput; }
 

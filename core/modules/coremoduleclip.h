@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class CoreModuleClip : public CoreModule
 {
 public:
-    CoreModuleClip(CoreSchema *schema);
+    explicit CoreModuleClip(CoreSchema *schema);
     void step();
 
 protected:

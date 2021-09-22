@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class CoreModuleTime : public CoreModule
 {
 public:
-    CoreModuleTime(CoreSchema *schema);
+    explicit CoreModuleTime(CoreSchema *schema);
     void step();
 
 protected:

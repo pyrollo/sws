@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class CoreModuleMultiply : public CoreModule
 {
 public:
-    CoreModuleMultiply(CoreSchema *schema);
+    explicit CoreModuleMultiply(CoreSchema *schema);
     void step();
 
 protected:

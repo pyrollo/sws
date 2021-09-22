@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DefaultInteraction : public DrawnSchemaInteraction
 {
 public:
-    DefaultInteraction(DrawnSchema *schema);
+    explicit DefaultInteraction(DrawnSchema *schema);
     ~DefaultInteraction() {}
     void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *) override;
 };

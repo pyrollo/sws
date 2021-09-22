@@ -27,7 +27,7 @@ class CoreSampleBuffer;
 class CoreModuleOutput : public CoreModule
 {
 public:
-    CoreModuleOutput(CoreSchema *schema);
+    explicit CoreModuleOutput(CoreSchema *schema);
     ~CoreModuleOutput();
     void step();
     void setName(std::string name);

@@ -86,9 +86,9 @@ QString FileSerializer::serialize()
                 continue;
             CoreModule *fromModule = fromOutput->module();
             std::string fromOutputName = "";
-            for (auto it: fromModule->outputs())
-                if (it.second == fromOutput)
-                    fromOutputName = it.first;
+            for (auto it2: fromModule->outputs())
+                if (it2.second == fromOutput)
+                    fromOutputName = it2.first;
 
             QDomElement xconnect = xdoc.createElement("connect");
             xschema.appendChild(xconnect);

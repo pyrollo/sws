@@ -39,7 +39,7 @@ public:
 class CoreUnknownTypeEx: public CoreException
 {
 public:
-    CoreUnknownTypeEx(const std::string type) {
+    explicit CoreUnknownTypeEx(const std::string& type) {
         mMsg = "Unknown type \"" + type + "\".";
     }
 };
@@ -56,7 +56,7 @@ public:
 class CoreUnknownModuleEx: public CoreException
 {
 public:
-    CoreUnknownModuleEx(const std::string name) {
+    explicit CoreUnknownModuleEx(const std::string& name) {
         mMsg = "Unknown module \"" + name + "\".";
     }
 };
@@ -64,7 +64,7 @@ public:
 class CoreUnknownInputEx: public CoreException
 {
 public:
-    CoreUnknownInputEx(const std::string name) {
+    explicit CoreUnknownInputEx(const std::string& name) {
         mMsg = "Unknown input \"" + name + "\".";
     }
 };
@@ -72,7 +72,7 @@ public:
 class CoreUnknownOutputEx: public CoreException
 {
 public:
-    CoreUnknownOutputEx(const std::string name) {
+    explicit CoreUnknownOutputEx(const std::string& name) {
         mMsg = "Unknown output \"" + name + "\".";
     }
 };
@@ -80,7 +80,7 @@ public:
 class CoreDuplicateNameEx: public CoreException
 {
 public:
-    CoreDuplicateNameEx(const std::string name) {
+    explicit CoreDuplicateNameEx(const std::string& name) {
         mMsg = "Name \"" + name + "\" already in use.";
     }
 };

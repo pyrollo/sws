@@ -26,7 +26,7 @@ class CoreInput;
 class CoreOutput : public CorePlug
 {
 public:
-    CoreOutput(CoreModule *module);
+    explicit CoreOutput(CoreModule *module);
     ~CoreOutput();
 
     Value value() const override { return mValue; }

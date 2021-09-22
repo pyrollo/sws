@@ -25,7 +25,7 @@ class DrawnItem;
 
 class DrawnSchemaInteraction {
 public:
-    DrawnSchemaInteraction(DrawnSchema *schema) : mSchema(schema) {}
+    explicit DrawnSchemaInteraction(DrawnSchema *schema) : mSchema(schema) {}
     virtual ~DrawnSchemaInteraction() {}
 
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) { (void)(e); (void)(item); }

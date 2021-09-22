@@ -26,16 +26,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "value/value.h"
 
 CoreSchema::CoreSchema() :
-    mTime(0.0f), mPrepared(false)
-{
-    mModuleFactory = new CoreModuleFactory(this);
-}
+    mModuleFactory(this), mTime(0.0f), mPrepared(false)
+{}
 
 CoreModule *CoreSchema::newModule(std::string type)
 {
     std::lock_guard<std::mutex> lock(mStepMutex);
 
-    CoreModule *module = mModuleFactory->newModule(type);
+    CoreModule *module = mModuleFactory.newModule(type);
 
     if (module) {
         mModules.insert(module);

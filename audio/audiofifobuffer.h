@@ -31,7 +31,7 @@ class AudioFifoBuffer : public QIODevice, public CoreSampleBuffer
     Q_OBJECT
     Q_DISABLE_COPY(AudioFifoBuffer)
 public:
-    AudioFifoBuffer(QAudioFormat::Endian endianness, QObject *parent = 0);
+    explicit AudioFifoBuffer(QAudioFormat::Endian endianness, QObject *parent = 0);
     ~AudioFifoBuffer();
 
     void writeSample(Value sample);

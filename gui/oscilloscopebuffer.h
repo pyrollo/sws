@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class OscilloscopeBuffer : public CoreSampleBuffer
 {
 public:
-    OscilloscopeBuffer(size_t size);
+    explicit OscilloscopeBuffer(size_t size);
     ~OscilloscopeBuffer();
     void fill(Value value);
 

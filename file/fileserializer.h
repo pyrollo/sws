@@ -25,7 +25,7 @@ class DrawnSchema;
 class FileSerializer
 {
 public:
-    FileSerializer(DrawnSchema *schema);
+    explicit FileSerializer(DrawnSchema *schema);
     QString serialize();
 protected:
     DrawnSchema *mSchema;
