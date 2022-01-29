@@ -97,15 +97,30 @@ DrawnOutput *DrawnModule::output(std::string name)
     }
 }
 
-void DrawnModule::highlightInputs()
+void DrawnModule::highlightPluggableInputs()
 {
     if (mCoreModule)
         for (auto it : mInputs)
-            if (!it.second->core()->isConnected())
+            if (it.second->pluggable())
                 it.second->setHighlighted(true);
 }
 
-void DrawnModule::highlightOutputs()
+void DrawnModule::highlightProbeableInputs()
+{
+    if (mCoreModule)
+        for (auto it : mInputs)
+            it.second->setHighlighted(true);
+}
+
+void DrawnModule::highlightPluggableOutputs()
+{
+    if (mCoreModule)
+        for (auto it : mOutputs)
+            if (it.second->pluggable())
+                it.second->setHighlighted(true);
+}
+
+void DrawnModule::highlightProbeableOutputs()
 {
     if (mCoreModule)
         for (auto it : mOutputs)

@@ -18,11 +18,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "guioscilloscopedisplay.h"
 #include "oscilloscopebuffer.h"
+#include "draw/drawnplug.h"
+#include "draw/drawnschema.h"
+#include "core/coreplug.h"
+#include "core/coreschema.h"
 
 #include <QPainter>
 #include <QTimer>
 #include <algorithm>
-GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) : QWidget(parent)
+GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) :
+    QWidget(parent), mProbedPlug(nullptr)
 {
     mSampleBuffer = new OscilloscopeBuffer(300);
     mIntBuffer = new int[mSampleBuffer->size()];
@@ -36,10 +41,22 @@ GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) : QWidget(parent
 
 GuiOscilloscopeDisplay::~GuiOscilloscopeDisplay()
 {
+    probePlug(nullptr);
     mTimer->stop();
     delete mTimer;
     delete mSampleBuffer;
     delete mIntBuffer;
+}
+
+void GuiOscilloscopeDisplay::probePlug(DrawnPlug *plug)
+{
+    if (mProbedPlug)
+        mProbedPlug->schema()->core()->disconnectReadingBuffer(mSampleBuffer);
+
+    mProbedPlug = plug;
+
+    if (mProbedPlug)
+        mProbedPlug->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
 }
 
 void GuiOscilloscopeDisplay::paintEvent(QPaintEvent *) {

@@ -48,8 +48,10 @@ public:
     DrawnOutput *output(std::string name);
 
     void unHighlightPlugs();
-    void highlightInputs();
-    void highlightOutputs();
+    void highlightPluggableInputs();
+    void highlightProbeableInputs();
+    void highlightPluggableOutputs();
+    void highlightProbeableOutputs();
 
     void setPenAndBrush(QPainter *painter);
 

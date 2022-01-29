@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QWidget>
 
 class OscilloscopeBuffer;
+class DrawnPlug;
 
 class GuiOscilloscopeDisplay : public QWidget
 {
@@ -30,11 +31,15 @@ public:
     explicit GuiOscilloscopeDisplay(QWidget *parent = nullptr);
     ~GuiOscilloscopeDisplay();
     OscilloscopeBuffer *getSampleBuffer() { return mSampleBuffer; }
+
+    void probePlug(DrawnPlug *plug);
+
 protected:
     void paintEvent(QPaintEvent *);
 
     OscilloscopeBuffer *mSampleBuffer;
     int *mIntBuffer;
+    DrawnPlug *mProbedPlug;
 
     QTimer *mTimer;
 signals:

@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnInput::DrawnInput(DrawnModule *parent, CoreInput *coreInput) :
-    DrawnPlug(parent), mCoreInput(coreInput)
+    DrawnPlug(parent, coreInput), mCoreInput(coreInput)
 {}
 
 void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

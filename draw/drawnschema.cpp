@@ -105,7 +105,7 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
         input->core()->module()->listDownstream(list);
         for (auto module : mModules)
             if (list.find(module->core()) == list.end())
-                module->highlightOutputs();
+                module->highlightPluggableOutputs();
     }
 
     DrawnOutput *output = dynamic_cast<DrawnOutput *>(plug);
@@ -113,7 +113,7 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
         output->core()->module()->listUpstream(list);
         for (auto module : mModules)
              if (list.find(module->core()) == list.end())
-                module->highlightInputs();
+                module->highlightPluggableInputs();
     }
 
     plug->setConnecting(true);
@@ -122,8 +122,8 @@ void DrawnSchema::highlightConnectable(DrawnPlug * plug)
 void DrawnSchema::highlightProbeable()
 {
     for (auto module : mModules) {
-        module->highlightInputs();
-        module->highlightOutputs();
+        module->highlightProbeableInputs();
+        module->highlightProbeableOutputs();
     }
 }
 

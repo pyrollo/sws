@@ -40,7 +40,7 @@ public:
     GuiOscilloscopeDock(const QString &title, GuiSchemaView *view);
     ~GuiOscilloscopeDock();
     void closeEvent(QCloseEvent *event);
-    void setProbe(DrawnPlug *plug);
+    void probePlug(DrawnPlug *plug);
 public slots:
     void handleSchemaChange();
     void handleProbe(bool checked);

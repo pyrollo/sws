@@ -44,7 +44,6 @@ public:
     void terminate() override
     {
         mSchema->unHighlight();
-        //mDock->enableProbeButton();
         delete this;
     }
 
@@ -54,8 +53,7 @@ public:
         if (!plug)
             return;
 
-        //TODO SET PROBE TO PLUG
-
+        mDock->probePlug(plug);
         mDock->turnOffProbeButton(); // This will end interaction with schema
         e->accept();
     }
@@ -82,7 +80,7 @@ GuiOscilloscopeDock::GuiOscilloscopeDock(const QString &title, GuiSchemaView *vi
 GuiOscilloscopeDock::~GuiOscilloscopeDock()
 {
     if (mProbeInteraction)
-        // TODO: Sure there is a schema ?
+        // TODO: Sure there is a schema ? -> Interaction should be aware of schema
         mView->schema()->endInteraction();
 
     delete ui;
@@ -95,10 +93,9 @@ void GuiOscilloscopeDock::closeEvent(QCloseEvent *event)
     delete this;
 }
 
-void GuiOscilloscopeDock::setProbe(DrawnPlug *plug)
+void GuiOscilloscopeDock::probePlug(DrawnPlug *plug)
 {
-    (void)(plug);
-    printf("Probe set [to be implemented]!\n"); fflush(stdout);
+    ui->oscilloscopeDisplay->probePlug(plug);
 }
 
 void GuiOscilloscopeDock::turnOffProbeButton()

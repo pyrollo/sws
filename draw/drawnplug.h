@@ -23,16 +23,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DrawnWire;
 class DrawnModule;
+class CorePlug;
 
 class DrawnPlug : public DrawnItem
 {
 public:
     enum Orientation { left = 0, top, right, bottom };
 
-    DrawnPlug(DrawnModule *parentModule);
+    DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug = nullptr);
     ~DrawnPlug();
 
     DrawnModule *module() { return mModule; }
+
+    CorePlug *core() { return mCorePlug; };
 
     virtual bool pluggable() = 0;
     bool connected();
@@ -62,6 +65,7 @@ protected:
     const float plugSize = 0.3f;
 
     DrawnModule *mModule;
+    CorePlug *mCorePlug;
     Orientation mOrientation;
     bool mHighlighted;
     bool mConnecting;

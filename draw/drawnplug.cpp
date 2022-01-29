@@ -27,8 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QMessageBox>
 
-DrawnPlug::DrawnPlug(DrawnModule *parentModule) :
-    DrawnItem(parentModule), mModule(parentModule),
+DrawnPlug::DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug) :
+    DrawnItem(parentModule), mModule(parentModule), mCorePlug(corePlug),
     mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);

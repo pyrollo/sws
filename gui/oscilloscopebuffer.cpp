@@ -45,13 +45,16 @@ void OscilloscopeBuffer::writeSample(Value value)
 
 void OscilloscopeBuffer::copyTo(int *buffer, Value scale, Value offset) {
     size_t n = 0;
+    // TODO: Think about making buffer thread safe. Meanwhile, copying mPos avoid segfaults during copy
+    // (if mPos gets changed while copying, p could go out of int buffer size)
     size_t pos = mPos;
+    size_t p = pos;
 
-    while (pos < mSize)
-        buffer[n++] = (mBuffer[pos++] * scale + offset).toInt();
+    while (p < mSize)
+        buffer[n++] = (mBuffer[p++] * scale + offset).toInt();
 
-    pos = 0;
-    while (pos < mPos)
-        buffer[n++] = (mBuffer[pos++] * scale + offset).toInt();
+    p = 0;
+    while (p < pos)
+        buffer[n++] = (mBuffer[p++] * scale + offset).toInt();
 }
 
