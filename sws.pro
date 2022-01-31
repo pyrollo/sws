@@ -55,6 +55,7 @@ SOURCES += \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
     gui/guimainwindow.cpp \
+    gui/guimenufile.cpp \
     gui/guimodulelibraryscene.cpp \
     gui/guimodulelibraryview.cpp \
     gui/guioscilloscopedisplay.cpp \
@@ -109,6 +110,7 @@ HEADERS += \
     file/filedeserializer.h \
     file/fileserializer.h \
     gui/guimainwindow.h \
+    gui/guimenufile.h \
     gui/guimodulelibraryscene.h \
     gui/guimodulelibraryview.h \
     gui/guioscilloscopedisplay.h \

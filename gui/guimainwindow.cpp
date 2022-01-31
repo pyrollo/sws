@@ -24,25 +24,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawninput.h"
 #include "draw/drawnoutput.h"
 #include "draw/drawnwire.h"
-#include "file/fileserializer.h"
-#include "file/filedeserializer.h"
 #include "ui_guimainwindow.h"
+#include "guimenufile.h"
 #include "guischemascene.h"
 #include "guimodulelibraryview.h"
 #include "guioscilloscopedock.h"
 #include "guistyle.h"
-#include <QFile>
-#include <QFileDialog>
-#include <QTextStream>
 
+#include <QSettings>
+#include <stdexcept>
+
+// Audio part
 #include "audio/audiofifobuffer.h"
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QAudioDeviceInfo>
-#include <stdexcept>
 
-GuiMainWindow::GuiMainWindow(QWidget *parent)
+GuiMainWindow::GuiMainWindow(QSettings *settings, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::GuiMainWindow),
+      mSettings(settings),
       mSchema(nullptr), mCoreMachine(),
       mAudioOutputBuffer(nullptr), mAudioOutput(nullptr),
       mCurrentFilePath("")
@@ -64,16 +64,15 @@ GuiMainWindow::GuiMainWindow(QWidget *parent)
     mCoreMachine.setStepTime(1.0f/float(format.sampleRate()));
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
-    // Menu and toolbar actions
-    connect(ui->actionNew,          &QAction::triggered, this, &GuiMainWindow::handleFileNew);
-    connect(ui->actionOpen,         &QAction::triggered, this, &GuiMainWindow::handleFileOpen);
-    connect(ui->actionSave,         &QAction::triggered, this, &GuiMainWindow::handleFileSave);
-    connect(ui->actionSaveAs,       &QAction::triggered, this, &GuiMainWindow::handleFileSaveAs);
-    connect(ui->actionQuit,         &QAction::triggered, this, &GuiMainWindow::handleFileQuit);
+    // Create menu
+    GuiMenuFile *menuFile = new GuiMenuFile(this, mSettings);
+    ui->menubar->addMenu(menuFile);
+
+    // Toolbar actions
     connect(ui->actionOscilloscope, &QAction::triggered, this, &GuiMainWindow::handleOscilloscope);
 
     // Start with a new file
-    handleFileNew();
+    menuFile->handleFileNew();
 }
 
 GuiMainWindow::~GuiMainWindow()
@@ -129,76 +128,6 @@ bool GuiMainWindow::changeSchema(DrawnSchema *schema)
     }
 
     return true;
-}
-
-void GuiMainWindow::handleFileNew()
-{
-    DrawnSchema *schema = new DrawnSchema();
-    if (!changeSchema(schema))
-        delete schema;
-}
-
-void GuiMainWindow::handleFileOpen()
-{
-    // TODO: Factorize with handleFileNew
-
-    QString filePath = QFileDialog::getOpenFileName(this,
-        tr("Open file"), QString(), tr("SWS files (*.sws)"));
-
-    if (filePath == "")
-        return;
-
-    // TODO: manage file access errors
-
-    QFile file(filePath);
-    file.open(QIODevice::ReadOnly);
-    QByteArray data = file.readAll();
-    file.close();
-
-    // TODO: manage file format errors
-
-    FileDeserializer deserializer(data);
-    DrawnSchema *schema = deserializer.deserializeToDrawnSchema();
-
-    if (!changeSchema(schema))
-        delete schema;
-    else
-        mCurrentFilePath = filePath;
-}
-
-void GuiMainWindow::handleFileSave()
-{
-    if (mCurrentFilePath == "") {
-        handleFileSaveAs();
-        return;
-    }
-
-    QFile file(mCurrentFilePath);
-    FileSerializer fs(mSchema);
-
-    if (file.open(QFile::WriteOnly | QFile::Text)) {
-        QTextStream stream(&file);
-        stream << fs.serialize();
-        file.close();
-    }
-}
-
-void GuiMainWindow::handleFileSaveAs()
-{
-    QString filePath = QFileDialog::getSaveFileName(this,
-        tr("Save file"), QString(), tr("SWS files (*.sws)"));
-
-    if (filePath != "") {
-        // TODO: Add .sws extension if none specified
-        mCurrentFilePath = filePath;
-        handleFileSave();
-     }
-}
-
-void GuiMainWindow::handleFileQuit()
-{
-    if (changeSchema(nullptr))
-        QApplication::quit();
 }
 
 void GuiMainWindow::handleOscilloscope()

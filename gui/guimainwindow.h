@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QMainWindow>
 #include "core/coremachine.h"
 
+class QSettings;
 class DrawnSchema;
 class AudioFifoBuffer;
 class QAudioOutput;
@@ -36,22 +37,21 @@ class GuiMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    GuiMainWindow(QWidget *parent = nullptr);
+    GuiMainWindow(QSettings *settings, QWidget *parent = nullptr);
     ~GuiMainWindow();
+
+    bool changeSchema(DrawnSchema *schema);
+    DrawnSchema *getSchema() { return mSchema; }
 
 signals:
     void schemaChanged(DrawnSchema *schema);
 
 public slots:
-    void handleFileNew();
-    void handleFileOpen();
-    void handleFileSave();
-    void handleFileSaveAs();
-    void handleFileQuit();
     void handleOscilloscope();
 
 protected:
     Ui::GuiMainWindow *ui;
+    QSettings *mSettings;
     DrawnSchema *mSchema;
     CoreMachine mCoreMachine;
 
@@ -60,6 +60,5 @@ protected:
 
     QString mCurrentFilePath;
 
-    bool changeSchema(DrawnSchema *schema);
 };
 #endif // GUIMAINWINDOW_H

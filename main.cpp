@@ -19,12 +19,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "gui/guimainwindow.h"
 
 #include <QApplication>
+#include <QSettings>
 #include "core/coresamplebuffer.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    GuiMainWindow w;
+    QSettings s("Short Waves Editor", "Short Waves System");
+    GuiMainWindow w(&s);
     w.show();
     return a.exec();
 }
