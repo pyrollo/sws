@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>485</width>
-    <height>319</height>
+    <width>810</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -37,16 +37,6 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="probeButton">
-        <property name="text">
-         <string>Probe</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -58,6 +48,20 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addProbeButton">
+        <property name="toolTip">
+         <string>Add a new probe</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="add">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>

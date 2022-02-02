@@ -20,21 +20,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define GUIOSCILLOSCOPEDISPLAY_H
 
 #include <QWidget>
+#include <set>
 
 class DisplayBuffer;
 class OscilloscopeBuffer;
 class OscilloscopeSampleInt;
 class DrawnPlug;
+class GuiOscilloscopeProbeFrame;
 
 class GuiOscilloscopeDisplay : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit GuiOscilloscopeDisplay(QWidget *parent = nullptr);
     ~GuiOscilloscopeDisplay();
-    OscilloscopeBuffer *getSampleBuffer() { return mSampleBuffer; }
 
-    void probePlug(DrawnPlug *plug);
+    void addProbe(GuiOscilloscopeProbeFrame* probe) { probes.insert(probe); }
+    void removeProbe(GuiOscilloscopeProbeFrame* probe) { probes.erase(probe); }
+
+signals:
+    void resized(QResizeEvent *);
 
 private:
     void resizeEvent(QResizeEvent *);
@@ -42,10 +48,12 @@ private:
     void resizeBuffer();
 
     OscilloscopeBuffer *mSampleBuffer;
-    DisplayBuffer *mDisplayBuffer;
     DrawnPlug *mProbedPlug;
 
     QTimer *mTimer;
+    float mRefreshRate;
+
+    std::set<GuiOscilloscopeProbeFrame *> probes;
 signals:
 };
 

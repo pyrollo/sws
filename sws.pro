@@ -54,12 +54,14 @@ SOURCES += \
     draw/modules/drawnmoduletime.cpp \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
+    gui/guicolorbutton.cpp \
     gui/guimainwindow.cpp \
     gui/guimenufile.cpp \
     gui/guimodulelibraryscene.cpp \
     gui/guimodulelibraryview.cpp \
     gui/guioscilloscopedisplay.cpp \
     gui/guioscilloscopedock.cpp \
+    gui/guioscilloscopeprobeframe.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
@@ -108,12 +110,14 @@ HEADERS += \
     draw/modules/drawnmoduletime.h \
     file/filedeserializer.h \
     file/fileserializer.h \
+    gui/guicolorbutton.h \
     gui/guimainwindow.h \
     gui/guimenufile.h \
     gui/guimodulelibraryscene.h \
     gui/guimodulelibraryview.h \
     gui/guioscilloscopedisplay.h \
     gui/guioscilloscopedock.h \
+    gui/guioscilloscopeprobeframe.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
@@ -125,7 +129,8 @@ HEADERS += \
 
 FORMS += \
     gui/guimainwindow.ui \
-    gui/guioscilloscopedock.ui
+    gui/guioscilloscopedock.ui \
+    gui/guioscilloscopeprobeframe.ui
 
 TRANSLATIONS += \
     sws_en_US.ts

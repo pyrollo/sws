@@ -16,32 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef GUIOSCILLOSCOPEDOCK_H
-#define GUIOSCILLOSCOPEDOCK_H
+// Code strongly inspired by https://github.com/pothosware/PothosFlow/blob/master/qtcolorpicker/src/qtcolorpicker.h
 
-#include <QDockWidget>
+#ifndef GUICOLORBUTTON_H
+#define GUICOLORBUTTON_H
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class GuiOscilloscopeDock; }
-QT_END_NAMESPACE
+#include <list>
+#include <QPushButton>
 
-class GuiSchemaView;
-
-class GuiOscilloscopeDock : public QDockWidget
+class GuiColorButton : public QPushButton
 {
-    Q_OBJECT
-
 public:
-    explicit GuiOscilloscopeDock(GuiSchemaView *view);
-    GuiOscilloscopeDock(const QString &title, GuiSchemaView *view);
-    ~GuiOscilloscopeDock();
-    void closeEvent(QCloseEvent *event);
-public slots:
-    void handleSchemaChange();
-    void handleAddProbe();
+    GuiColorButton(QWidget *parent = nullptr);
+    ~GuiColorButton();
+
+    QColor getColor() const { return mColor; }
+
+signals:
+    void colorChanged(const QColor &color) { (void)(color); }
+
 protected:
-    Ui::GuiOscilloscopeDock *ui;
-    GuiSchemaView *mView;
+    void paintEvent(QPaintEvent *e);
+
+private slots:
+    void buttonPressed();
+
+private:
+    QColor mColor;
+    std::list<QColor> mColors;
 };
 
-#endif // GUIOSCILLOSCOPEDOCK_H
+#endif // GUICOLORBUTTON_H

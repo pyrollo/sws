@@ -17,13 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "guioscilloscopedisplay.h"
-#include "utils/resizeablerollingbuffer.h"
-#include "utils/rollingbuffer.h"
+#include "guioscilloscopeprobeframe.h"
 #include "draw/drawnplug.h"
 #include "draw/drawnschema.h"
 #include "core/coreplug.h"
 #include "core/coreschema.h"
-#include "core/coresamplebuffer.h"
 
 #include <QPainter>
 #include <QTimer>
@@ -31,31 +29,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <algorithm>
 
-class DisplayBuffer : public RollingBuffer<int>
-{
-public:
-    DisplayBuffer(size_t size): RollingBuffer<int>(size) {}
-};
-
-class OscilloscopeBuffer : public ResizeableRollingBuffer<Value>, public CoreSampleBuffer
-{
-public:
-    OscilloscopeBuffer(): ResizeableRollingBuffer<Value>() {}
-
-    void writeSample(Value sample) override { push(sample); }
-    Value readSample() override { return Value(.0f); } // Nothing to read here
-};
-
 GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) :
-    QWidget(parent), mDisplayBuffer(nullptr), mProbedPlug(nullptr)
+    QWidget(parent), mProbedPlug(nullptr), mRefreshRate(25.0f)
 {
-    mSampleBuffer = new OscilloscopeBuffer();
-    mSampleBuffer->resize(width());
-    // --> Should be adapted to sample rate and refresh rate.
-    // Sample buffer should contain sample produced between two displays.
-    // If display is 50hz, take 25Hz in account. If sample rate is ~50KHz, then
-    // 2000 max samples is enough for all cases.
-
     mTimer = new QTimer(this);
     connect(mTimer, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
     mTimer->setInterval(50);
@@ -65,79 +41,25 @@ GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) :
 
 GuiOscilloscopeDisplay::~GuiOscilloscopeDisplay()
 {
-    probePlug(nullptr);
     mTimer->stop();
     delete mTimer;
-    delete mSampleBuffer;
-    delete mDisplayBuffer;
 }
 
-void GuiOscilloscopeDisplay::probePlug(DrawnPlug *plug)
+void GuiOscilloscopeDisplay::resizeEvent(QResizeEvent *e)
 {
-    if (mProbedPlug)
-        mProbedPlug->schema()->core()->disconnectReadingBuffer(mSampleBuffer);
-
-    mProbedPlug = plug;
-
-    if (mProbedPlug)
-        mProbedPlug->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
-}
-
-void GuiOscilloscopeDisplay::resizeBuffer()
-{
-    size_t newsize = width();
-    size_t oldsize = (mDisplayBuffer)?mDisplayBuffer->size():0;
-
-    if (oldsize == newsize)
-        return;
-
-    DisplayBuffer* oldbuffer = mDisplayBuffer;
-    mDisplayBuffer = new DisplayBuffer(newsize);
-
-    // Fill unset part of buffer with zeros
-    int zero = size().height()*0.5f;
-    size_t fill = newsize;
-    if (oldbuffer)
-    {
-        if (oldbuffer->length() < newsize)
-            fill = newsize - oldbuffer->length();
-        else
-            fill = 0;
-    }
-    while (fill--)
-        mDisplayBuffer->push(zero);
-
-    // Copy existing stuff from old buffer to new buffer
-    if (!oldbuffer)
-        return;
-
-    oldbuffer->rewind();
-    while (!oldbuffer->underflow())
-        mDisplayBuffer->push(oldbuffer->pop());
-
-    delete oldbuffer;
-}
-
-void GuiOscilloscopeDisplay::resizeEvent(QResizeEvent *)
-{
-    resizeBuffer();
-    mSampleBuffer->resize(width());
+    emit resized(e);
 }
 
 void GuiOscilloscopeDisplay::paintEvent(QPaintEvent *) {
     QPainter painter(this);
+    QPoint origin(0.0f, 0.0f);
+    QColor background(16, 48, 16);
 
-    // Copy and convert new samples
-    while (!mSampleBuffer->underflow())
-        // TODO: compute values only once
-        mDisplayBuffer->push(mSampleBuffer->pop().toInt(Value(100.0f), Value(size().height()*0.5f)));
+    QImage image(size(), QImage::Format_RGB32);
+    image.fill(background);
 
-    mDisplayBuffer->rewind();
+    for (auto probe: probes)
+        probe->drawTo(&image);
 
-    painter.setPen(Qt::white);
-    painter.fillRect(rect(), Qt::darkGreen);
-
-    for (int x = 0; x < width(); x ++)
-//        painter.drawLine(x, mIntBuffer[x].min, x, mIntBuffer[x].max);
-        painter.drawPoint(x, mDisplayBuffer->pop());
+    painter.drawImage(origin, image);
 }
