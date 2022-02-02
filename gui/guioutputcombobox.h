@@ -33,7 +33,6 @@ public:
     GuiOutputComboBox(QWidget *parent = nullptr);
     void setSchema(DrawnSchema *schema);
     void setAudioBuffer(AudioFifoBuffer *buffer);
-    void setOscilloscopeBuffer(OscilloscopeBuffer *buffer);
 public slots:
     void outputsChanged();
     void onIndexChanged(int index);

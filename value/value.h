@@ -23,6 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class Value
 {
 public:
+
+    // Constructors
+
     Value();
     Value(const double v);
     Value(const std::string &str);
@@ -30,6 +33,7 @@ public:
     // Conversions
 
     Value& operator =(const double v);
+    Value& operator =(const int v);
     Value& operator =(const std::string &str);
 
     std::string toString() const;
@@ -37,26 +41,34 @@ public:
     int toInt() const;
     short toShort() const;
 
+    int toInt(const Value &scale, const Value &offset) const { return ((*this) * scale + offset).toInt(); }
+    int toShort(const Value &scale, const Value &offset) const { return ((*this) * scale + offset).toShort(); }
+
+    // Comparisons
+
+    bool operator <(const Value &v);
+    bool operator <=(const Value &v);
+    bool operator >(const Value &v);
+    bool operator >=(const Value &v);
+    bool operator ==(const Value &v);
+    bool operator !=(const Value &v);
+
     // Operations
 
-    Value operator +(const Value op);
-    Value operator *(const Value op);
-//    Value& operator /(const Value div);
-
-//    value& operator %(const value op1, const value op2);
+    Value operator +(const Value op) const;
+    Value operator *(const Value op) const;
+    Value operator /(const Value op) const;
 
     Value modulo(Value div) const;
     Value moduloOne() const;
     Value limit(Value min, Value max) const;
 
 private:
-    void setFromDouble(const double v);
-    void setFromString(const std::string &str);
-
     long int value;
 
-    Value(long int val);
-
+    void setFromDouble(const double v);
+    void setFromString(const std::string &str);
+    void setFromInt(const int val);
 };
 
 #endif // VALUE_H

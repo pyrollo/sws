@@ -63,7 +63,6 @@ SOURCES += \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
-    gui/oscilloscopebuffer.cpp \
     main.cpp \
     value/value.cpp
 
@@ -119,7 +118,8 @@ HEADERS += \
     gui/guischemascene.h \
     gui/guischemaview.h \
     gui/guistyle.h \
-    gui/oscilloscopebuffer.h \
+    utils/resizeablerollingbuffer.h \
+    utils/rollingbuffer.h \
     value/string.h \
     value/value.h
 

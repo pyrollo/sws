@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/coreschema.h"
 #include "core/modules/coremoduleoutput.h"
 #include "audio/audiofifobuffer.h"
-#include "gui/oscilloscopebuffer.h"
 
 GuiOutputComboBox::GuiOutputComboBox(QWidget *parent):
     QComboBox(parent), mSchema(nullptr),
@@ -79,15 +78,6 @@ void GuiOutputComboBox::setAudioBuffer(AudioFifoBuffer *buffer)
     connectBuffer();
 }
 
-void GuiOutputComboBox::setOscilloscopeBuffer(OscilloscopeBuffer *buffer)
-{
-    if (mOscilloscopeBuffer)
-        mSchema->core()->disconnectReadingBuffer(mOscilloscopeBuffer);
-
-//    mOscilloscopeBuffer = buffer;
-//    connectBuffer();
-}
-
 void GuiOutputComboBox::connectBuffer()
 {
     if (!mSchema)
@@ -97,14 +87,10 @@ void GuiOutputComboBox::connectBuffer()
         mSelectedOutput = mSchema->core()->output(currentText().toStdString());
         if (mAudioBuffer)
             mSchema->core()->connectReadingBuffer(mAudioBuffer, mSelectedOutput->plug());
-        if (mOscilloscopeBuffer)
-            mSchema->core()->connectReadingBuffer(mOscilloscopeBuffer, mSelectedOutput->plug());
     } else {
         mSelectedOutput = nullptr;
         if (mAudioBuffer)
             mSchema->core()->disconnectReadingBuffer(mAudioBuffer);
-        if (mOscilloscopeBuffer)
-            mSchema->core()->disconnectReadingBuffer(mOscilloscopeBuffer);
     }
 }
 

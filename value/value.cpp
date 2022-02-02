@@ -38,15 +38,13 @@ Value::Value(const std::string &str)
     setFromString(str);
 }
 
-Value::Value(long int val): value(val)
-{}
+// Double conversions
 
-// Double conversion
 void Value::setFromDouble(const double v) {
      value = PRECISION * v;
 }
 
-Value& Value::operator=(const double v) {
+Value& Value::operator =(const double v) {
     setFromDouble(v);
     return *this;
 }
@@ -56,7 +54,16 @@ double Value::toDouble() const
     return (double)value/PRECISION;
 }
 
-// To Int conversions (to be improved)
+// Int conversions
+
+void Value::setFromInt(const int v) {
+    value = PRECISION * long(v);
+}
+
+Value& Value::operator =(const int v) {
+    setFromInt(v);
+    return *this;
+}
 
 int Value::toInt() const
 {
@@ -72,7 +79,8 @@ short Value::toShort() const
     return (short)(limit(min, max) * invPrecision).value;
 }
 
-// String conversion
+// String conversions
+
 void Value::setFromString(const std::string &str) {
     value = 0;
     bool negative = false;
@@ -112,7 +120,6 @@ void Value::setFromString(const std::string &str) {
     if (negative)
         value = - value;
 }
-
 
 Value& Value::operator =(const std::string &str) {
     setFromString(str);
@@ -157,16 +164,48 @@ std::string Value::toString() const
     return result;
 }
 
+// Comparisons
+
+bool Value::operator <(const Value &v)
+{
+    return value < v.value;
+}
+
+bool Value::operator <=(const Value &v)
+{
+    return value <= v.value;
+}
+
+bool Value::operator >(const Value &v)
+{
+    return value > v.value;
+}
+
+bool Value::operator >=(const Value &v)
+{
+    return value >= v.value;
+}
+
+bool Value::operator ==(const Value &v)
+{
+    return value == v.value;
+}
+
+bool Value::operator !=(const Value &v)
+{
+    return value != v.value;
+}
+
 // Operations
 
-Value Value::operator +(Value op)
+Value Value::operator +(Value op) const
 {
     Value result;
     result.value = value + op.value;
     return result;
 }
 
-Value Value::operator *(Value op)
+Value Value::operator *(Value op) const
 {
     Value result;
     // TODO: check if something more accurate can be done
@@ -175,14 +214,13 @@ Value Value::operator *(Value op)
     return result;
 }
 
-/*
-Value& Value::operator /(Value div)
+Value Value::operator /(Value op) const
 {
     Value result;
-    result.value = value / div.value * PRECISION;
-    return &result;
+    result.value = value / op.value * PRECISION;
+    return result;
 }
-*/
+
 /*
     value absolute(value op)
     {
@@ -197,23 +235,15 @@ Value& Value::operator /(Value div)
 
 Value Value::moduloOne() const
 {
+    Value result;
     if (value>0)
-        return Value(value%PRECISION);
+        result.value = value%PRECISION;
     else
-        return Value((value+1)%PRECISION+PRECISION-1);
+        result.value = (value+1)%PRECISION+PRECISION-1;
+
+    return result;
 }
 
-/*
-    value min(value op1, value op2)
-    {
-        return (op1<op2)?op1:op2;
-    }
-
-    value max(value op1, value op2)
-    {
-        return (op1>op2)?op1:op2;
-    }
-*/
 Value Value::limit(Value min, Value max) const
 {
     Value result;

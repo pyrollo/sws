@@ -16,29 +16,3 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef OSCILLOSCOPEBUFFER_H
-#define OSCILLOSCOPEBUFFER_H
-#include <cstddef>
-#include "core/coresamplebuffer.h"
-#include "value/value.h"
-
-class OscilloscopeBuffer : public CoreSampleBuffer
-{
-public:
-    explicit OscilloscopeBuffer(size_t size);
-    ~OscilloscopeBuffer();
-    void fill(Value value);
-
-    void writeSample(Value sample) override;
-    Value readSample() override { return Value(.0f); } // Nothing to read here
-
-    void copyTo(int *buffer, Value scale, Value offset);
-    inline size_t size() { return mSize; }
-
-private:
-    size_t mSize;
-    Value *mBuffer;
-    size_t mPos;
-};
-
-#endif // OSCILLOSCOPEBUFFER_H
