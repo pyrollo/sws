@@ -15,13 +15,14 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QResizeEvent>
 #include <QImage>
+#include <QRgb>
 
 // Display buffer
 // TODO: Should be resizeable and rewindable
-class DisplayBuffer : public RollingBuffer<int>
+class DisplayBuffer : public RollingBuffer<GuiOscilloscopeProbeSample>
 {
 public:
-    DisplayBuffer(size_t size): RollingBuffer<int>(size) {}
+    DisplayBuffer(size_t size): RollingBuffer<GuiOscilloscopeProbeSample>(size) {}
 };
 
 // Oscilloscope sample buffer
@@ -75,7 +76,8 @@ protected:
 
 GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *parent, GuiSchemaView *view):
         QFrame(parent), ui(new Ui::GuiOscilloscopeProbeFrame), mDisplay(parent),
-        mView(view), mDisplayBuffer(nullptr), mProbedPlug(nullptr)
+        mView(view), mProbeInteraction(nullptr), mProbedPlug(nullptr),
+        mDisplayBuffer(nullptr), mLast(0), mPeriod(0.0f), mSampleRatio(1.0f), mCurrentSample({0, 0})
 {
     mSampleBuffer = new OscilloscopeBuffer();
     mSampleBuffer->resize(parent->width());
@@ -94,6 +96,8 @@ GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *par
     connect(ui->deleteButton, &QAbstractButton::pressed, this, &GuiOscilloscopeProbeFrame::handleDelete);
 
     connect(parent, &GuiOscilloscopeDisplay::resized, this, &GuiOscilloscopeProbeFrame::displayResized);
+
+    handleChangeColor();
 }
 
 GuiOscilloscopeProbeFrame::~GuiOscilloscopeProbeFrame()
@@ -144,7 +148,8 @@ void GuiOscilloscopeProbeFrame::displayResized(QResizeEvent *e)
     mDisplayBuffer = new DisplayBuffer(newsize);
 
     // Fill unset part of buffer with zeros
-    int zero = size().height()*0.5f;
+    GuiOscilloscopeProbeSample zero = {int(size().height()*0.5f), int(size().height()*0.5f)};
+
     size_t fill = newsize;
     if (oldbuffer)
     {
@@ -175,8 +180,7 @@ void GuiOscilloscopeProbeFrame::handleEnable(bool checked)
 
 void GuiOscilloscopeProbeFrame::handleChangeColor()
 {
-    // TODO: To be implemented
-    printf("Change color\n"); fflush(stdout);
+    mColor = ui->changeColorButton->getColor();
 }
 
 void GuiOscilloscopeProbeFrame::handleChangePlug(bool checked) {
@@ -200,27 +204,56 @@ void GuiOscilloscopeProbeFrame::handleDelete()
     delete this;
 }
 
+void addPixel(QImage *image, int x, int y, QColor &color)
+{
+    QRgb *line = (QRgb*)image->scanLine(y);
+    QRgb pixel = line[x];
+    // Here is the color composition rule (basic 'lighten only' thing for now)
+    line[x] = qRgb(
+        std::max(qRed(pixel), color.red()),
+        std::max(qGreen(pixel), color.green()),
+        std::max(qBlue(pixel), color.blue())
+    );
+}
+
 void GuiOscilloscopeProbeFrame::drawTo(QImage *image)
 {
-    int ymax = mDisplay->size().height();
-    Value scale(100.0f);
-    Value offset(ymax*0.5f);
 
-    // Copy and convert new samples
-    while (!mSampleBuffer->underflow())
-        mDisplayBuffer->push(mSampleBuffer->pop().toInt(scale, offset));
+    // TODO: Move that in class members
+    Value scale(100.0f);
+    Value offset(mDisplay->size().height()*0.5f);
+
+    // Convert and merge new core samples to display samples
+    while (!mSampleBuffer->underflow()) {
+        mLast = mSampleBuffer->pop().toInt(scale, offset);
+
+        if (mCurrentSample.min > mLast)
+            mCurrentSample.min = mLast;
+        if (mCurrentSample.max < mLast)
+            mCurrentSample.max = mLast;
+
+        mPeriod += 1.0f;
+        if (mPeriod > mSampleRatio) {
+            mDisplayBuffer->push(mCurrentSample);
+            mPeriod -= mSampleRatio;
+            mCurrentSample.min = mLast;
+            mCurrentSample.max = mLast;
+        }
+    }
 
     mDisplayBuffer->rewind();
 
-    QColor color = Qt::white;
-
-    int y;
+    QColor color;
+    int ylimit = mDisplay->size().height() - 1;
     for (int x = 0; x < width(); x ++)
     {
-        y = mDisplayBuffer->pop();
-        // TODO: Manage bar representation if several samples
-        if (y >= 0 && y < ymax)
-            // TODO: Manage composition
-            image->setPixelColor(x, y, color);
+        auto sample = mDisplayBuffer->pop();
+        sample.min = (sample.min > 0)?sample.min:0;
+        sample.max = (sample.max < ylimit)?sample.max:ylimit;
+        if (sample.min <= ylimit && sample.max >= 0) {
+            color = mColor.darker(100 + (sample.max-sample.min) * 5);
+            for (int y = sample.min; y <= sample.max; y++)
+                addPixel(image, x, y, color);
+        }
     }
 }

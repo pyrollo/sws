@@ -36,6 +36,12 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class GuiOscilloscopeProbeFrame; }
 QT_END_NAMESPACE
 
+struct GuiOscilloscopeProbeSample
+{
+    int min;
+    int max;
+};
+
 class GuiOscilloscopeProbeFrame : public QFrame
 {
     friend ProbeShemaInteraction;
@@ -61,17 +67,22 @@ private:
     GuiOscilloscopeDisplay *mDisplay;
     GuiSchemaView *mView;
 
+    ProbeShemaInteraction *mProbeInteraction;
+    DrawnPlug *mProbedPlug;
     OscilloscopeBuffer *mSampleBuffer;
+
     DisplayBuffer *mDisplayBuffer;
 
-    DrawnPlug *mProbedPlug;
     QColor mColor;
     Value mScale;
     Value mOffset;
 
+    // Draw variables
+    int mLast;
+    float mPeriod;
+    float mSampleRatio;
+    GuiOscilloscopeProbeSample mCurrentSample;
 
-
-    ProbeShemaInteraction *mProbeInteraction;
 };
 
 #endif // GUIOSCILLOSCOPEPROBEFRAME_H
