@@ -37,6 +37,16 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="GuiValueListSpinBox" name="speedSpinBox">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -72,8 +82,13 @@
   <customwidget>
    <class>GuiOscilloscopeDisplay</class>
    <extends>QWidget</extends>
-   <header location="global">gui/guioscilloscopedisplay.h</header>
+   <header location="global">gui/oscilloscope/guioscilloscopedisplay.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GuiValueListSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">gui/widgets/guivaluelistspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

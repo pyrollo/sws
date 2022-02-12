@@ -20,8 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "ui_guioscilloscopedock.h"
 
 #include "guioscilloscopeprobeframe.h"
-#include "guimainwindow.h"
-#include "guischemaview.h"
+#include "../guimainwindow.h"
+#include "../guischemaview.h"
 //#include "draw/drawnschema.h"
 #include <QGraphicsSceneMouseEvent>
 
@@ -60,7 +60,6 @@ void GuiOscilloscopeDock::handleSchemaChange() {
 }
 
 void GuiOscilloscopeDock::handleAddProbe() {
-    printf("ADD PROBE\n"); fflush(stdout);
     GuiOscilloscopeProbeFrame *probe = new GuiOscilloscopeProbeFrame(ui->oscilloscopeDisplay, mView);
     ui->verticalLayout->addWidget(probe);
     probe->show();

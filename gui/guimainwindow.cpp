@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "guimenufile.h"
 #include "guischemascene.h"
 #include "guimodulelibraryview.h"
-#include "guioscilloscopedock.h"
+#include "oscilloscope/guioscilloscopedock.h"
 #include "guistyle.h"
 
 #include <QSettings>

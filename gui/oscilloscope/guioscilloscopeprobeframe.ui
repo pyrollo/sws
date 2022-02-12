@@ -56,10 +56,10 @@
     <widget class="QDial" name="dial"/>
    </item>
    <item>
-    <widget class="QDoubleSpinBox" name="probeOffset"/>
+    <widget class="QDoubleSpinBox" name="probeScale"/>
    </item>
    <item>
-    <widget class="QDoubleSpinBox" name="probeScale"/>
+    <widget class="QDoubleSpinBox" name="probeOffset"/>
    </item>
    <item>
     <widget class="QPushButton" name="changePlugButton">

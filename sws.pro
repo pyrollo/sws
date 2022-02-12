@@ -60,12 +60,13 @@ SOURCES += \
     gui/guimenufile.cpp \
     gui/guimodulelibraryscene.cpp \
     gui/guimodulelibraryview.cpp \
-    gui/guioscilloscopedisplay.cpp \
-    gui/guioscilloscopedock.cpp \
-    gui/guioscilloscopeprobeframe.cpp \
     gui/guioutputcombobox.cpp \
     gui/guischemascene.cpp \
     gui/guischemaview.cpp \
+    gui/oscilloscope/guioscilloscopedisplay.cpp \
+    gui/oscilloscope/guioscilloscopedock.cpp \
+    gui/oscilloscope/guioscilloscopeprobe.cpp \
+    gui/oscilloscope/guioscilloscopeprobeframe.cpp \
     main.cpp \
     value/value.cpp
 
@@ -117,13 +118,14 @@ HEADERS += \
     gui/guimenufile.h \
     gui/guimodulelibraryscene.h \
     gui/guimodulelibraryview.h \
-    gui/guioscilloscopedisplay.h \
-    gui/guioscilloscopedock.h \
-    gui/guioscilloscopeprobeframe.h \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
     gui/guistyle.h \
+    gui/oscilloscope/guioscilloscopedisplay.h \
+    gui/oscilloscope/guioscilloscopedock.h \
+    gui/oscilloscope/guioscilloscopeprobe.h \
+    gui/oscilloscope/guioscilloscopeprobeframe.h \
     utils/resizeablerollingbuffer.h \
     utils/rollingbuffer.h \
     value/string.h \
@@ -131,8 +133,8 @@ HEADERS += \
 
 FORMS += \
     gui/guimainwindow.ui \
-    gui/guioscilloscopedock.ui \
-    gui/guioscilloscopeprobeframe.ui
+    gui/oscilloscope/guioscilloscopedock.ui \
+    gui/oscilloscope/guioscilloscopeprobeframe.ui
 
 TRANSLATIONS += \
     sws_en_US.ts

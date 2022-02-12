@@ -30,7 +30,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <algorithm>
 
 GuiOscilloscopeDisplay::GuiOscilloscopeDisplay(QWidget *parent) :
-    QWidget(parent), mProbedPlug(nullptr), mRefreshRate(25.0f)
+    QWidget(parent), mRefreshRate(25.0f)
 {
     mTimer = new QTimer(this);
     connect(mTimer, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));

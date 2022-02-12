@@ -2,7 +2,7 @@
 #include "ui_guioscilloscopeprobeframe.h"
 
 #include "guioscilloscopedisplay.h"
-#include "guischemaview.h"
+#include "gui/guischemaview.h"
 
 #include "draw/drawnschema.h"
 #include "draw/drawnschemainteraction.h"
