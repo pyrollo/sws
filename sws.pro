@@ -54,7 +54,8 @@ SOURCES += \
     draw/modules/drawnmoduletime.cpp \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
-    gui/guicolorbutton.cpp \
+    gui/widgets/guicolorbutton.cpp \
+    gui/widgets/guivaluelistspinbox.cpp \
     gui/guimainwindow.cpp \
     gui/guimenufile.cpp \
     gui/guimodulelibraryscene.cpp \
@@ -110,7 +111,8 @@ HEADERS += \
     draw/modules/drawnmoduletime.h \
     file/filedeserializer.h \
     file/fileserializer.h \
-    gui/guicolorbutton.h \
+    gui/widgets/guicolorbutton.h \
+    gui/widgets/guivaluelistspinbox.h \
     gui/guimainwindow.h \
     gui/guimenufile.h \
     gui/guimodulelibraryscene.h \
