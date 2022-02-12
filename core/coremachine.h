@@ -33,6 +33,7 @@ public:
 
     void setSchema(CoreSchema *schema);
     void setStepTime(Value stepTime);
+    Value getStepTime() { return mStepTime; }
 
     void start();
     void stop();
