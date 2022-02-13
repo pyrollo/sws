@@ -34,8 +34,8 @@ public:
     explicit GuiOscilloscopeDisplay(QWidget *parent = nullptr);
     ~GuiOscilloscopeDisplay();
 
-    void addProbe(GuiOscilloscopeProbe* probe) { probes.insert(probe); }
-    void removeProbe(GuiOscilloscopeProbe* probe) { probes.erase(probe); }
+    void addProbe(GuiOscilloscopeProbe* probe) { mProbes.insert(probe); }
+    void removeProbe(GuiOscilloscopeProbe* probe) { mProbes.erase(probe); }
 
 signals:
     void resized(QResizeEvent *);
@@ -48,7 +48,7 @@ private:
     QTimer *mTimer;
     float mRefreshRate;
 
-    std::set<GuiOscilloscopeProbe *> probes;
+    std::set<GuiOscilloscopeProbe *> mProbes;
 signals:
 };
 

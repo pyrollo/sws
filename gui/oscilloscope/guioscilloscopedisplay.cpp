@@ -58,7 +58,7 @@ void GuiOscilloscopeDisplay::paintEvent(QPaintEvent *) {
     QImage image(size(), QImage::Format_RGB32);
     image.fill(background);
 
-    for (auto probe: probes)
+    for (auto probe: mProbes)
         probe->drawTo(&image);
 
     painter.drawImage(origin, image);
