@@ -37,7 +37,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="GuiValueListSpinBox" name="speedSpinBox">
+       <widget class="GuiValueListSpinBox" name="timeSpinBox">
         <property name="minimumSize">
          <size>
           <width>100</width>

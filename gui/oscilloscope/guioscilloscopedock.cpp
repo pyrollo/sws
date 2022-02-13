@@ -22,13 +22,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "guioscilloscopeprobeframe.h"
 #include "../guimainwindow.h"
 #include "../guischemaview.h"
-//#include "draw/drawnschema.h"
 #include <QGraphicsSceneMouseEvent>
 
 GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view)
     : QDockWidget(view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view)
 {
     ui->setupUi(this);
+
+    ui->timeSpinBox->addValue(QString("1s"), 1.0f);
+    ui->timeSpinBox->addValue(QString("2s"), 2.0f);
+    ui->timeSpinBox->addValue(QString("5s"), 5.0f);
+    ui->timeSpinBox->addValue(QString("10s"), 10.0f);
+
 
     connect(ui->addProbeButton, &QAbstractButton::pressed, this, &GuiOscilloscopeDock::handleAddProbe);
     handleAddProbe();
