@@ -124,6 +124,9 @@ void GuiOscilloscopeProbe::resizeBuffer(size_t newsize)
 
 void GuiOscilloscopeProbe::drawTo(QImage *image)
 {
+    if (!mEnabled)
+        return;
+
     resizeBuffer(image->width());
     fetchSamples();
 

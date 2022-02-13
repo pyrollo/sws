@@ -67,6 +67,7 @@ GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *par
     connect(ui->changePlugButton, &QAbstractButton::toggled, this, &GuiOscilloscopeProbeFrame::handleChangePlug);
     connect(ui->deleteButton, &QAbstractButton::pressed, this, &GuiOscilloscopeProbeFrame::handleDelete);
 
+    handleEnable(ui->enableButton->checkState());
     handleChangeColor();
 }
 
@@ -91,8 +92,7 @@ void GuiOscilloscopeProbeFrame::turnOffChangeProbeButton()
 
 void GuiOscilloscopeProbeFrame::handleEnable(bool checked)
 {
-    // TODO: To be implemented
-    printf("Enable %s\n", (checked)?"true":"false"); fflush(stdout);
+    mProbe->setEnabled(checked);
 }
 
 void GuiOscilloscopeProbeFrame::handleChangeColor()
