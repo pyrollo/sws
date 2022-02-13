@@ -60,5 +60,7 @@ protected:
 
     QString mCurrentFilePath;
 
+    int mSampleRate;
+
 };
 #endif // GUIMAINWINDOW_H

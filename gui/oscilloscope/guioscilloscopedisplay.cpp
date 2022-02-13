@@ -63,3 +63,10 @@ void GuiOscilloscopeDisplay::paintEvent(QPaintEvent *) {
 
     painter.drawImage(origin, image);
 }
+
+void  GuiOscilloscopeDisplay::setSampleRatio(float ratio)
+{
+    for (auto probe: mProbes)
+        probe->setSampleRatio(ratio);
+}
+

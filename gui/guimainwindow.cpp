@@ -61,7 +61,8 @@ GuiMainWindow::GuiMainWindow(QSettings *settings, QWidget *parent)
     mAudioOutputBuffer->open(QIODevice::ReadOnly);
     mAudioOutput->start(mAudioOutputBuffer);
     mAudioOutputBuffer->fill(0, mAudioOutput->periodSize()/2);
-    mCoreMachine.setStepTime(1.0f/float(format.sampleRate()));
+    mSampleRate = format.sampleRate();
+    mCoreMachine.setStepTime(1.0f/float(mSampleRate));
     ui->speakerOutputComboBox->setAudioBuffer(mAudioOutputBuffer);
 
     // Create menu
@@ -132,6 +133,6 @@ bool GuiMainWindow::changeSchema(DrawnSchema *schema)
 
 void GuiMainWindow::handleOscilloscope()
 {
-    GuiOscilloscopeDock *dock = new GuiOscilloscopeDock(ui->schemaView);
+    GuiOscilloscopeDock *dock = new GuiOscilloscopeDock(ui->schemaView, mSampleRate);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 }

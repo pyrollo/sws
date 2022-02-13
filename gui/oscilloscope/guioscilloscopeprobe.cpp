@@ -64,6 +64,7 @@ void GuiOscilloscopeProbe::fetchSamples()
 
         mLast = mSampleBuffer->pop().toInt(mScale, mOffset);
 
+        ++mCurrentSample.number;
         if (mCurrentSample.min > mLast)
             mCurrentSample.min = mLast;
         if (mCurrentSample.max < mLast)
@@ -75,6 +76,7 @@ void GuiOscilloscopeProbe::fetchSamples()
             mPeriod -= mSampleRatio;
             mCurrentSample.min = mLast;
             mCurrentSample.max = mLast;
+            mCurrentSample.number = 1;
         }
     }
 }
@@ -143,7 +145,7 @@ void GuiOscilloscopeProbe::drawTo(QImage *image)
         ymin = (sample.min + yoffset > 0)?sample.min + yoffset:0;
         ymax = (sample.max + yoffset < ylimit)?sample.max + yoffset:ylimit;
         if (ymin <= ylimit && ymax >= 0) {
-            color = mColor.darker(100 + (ymax - ymin) * 5);
+            color = mColor.darker(100 + (ymax - ymin) * 100 / (sample.number + 1));
             for (int y = ymin; y <= ymax; y++)
                 addPixel(image, x, y, color);
         }

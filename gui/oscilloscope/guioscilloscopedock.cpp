@@ -24,28 +24,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "../guischemaview.h"
 #include <QGraphicsSceneMouseEvent>
 
-GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view)
-    : QDockWidget(view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view)
+GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view, int sampleRate)
+    : QDockWidget(view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view), mSampleRate(sampleRate)
 {
     ui->setupUi(this);
 
+    ui->timeSpinBox->addValue(QString("50ms"), .05f);
+    ui->timeSpinBox->addValue(QString("100ms"), .1f);
+    ui->timeSpinBox->addValue(QString("200ms"), .2f);
+    ui->timeSpinBox->addValue(QString("500ms"), .5f);
     ui->timeSpinBox->addValue(QString("1s"), 1.0f);
     ui->timeSpinBox->addValue(QString("2s"), 2.0f);
     ui->timeSpinBox->addValue(QString("5s"), 5.0f);
     ui->timeSpinBox->addValue(QString("10s"), 10.0f);
 
-
     connect(ui->addProbeButton, &QAbstractButton::pressed, this, &GuiOscilloscopeDock::handleAddProbe);
+    connect(ui->timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &GuiOscilloscopeDock::handleTimeValueChanged);
     handleAddProbe();
-}
-
-GuiOscilloscopeDock::GuiOscilloscopeDock(const QString &title, GuiSchemaView *view)
-    : QDockWidget(title, view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view)
-{
-    ui->setupUi(this);
-
-    connect(ui->addProbeButton, &QAbstractButton::pressed, this, &GuiOscilloscopeDock::handleAddProbe);
-    handleAddProbe();
+    handleTimeValueChanged(0);
 }
 
 GuiOscilloscopeDock::~GuiOscilloscopeDock()
@@ -60,12 +56,21 @@ void GuiOscilloscopeDock::closeEvent(QCloseEvent *event)
     delete this;
 }
 
-void GuiOscilloscopeDock::handleSchemaChange() {
+void GuiOscilloscopeDock::handleSchemaChange()
+{
     // TODO: Cancel current interaction ?
 }
 
-void GuiOscilloscopeDock::handleAddProbe() {
+void GuiOscilloscopeDock::handleAddProbe()
+{
     GuiOscilloscopeProbeFrame *probe = new GuiOscilloscopeProbeFrame(ui->oscilloscopeDisplay, mView);
     ui->verticalLayout->addWidget(probe);
     probe->show();
+}
+
+void GuiOscilloscopeDock::handleTimeValueChanged(int)
+{
+    float period = ui->timeSpinBox->getSelectedValue();
+    if (period > .0f)
+        ui->oscilloscopeDisplay->setSampleRatio(0.001f * period * float(mSampleRate));
 }

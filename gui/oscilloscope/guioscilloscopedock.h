@@ -32,16 +32,19 @@ class GuiOscilloscopeDock : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit GuiOscilloscopeDock(GuiSchemaView *view);
-    GuiOscilloscopeDock(const QString &title, GuiSchemaView *view);
+    explicit GuiOscilloscopeDock(GuiSchemaView *view, int sampleRate);
     ~GuiOscilloscopeDock();
     void closeEvent(QCloseEvent *event);
+
 public slots:
     void handleSchemaChange();
     void handleAddProbe();
+    void handleTimeValueChanged(int);
+
 protected:
     Ui::GuiOscilloscopeDock *ui;
     GuiSchemaView *mView;
+    int mSampleRate;
 };
 
 #endif // GUIOSCILLOSCOPEDOCK_H

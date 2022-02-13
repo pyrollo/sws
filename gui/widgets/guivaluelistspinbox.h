@@ -12,6 +12,7 @@ public:
     QString textFromValue(int val) const override;
     void addValue(QString label, float value);
 
+    float getSelectedValue();
 private:
     std::vector<std::pair<QString, float>> mValues;
 };

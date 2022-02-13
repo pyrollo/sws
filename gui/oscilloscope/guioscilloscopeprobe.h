@@ -47,6 +47,7 @@ protected:
     struct DisplaySample {
         int min;
         int max;
+        int number;
     };
 
     // TODO: Should be resizeable and rewindable

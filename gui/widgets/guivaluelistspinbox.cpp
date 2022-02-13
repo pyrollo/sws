@@ -18,3 +18,10 @@ void GuiValueListSpinBox::addValue(QString label, float value) {
     mValues.push_back(std::pair<QString, float>{label, value});
     setRange(0, mValues.size() - 1);
 }
+
+float GuiValueListSpinBox::getSelectedValue()
+{
+    if (value() < mValues.size())
+        return mValues[value()].second;
+    return 0.0f;
+}

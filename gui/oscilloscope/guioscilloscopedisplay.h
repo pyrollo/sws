@@ -37,6 +37,8 @@ public:
     void addProbe(GuiOscilloscopeProbe* probe) { mProbes.insert(probe); }
     void removeProbe(GuiOscilloscopeProbe* probe) { mProbes.erase(probe); }
 
+    void setSampleRatio(float ratio);
+
 signals:
     void resized(QResizeEvent *);
 
