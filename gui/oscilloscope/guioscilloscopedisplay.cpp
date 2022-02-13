@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "guioscilloscopedisplay.h"
-#include "guioscilloscopeprobeframe.h"
+#include "guioscilloscopeprobe.h"
 #include "draw/drawnplug.h"
 #include "draw/drawnschema.h"
 #include "core/coreplug.h"

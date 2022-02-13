@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DisplayBuffer;
 class OscilloscopeSampleInt;
-class GuiOscilloscopeProbeFrame;
+class GuiOscilloscopeProbe;
 
 class GuiOscilloscopeDisplay : public QWidget
 {
@@ -34,8 +34,8 @@ public:
     explicit GuiOscilloscopeDisplay(QWidget *parent = nullptr);
     ~GuiOscilloscopeDisplay();
 
-    void addProbe(GuiOscilloscopeProbeFrame* probe) { probes.insert(probe); }
-    void removeProbe(GuiOscilloscopeProbeFrame* probe) { probes.erase(probe); }
+    void addProbe(GuiOscilloscopeProbe* probe) { probes.insert(probe); }
+    void removeProbe(GuiOscilloscopeProbe* probe) { probes.erase(probe); }
 
 signals:
     void resized(QResizeEvent *);
@@ -48,7 +48,7 @@ private:
     QTimer *mTimer;
     float mRefreshRate;
 
-    std::set<GuiOscilloscopeProbeFrame *> probes;
+    std::set<GuiOscilloscopeProbe *> probes;
 signals:
 };
 
