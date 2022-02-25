@@ -46,11 +46,16 @@ private:
     void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
     void resizeBuffer();
+    void drawBackground(QImage &image);
 
     QTimer *mTimer;
     float mRefreshRate;
 
     std::set<GuiOscilloscopeProbe *> mProbes;
+
+    QColor mBackgroundColor;
+    QColor mGridColor;
+    int mDivisionSize;
 signals:
 };
 
