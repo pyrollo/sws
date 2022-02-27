@@ -54,7 +54,7 @@ protected:
 
 GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *parent, GuiSchemaView *view):
         QFrame(parent), ui(new Ui::GuiOscilloscopeProbeFrame), mDisplay(parent),
-        mView(view), mProbeInteraction(nullptr)
+        mView(view), mProbeInteraction(nullptr), mScaleValue(1), mScaleExp(0), mOffsetValue(0)
 {
     ui->setupUi(this);
 
@@ -67,8 +67,13 @@ GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *par
     connect(ui->changePlugButton, &QAbstractButton::toggled, this, &GuiOscilloscopeProbeFrame::handleChangePlug);
     connect(ui->deleteButton, &QAbstractButton::pressed, this, &GuiOscilloscopeProbeFrame::handleDelete);
 
+    connect(ui->scaleDial, &GuiInfiniteDial::valueDelta, this, &GuiOscilloscopeProbeFrame::handleScaleDialValueDelta);
+    connect(ui->offsetDial, &GuiInfiniteDial::valueDelta, this, &GuiOscilloscopeProbeFrame::handleOffsetDialValueDelta);
+
     handleEnable(ui->enableButton->checkState());
     handleChangeColor();
+
+    refreshScaleAndOffset();
 }
 
 GuiOscilloscopeProbeFrame::~GuiOscilloscopeProbeFrame()
@@ -81,6 +86,73 @@ GuiOscilloscopeProbeFrame::~GuiOscilloscopeProbeFrame()
     delete mProbe;
 
     delete ui;
+}
+
+void GuiOscilloscopeProbeFrame::refreshScaleAndOffset()
+{
+    QString label;
+    if (mScaleExp < 0) {
+        label.append("0.");
+        for (int i = mScaleExp; i < -1; ++i)
+            label.append("0");
+        label.append( QString::number(mScaleValue));
+    } else {
+        label.append( QString::number(mScaleValue));
+        for (int i = mScaleExp; i > 0; --i)
+            label.append("0");
+    }
+
+    Value s(label.toStdString());
+    Value o(mOffsetValue);
+    Value d(float(mDisplay->getDivisionSize()));
+
+    mProbe->setScale(d / s);
+    mProbe->setOffset(o * d);
+
+    ui->scaleLabel->setText(label.prepend("Scale (u/div)\n"));
+    ui->offsetLabel->setText(QString::number(mOffsetValue).prepend("Offset (divs)\n"));
+
+}
+
+void GuiOscilloscopeProbeFrame::handleOffsetDialValueDelta(int delta)
+{
+    mOffsetValue += delta;
+    refreshScaleAndOffset();
+}
+
+void GuiOscilloscopeProbeFrame::handleScaleDialValueDelta(int delta)
+{
+    while (delta < 0) {
+        switch(mScaleValue) {
+        case 2:
+            mScaleValue = 1;
+            break;
+        case 5:
+            mScaleValue = 2;
+            break;
+        default:
+            mScaleValue = 5;
+            --mScaleExp;
+        }
+        ++delta;
+    }
+
+    while (delta > 0) {
+        switch(mScaleValue) {
+        case 1:
+            mScaleValue = 2;
+            break;
+        case 2:
+            mScaleValue = 5;
+            break;
+        default:
+            mScaleValue = 1;
+            ++mScaleExp;
+        }
+        --delta;
+    }
+
+    refreshScaleAndOffset();
 }
 
 void GuiOscilloscopeProbeFrame::turnOffChangeProbeButton()
@@ -120,5 +192,4 @@ void GuiOscilloscopeProbeFrame::handleDelete()
 {
     delete this;
 }
-
 

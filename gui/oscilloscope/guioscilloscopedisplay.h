@@ -39,6 +39,7 @@ public:
 
     void setSampleRatio(float ratio);
 
+    int getDivisionSize() { return mDivisionSize; }
 signals:
     void resized(QResizeEvent *);
 

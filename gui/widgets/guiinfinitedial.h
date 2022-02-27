@@ -27,6 +27,8 @@ class GuiInfiniteDial : public QDial
 
 public:
     GuiInfiniteDial(QWidget *parent = nullptr);
+    virtual QSize minimumSizeHint() const override;
+    virtual QSize sizeHint() const override;
 
 signals:
     void valueDelta(int delta);

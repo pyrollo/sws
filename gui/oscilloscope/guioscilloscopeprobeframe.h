@@ -45,9 +45,12 @@ public slots:
     void handleChangeColor();
     void handleChangePlug(bool checked);
     void handleDelete();
+    void handleScaleDialValueDelta(int delta);
+    void handleOffsetDialValueDelta(int delta);
 
 protected:
     void turnOffChangeProbeButton();
+    void refreshScaleAndOffset();
 
 private:
     Ui::GuiOscilloscopeProbeFrame *ui;
@@ -56,6 +59,10 @@ private:
 
     ProbeShemaInteraction *mProbeInteraction;
     GuiOscilloscopeProbe *mProbe;
+
+    int mScaleExp;
+    int mScaleValue;
+    int mOffsetValue;
 };
 
 #endif // GUIOSCILLOSCOPEPROBEFRAME_H

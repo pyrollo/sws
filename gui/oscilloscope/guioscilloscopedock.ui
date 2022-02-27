@@ -87,7 +87,7 @@
   </customwidget>
   <customwidget>
    <class>GuiValueListSpinBox</class>
-   <extends>QDoubleSpinBox</extends>
+   <extends>QSpinBox</extends>
    <header location="global">gui/widgets/guivaluelistspinbox.h</header>
   </customwidget>
  </customwidgets>

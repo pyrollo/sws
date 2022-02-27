@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "guiinfinitedial.h"
+#include <QApplication>
 
 GuiInfiniteDial::GuiInfiniteDial(QWidget *parent):
     QDial(parent), mLastValue(0)
@@ -37,4 +38,14 @@ void GuiInfiniteDial::handleValueChanged(int value)
         delta += maximum();
 
     emit valueDelta(delta);
+}
+
+QSize GuiInfiniteDial::sizeHint() const
+{
+    return QSize(30, 30).expandedTo(QApplication::globalStrut());
+}
+
+QSize GuiInfiniteDial::minimumSizeHint() const
+{
+    return QSize(30, 30).expandedTo(QApplication::globalStrut());
 }
