@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class GuiColorButton : public QPushButton
 {
+    Q_OBJECT
 public:
     GuiColorButton(QWidget *parent = nullptr);
     ~GuiColorButton();
@@ -33,7 +34,7 @@ public:
     QColor getColor() const { return mColor; }
 
 signals:
-    void colorChanged(const QColor &color) { (void)(color); }
+    void colorChanged(const QColor &color);
 
 protected:
     void paintEvent(QPaintEvent *e);
