@@ -55,6 +55,7 @@ SOURCES += \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
     gui/widgets/guicolorbutton.cpp \
+    gui/widgets/guiinfinitedial.cpp \
     gui/widgets/guivaluelistspinbox.cpp \
     gui/guimainwindow.cpp \
     gui/guimenufile.cpp \
@@ -113,6 +114,7 @@ HEADERS += \
     file/filedeserializer.h \
     file/fileserializer.h \
     gui/widgets/guicolorbutton.h \
+    gui/widgets/guiinfinitedial.h \
     gui/widgets/guivaluelistspinbox.h \
     gui/guimainwindow.h \
     gui/guimenufile.h \
