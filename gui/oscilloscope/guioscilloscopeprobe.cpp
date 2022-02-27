@@ -22,9 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawnplug.h"
 
 GuiOscilloscopeProbe::GuiOscilloscopeProbe():
-    mProbedPlug(nullptr), mDisplayBuffer(nullptr), mLast(0), mPeriod(0.0f), mSampleRatio(1.0f), mCurrentSample({0, 0})
+    mProbedPlug(nullptr), mDisplayBuffer(nullptr), mLast(0), mPeriod(0.0f), mCurrentSample({0, 0, 0, false})
 {
     mSampleBuffer = new SampleBuffer();
+    setSampleRatio(1.0f);
     mScale = 100.0f;
 }
 
@@ -45,6 +46,14 @@ void GuiOscilloscopeProbe::probePlug(DrawnPlug *plug)
         mProbedPlug->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
 }
 
+ void GuiOscilloscopeProbe::setSampleRatio(float ratio)
+ {
+    mSampleRatio = ratio;
+// TODO:Sample buffer seems ok if > 4000.
+
+    mSampleBuffer->resize(int(mSampleRatio * 100.0f));
+}
+
 void addPixel(QImage *image, int x, int y, QColor &color)
 {
     QRgb *line = (QRgb*)image->scanLine(y);
@@ -59,6 +68,9 @@ void addPixel(QImage *image, int x, int y, QColor &color)
 
 void GuiOscilloscopeProbe::fetchSamples()
 {
+    if (mSampleBuffer->overflow())
+        mCurrentSample.overflow = true;
+
     // Convert and merge new core samples to display samples
     while (!mSampleBuffer->underflow()) {
 
@@ -77,19 +89,13 @@ void GuiOscilloscopeProbe::fetchSamples()
             mCurrentSample.min = mLast;
             mCurrentSample.max = mLast;
             mCurrentSample.number = 1;
+            mCurrentSample.overflow = false;
         }
     }
 }
 
 void GuiOscilloscopeProbe::resizeBuffer(size_t newsize)
 {
-    // TODO: Should not be resized
-    // --> Should be adapted to sample rate and refresh rate.
-    // Sample buffer should contain sample produced between two displays.
-    // If display is 50hz, take 25Hz in account. If sample rate is ~50KHz, then
-    // 2000 max samples is enough for all cases.
-    mSampleBuffer->resize(newsize);
-
     // TODO: Should use a resizeable buffer capable of rewind
     size_t oldsize = (mDisplayBuffer)?mDisplayBuffer->size():0;
 
@@ -100,7 +106,7 @@ void GuiOscilloscopeProbe::resizeBuffer(size_t newsize)
     mDisplayBuffer = new DisplayBuffer(newsize);
 
     // Fill unset part of buffer with zeros
-    DisplaySample zero = {0, 0};
+    DisplaySample zero = {0, 0, 1, false};
 
     size_t fill = newsize;
     if (oldbuffer)
@@ -146,6 +152,8 @@ void GuiOscilloscopeProbe::drawTo(QImage *image)
         ymax = (sample.max + yoffset < ylimit)?sample.max + yoffset:ylimit;
         if (ymin <= ylimit && ymax >= 0) {
             color = mColor.darker(100 + (ymax - ymin) * 100 / (sample.number + 1));
+            if (sample.overflow)
+                color = Qt::white;
             for (int y = ymin; y <= ymax; y++)
                 addPixel(image, x, y, color);
         }

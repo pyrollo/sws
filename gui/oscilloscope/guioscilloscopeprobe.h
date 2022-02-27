@@ -40,7 +40,9 @@ public:
     void probePlug(DrawnPlug *plug);
     void setColor(QColor color) { mColor = color; }
     void setEnabled(bool enabled) { mEnabled = enabled; }
-    void setSampleRatio(float ratio) { mSampleRatio = ratio; }
+    void setSampleRatio(float ratio);
+    void setScale(Value scale) { mScale = scale; }
+    void setOffset(Value offset) { mOffset = offset; }
 
 protected:
 
@@ -48,6 +50,7 @@ protected:
         int min;
         int max;
         int number;
+        bool overflow;
     };
 
     // TODO: Should be resizeable and rewindable
