@@ -24,6 +24,9 @@ class Value
 {
 public:
 
+    // Constants
+    static const int decimals = 6; // Value precison in decimals
+
     // Constructors
 
     Value();
