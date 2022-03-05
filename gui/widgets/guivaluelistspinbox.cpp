@@ -9,7 +9,7 @@ GuiValueListSpinBox::GuiValueListSpinBox(QWidget *parent):
 }
 
 QString GuiValueListSpinBox::textFromValue(int val) const {
-    if (val < mValues.size())
+    if (val < int(mValues.size()))
         return mValues[val].first;
     return QString("");
 }
@@ -21,7 +21,7 @@ void GuiValueListSpinBox::addValue(QString label, float value) {
 
 float GuiValueListSpinBox::getSelectedValue()
 {
-    if (value() < mValues.size())
+    if (value() < int(mValues.size()))
         return mValues[value()].second;
     return 0.0f;
 }

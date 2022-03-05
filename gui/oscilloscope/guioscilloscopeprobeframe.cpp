@@ -54,7 +54,7 @@ protected:
 
 GuiOscilloscopeProbeFrame::GuiOscilloscopeProbeFrame(GuiOscilloscopeDisplay *parent, GuiSchemaView *view):
         QFrame(parent), ui(new Ui::GuiOscilloscopeProbeFrame), mDisplay(parent),
-        mView(view), mProbeInteraction(nullptr), mScaleValue(1), mScaleExp(0), mOffsetValue(0)
+        mView(view), mProbeInteraction(nullptr), mScaleExp(0), mScaleValue(1), mOffsetValue(0)
 {
     ui->setupUi(this);
 
