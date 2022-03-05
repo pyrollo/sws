@@ -34,7 +34,7 @@ class GuiOscilloscopeDock : public QDockWidget
 public:
     explicit GuiOscilloscopeDock(GuiSchemaView *view, int sampleRate);
     ~GuiOscilloscopeDock();
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent *);
 
 public slots:
     void handleSchemaChange();

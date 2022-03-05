@@ -24,24 +24,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "../guischemaview.h"
 #include <QGraphicsSceneMouseEvent>
 
+const float timePeriods [] = { .01f, .02f, .05f, .1f, .2f, .5f, 1.0f, 2.0f, 5.0f, 10.0f };
+const QString timeLabels [] = { "10ms", "20ms", "50ms", "100ms", "200ms", "500ms", "1s", "2s", "5s", "10s" };
+
 GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view, int sampleRate)
     : QDockWidget(view->parentWidget()), ui(new Ui::GuiOscilloscopeDock), mView(view), mSampleRate(sampleRate)
 {
     ui->setupUi(this);
 
-    ui->timeSpinBox->addValue(QString("50ms"), .05f);
-    ui->timeSpinBox->addValue(QString("100ms"), .1f);
-    ui->timeSpinBox->addValue(QString("200ms"), .2f);
-    ui->timeSpinBox->addValue(QString("500ms"), .5f);
-    ui->timeSpinBox->addValue(QString("1s"), 1.0f);
-    ui->timeSpinBox->addValue(QString("2s"), 2.0f);
-    ui->timeSpinBox->addValue(QString("5s"), 5.0f);
-    ui->timeSpinBox->addValue(QString("10s"), 10.0f);
-
     connect(ui->addProbeButton, &QAbstractButton::pressed, this, &GuiOscilloscopeDock::handleAddProbe);
-    connect(ui->timeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this, &GuiOscilloscopeDock::handleTimeValueChanged);
+    connect(ui->timeDial, QOverload<int>::of(&QDial::valueChanged), this, &GuiOscilloscopeDock::handleTimeValueChanged);
+
+    ui->timeDial->setValue(4);
     handleAddProbe();
-    handleTimeValueChanged(0);
 }
 
 GuiOscilloscopeDock::~GuiOscilloscopeDock()
@@ -49,9 +44,8 @@ GuiOscilloscopeDock::~GuiOscilloscopeDock()
     delete ui;
 }
 
-void GuiOscilloscopeDock::closeEvent(QCloseEvent *event)
+void GuiOscilloscopeDock::closeEvent(QCloseEvent *)
 {
-    (void)(event);
     // Remove oscilloscope on close
     delete this;
 }
@@ -68,9 +62,8 @@ void GuiOscilloscopeDock::handleAddProbe()
     probe->show();
 }
 
-void GuiOscilloscopeDock::handleTimeValueChanged(int)
+void GuiOscilloscopeDock::handleTimeValueChanged(int value)
 {
-    float period = ui->timeSpinBox->getSelectedValue();
-    if (period > .0f)
-        ui->oscilloscopeDisplay->setSampleRatio(0.001f * period * float(mSampleRate));
+    ui->oscilloscopeDisplay->setSampleRatio(timePeriods[value] * float(mSampleRate) / ui->oscilloscopeDisplay->getDivisionSize());
+    ui->timeLabel->setText(QString("Time/div\n").append(timeLabels[value]));
 }

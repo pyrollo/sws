@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>409</width>
+    <width>548</width>
     <height>120</height>
    </rect>
   </property>
@@ -72,6 +72,9 @@
      <property name="pageStep">
       <number>1</number>
      </property>
+     <property name="wrapping">
+      <bool>true</bool>
+     </property>
      <property name="notchesVisible">
       <bool>true</bool>
      </property>
@@ -113,6 +116,9 @@
      </property>
      <property name="pageStep">
       <number>1</number>
+     </property>
+     <property name="wrapping">
+      <bool>true</bool>
      </property>
      <property name="notchesVisible">
       <bool>true</bool>

@@ -22,11 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 GuiInfiniteDial::GuiInfiniteDial(QWidget *parent):
     QDial(parent), mLastValue(0)
 {
-    setValue(0);
-    setWrapping(true);
     connect(this, QOverload<int>::of(&QDial::valueChanged), this, &GuiInfiniteDial::handleValueChanged);
-
 }
+
 void GuiInfiniteDial::handleValueChanged(int value)
 {
     int delta = value - mLastValue;

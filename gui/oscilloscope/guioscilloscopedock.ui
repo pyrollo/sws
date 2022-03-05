@@ -37,12 +37,26 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="GuiValueListSpinBox" name="timeSpinBox">
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>0</height>
-         </size>
+       <widget class="GuiInfiniteDial" name="timeDial">
+        <property name="maximum">
+         <number>9</number>
+        </property>
+        <property name="pageStep">
+         <number>1</number>
+        </property>
+        <property name="notchesVisible">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="timeLabel">
+        <property name="text">
+         <string>Time/div
+</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::PlainText</enum>
         </property>
        </widget>
       </item>
@@ -80,15 +94,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>GuiInfiniteDial</class>
+   <extends>QDial</extends>
+   <header location="global">gui/widgets/guiinfinitedial.h</header>
+  </customwidget>
+  <customwidget>
    <class>GuiOscilloscopeDisplay</class>
    <extends>QWidget</extends>
    <header location="global">gui/oscilloscope/guioscilloscopedisplay.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>GuiValueListSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header location="global">gui/widgets/guivaluelistspinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
