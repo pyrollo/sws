@@ -90,6 +90,7 @@ GuiOscilloscopeProbeFrame::~GuiOscilloscopeProbeFrame()
 
 void GuiOscilloscopeProbeFrame::refreshScaleAndOffset()
 {
+    static Value zero(0.0f);
     QString label;
     if (mScaleExp < 0) {
         label.append("0.");
@@ -106,7 +107,8 @@ void GuiOscilloscopeProbeFrame::refreshScaleAndOffset()
     Value o(mOffsetValue);
     Value d(float(mDisplay->getDivisionSize()));
 
-    mProbe->setScale(d / s);
+    if (s > zero)
+        mProbe->setScale(d / s);
     mProbe->setOffset(o * d);
 
     ui->scaleLabel->setText(label.prepend("Scale (u/div)\n"));
@@ -131,8 +133,10 @@ void GuiOscilloscopeProbeFrame::handleScaleDialValueDelta(int delta)
             mScaleValue = 2;
             break;
         default:
-            mScaleValue = 5;
-            --mScaleExp;
+            if (mScaleExp > -Value::decimalDigits) {
+                mScaleValue = 5;
+                --mScaleExp;
+            }
         }
         ++delta;
     }
@@ -146,6 +150,7 @@ void GuiOscilloscopeProbeFrame::handleScaleDialValueDelta(int delta)
             mScaleValue = 5;
             break;
         default:
+            if (mScaleExp < Value::integerDigits)
             mScaleValue = 1;
             ++mScaleExp;
         }
