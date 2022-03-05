@@ -38,7 +38,7 @@ Value::Value(const std::string &str)
 // Double conversions
 
 void Value::setFromDouble(const double v) {
-    static double multiplier = std::pow(10, decimals);
+    static double multiplier = std::pow(10, decimalDigits);
     value = v * multiplier;
 }
 
@@ -49,15 +49,15 @@ Value& Value::operator =(const double v) {
 
 double Value::toDouble() const
 {
-    static double multiplier = std::pow(10, -decimals);
+    static double multiplier = std::pow(10, -decimalDigits);
     return (double)value * multiplier;
 }
 
 // Int conversions
 
 void Value::setFromInt(const int v) {
-    static long divider = std::pow(10, decimals);
-    value = long(v) / divider;
+    static long long divider = std::pow(10, decimalDigits);
+    value = (long long)(v) / divider;
 }
 
 Value& Value::operator =(const int v) {
@@ -67,7 +67,7 @@ Value& Value::operator =(const int v) {
 
 int Value::toInt() const
 {
-    static Value multiplier(std::pow(10, -decimals));
+    static Value multiplier(std::pow(10, -decimalDigits));
     static Value max((double)std::numeric_limits<int>::max());
     static Value min((double)std::numeric_limits<int>::min());
     return (int)(limit(min, max) * multiplier).value;
@@ -75,7 +75,7 @@ int Value::toInt() const
 
 short Value::toShort() const
 {
-    static Value multiplier(std::pow(10, -decimals));
+    static Value multiplier(std::pow(10, -decimalDigits));
     static Value max((double)std::numeric_limits<short>::max());
     static Value min((double)std::numeric_limits<short>::min());
     return (short)(limit(min, max) * multiplier).value;
@@ -84,7 +84,7 @@ short Value::toShort() const
 // String conversions
 
 void Value::setFromString(const std::string &str) {
-    static int startprecision = std::pow(10, decimals);
+    static int startprecision = std::pow(10, decimalDigits);
     value = 0;
     bool negative = false;
     int precision = startprecision;
@@ -131,9 +131,9 @@ Value& Value::operator =(const std::string &str) {
 
 std::string Value::toString() const
 {
-    static int startprecision = std::pow(10, decimals);
+    static int startprecision = std::pow(10, decimalDigits);
 
-    long int v = value;
+    long long v = value;
 
     std::string result = "";
     bool negative = v < 0;
@@ -212,7 +212,7 @@ Value Value::operator +(Value op) const
 
 Value Value::operator *(Value op) const
 {
-    static long int divider = std::pow(10, decimals);
+    static long long divider = std::pow(10, decimalDigits);
     Value result;
     // TODO: check if something more accurate can be done
     // ( op1 / sqr(PRECISION) * op2 / sqr(PRECISION) ?)
@@ -222,7 +222,7 @@ Value Value::operator *(Value op) const
 
 Value Value::operator /(Value op) const
 {
-    static long int multiplier = std::pow(10, decimals);
+    static long long multiplier = std::pow(10, decimalDigits);
     Value result;
     result.value = value / op.value * multiplier;
     return result;
@@ -243,7 +243,7 @@ Value Value::operator /(Value op) const
 Value Value::moduloOne() const
 {
 
-    static long int multiplier = std::pow(10, decimals);
+    static long long multiplier = std::pow(10, decimalDigits);
     Value result;
     if (value>0)
         result.value = value%multiplier;

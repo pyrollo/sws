@@ -25,7 +25,10 @@ class Value
 public:
 
     // Constants
-    static const int decimals = 6; // Value precison in decimals
+
+    // Maximum number of digits
+    static const int decimalDigits = 6;
+    static const int integerDigits = 12;
 
     // Constructors
 
@@ -67,7 +70,7 @@ public:
     Value limit(Value min, Value max) const;
 
 private:
-    long int value;
+    long long value;
 
     void setFromDouble(const double v);
     void setFromString(const std::string &str);
