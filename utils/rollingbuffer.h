@@ -77,16 +77,10 @@ public:
         }
 
         mBuffer[mPushPos] = item;
-
-        mUnderflow = false;
-        mOverflow = (mPopPos == mPushPos);
+        setStateAfterPush();
 
         if (mOverflow && mPolicy == OverflowPolicy::ForgetPast)
-        {
-            ++mPopPos;
-            if (mPopPos == mSize)
-                mPopPos = 0;
-        }
+            advancePop();
     }
 
     T pop()
@@ -95,12 +89,8 @@ public:
         if (mUnderflow)
             return T();
 
-        ++mPopPos;
-        if (mPopPos == mSize)
-            mPopPos = 0;
-
-        mOverflow = false;
-        mUnderflow = (mPopPos == mPushPos);
+        advancePop();
+        setStateAfterPop();
 
         return mBuffer[mPopPos];
     }
@@ -110,14 +100,18 @@ public:
     void rewind()
     {
         if (mFirstTurn) {
-            mPopPos = mSize - 1;
-            mUnderflow = mPushPos == mPopPos;
-            mOverflow = false;
+            resetPop();
         } else {
             mPopPos = mPushPos;
-            mUnderflow = false;
-            mOverflow = true;
+            setStateAfterPush();
         }
+    }
+
+    // Reset pop pointer to start of buffer
+    void resetPop()
+    {
+        mPopPos = mSize - 1;
+        setStateAfterPop();
     }
 
 private:
@@ -133,6 +127,26 @@ private:
     bool mUnderflow;
     bool mOverflow;
     bool mFirstTurn;
+
+    void advancePop()
+    {
+        ++mPopPos;
+        if (mPopPos == mSize)
+            mPopPos = 0;
+    }
+
+    void setStateAfterPop()
+    {
+        mOverflow = false;
+        mUnderflow = (mPopPos == mPushPos);
+    }
+
+    void setStateAfterPush()
+    {
+        mUnderflow = false;
+        mOverflow = (mPopPos == mPushPos);
+    }
+
 };
 
 #endif // ROLLINGBUFFER_H
