@@ -136,7 +136,7 @@ public:
 
         T item = mPopChunk->pop();
         mUnderflow = mPopChunk->underflow();
-        mOverflow = mPushChunk->overflow();
+        mOverflow = mPushChunk && mPushChunk->overflow();
 
         if (mUnderflow && mPopChunk->mNextChunk)
         {
