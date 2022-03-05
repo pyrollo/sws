@@ -60,12 +60,18 @@ void GuiOscilloscopeDock::handleAddProbe()
 {
     GuiOscilloscopeProbeFrame *probe = new GuiOscilloscopeProbeFrame(ui->oscilloscopeDisplay, mView);
     probe->getProbe()->setBufferSize(2.0f * mSampleRate / ui->oscilloscopeDisplay->getRefreshRate());
+    probe->getProbe()->setSampleRatio(getSampleRatio());
     ui->verticalLayout->addWidget(probe);
     probe->show();
 }
 
 void GuiOscilloscopeDock::handleTimeValueChanged(int value)
 {
-    ui->oscilloscopeDisplay->setSampleRatio(timePeriods[value] * float(mSampleRate) / ui->oscilloscopeDisplay->getDivisionSize());
+    ui->oscilloscopeDisplay->setSampleRatio(getSampleRatio());
     ui->timeLabel->setText(QString("Time/div\n").append(timeLabels[value]));
+}
+
+float GuiOscilloscopeDock::getSampleRatio()
+{
+    return timePeriods[ui->timeDial->value()] * float(mSampleRate) / ui->oscilloscopeDisplay->getDivisionSize();
 }

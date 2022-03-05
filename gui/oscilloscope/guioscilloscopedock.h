@@ -45,6 +45,8 @@ protected:
     Ui::GuiOscilloscopeDock *ui;
     GuiSchemaView *mView;
     int mSampleRate;
+
+    float getSampleRatio();
 };
 
 #endif // GUIOSCILLOSCOPEDOCK_H
