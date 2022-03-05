@@ -31,14 +31,20 @@ class RollingBuffer
 {
 public:
     RollingBuffer(size_t size):
-        mSize(size), mPolicy(OverflowPolicy::ForgetPast), mPushPos(0), mPopPos(0), mUnderflow(true), mOverflow(false), mFirstTurn(true)
+        mSize(size), mPolicy(OverflowPolicy::ForgetPast),
+        mPushPos(mSize - 1), mPopPos(mSize - 1), mFirstTurn(true),
+        mUnderflow(true), mOverflow(!size)
     {
-        mBuffer = new T[size];
+        if (size)
+            mBuffer = new T[size];
+        else
+            mBuffer = nullptr;
     }
 
     ~RollingBuffer()
     {
-        delete[] mBuffer;
+        if (mBuffer)
+            delete[] mBuffer;
     }
 
     void setOverflowPolicy(OverflowPolicy policy) { mPolicy = policy; }
@@ -47,6 +53,9 @@ public:
 
     size_t length() const
     {
+        if (mUnderflow) // Covers mSize = 0
+            return 0;
+
         return (mPushPos > mPopPos)?(mPushPos - mPopPos):(mSize - mPopPos + mPushPos);
     }
 
@@ -58,13 +67,16 @@ public:
         if (mOverflow && mPolicy == OverflowPolicy::IgnoreFuture)
             return;
 
-        mBuffer[mPushPos] = item;
+        if (!mBuffer)
+            return;
 
         ++mPushPos;
         if (mPushPos == mSize) {
             mPushPos = 0;
             mFirstTurn = false;
         }
+
+        mBuffer[mPushPos] = item;
 
         mUnderflow = false;
         mOverflow = (mPopPos == mPushPos);
@@ -79,11 +91,9 @@ public:
 
     T pop()
     {
-        // In case of undeflow, return default value
+        // In case of undeflow, return default value (This also protects nullptr mBuffer)
         if (mUnderflow)
             return T();
-
-        size_t pos = mPopPos;
 
         ++mPopPos;
         if (mPopPos == mSize)
@@ -92,7 +102,7 @@ public:
         mOverflow = false;
         mUnderflow = (mPopPos == mPushPos);
 
-        return mBuffer[pos];
+        return mBuffer[mPopPos];
     }
 
     // Set mPopPos to the oldest sample in buffer
@@ -100,12 +110,10 @@ public:
     void rewind()
     {
         if (mFirstTurn) {
-            mPopPos = 0;
-            mUnderflow = !mPushPos;
+            mPopPos = mSize - 1;
+            mUnderflow = mPushPos == mPopPos;
             mOverflow = false;
-        }
-        else
-        {
+        } else {
             mPopPos = mPushPos;
             mUnderflow = false;
             mOverflow = true;
