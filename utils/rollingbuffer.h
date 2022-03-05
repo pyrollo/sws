@@ -32,8 +32,8 @@ class RollingBuffer
 public:
     RollingBuffer(size_t size):
         mSize(size), mPolicy(OverflowPolicy::ForgetPast),
-        mPushPos(mSize - 1), mPopPos(mSize - 1), mFirstTurn(true),
-        mUnderflow(true), mOverflow(!size)
+        mPushPos(mSize - 1), mPopPos(mSize - 1),
+        mUnderflow(true), mOverflow(!size), mFirstTurn(true)
     {
         if (size)
             mBuffer = new T[size];
