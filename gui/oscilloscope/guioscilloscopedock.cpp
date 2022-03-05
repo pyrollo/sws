@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "guioscilloscopedock.h"
 #include "ui_guioscilloscopedock.h"
 
+#include "guioscilloscopeprobe.h"
 #include "guioscilloscopeprobeframe.h"
 #include "../guimainwindow.h"
 #include "../guischemaview.h"
@@ -58,6 +59,7 @@ void GuiOscilloscopeDock::handleSchemaChange()
 void GuiOscilloscopeDock::handleAddProbe()
 {
     GuiOscilloscopeProbeFrame *probe = new GuiOscilloscopeProbeFrame(ui->oscilloscopeDisplay, mView);
+    probe->getProbe()->setBufferSize(2.0f * mSampleRate / ui->oscilloscopeDisplay->getRefreshRate());
     ui->verticalLayout->addWidget(probe);
     probe->show();
 }

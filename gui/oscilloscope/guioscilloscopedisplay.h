@@ -39,7 +39,8 @@ public:
 
     void setSampleRatio(float ratio);
 
-    int getDivisionSize() { return mDivisionSize; }
+    int getDivisionSize() const { return mDivisionSize; }
+    float getRefreshRate() const { return mRefreshRate; }
 signals:
     void resized(QResizeEvent *);
 

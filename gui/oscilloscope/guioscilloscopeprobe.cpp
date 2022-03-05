@@ -22,17 +22,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawnplug.h"
 
 GuiOscilloscopeProbe::GuiOscilloscopeProbe():
-    mProbedPlug(nullptr), mDisplayBuffer(nullptr), mLast(0), mPeriod(0.0f), mCurrentSample({0, 0, 0, false})
+    mProbedPlug(nullptr), mDisplayBuffer(nullptr),
+    mColor(Qt::white), mEnabled(false), mScale(1.0f), mOffset(0.0f),
+    mPeriod(0.0f), mSampleRatio(1.0f),
+    mCurrentSample({0, 0, 0, false})
 {
     mSampleBuffer = new SampleBuffer();
-    setSampleRatio(1.0f);
-    mScale = 100.0f;
 }
 
 GuiOscilloscopeProbe::~GuiOscilloscopeProbe()
 {
     probePlug(nullptr);
+    if (mDisplayBuffer)
+        delete mDisplayBuffer;
     delete mSampleBuffer;
+}
+
+void GuiOscilloscopeProbe::setBufferSize(size_t size)
+{
+    mSampleBuffer->resize(size);
 }
 
 void GuiOscilloscopeProbe::probePlug(DrawnPlug *plug)
@@ -44,14 +52,6 @@ void GuiOscilloscopeProbe::probePlug(DrawnPlug *plug)
 
     if (mProbedPlug)
         mProbedPlug->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
-}
-
- void GuiOscilloscopeProbe::setSampleRatio(float ratio)
- {
-    mSampleRatio = ratio;
-// TODO:Sample buffer seems ok if > 4000.
-
-    mSampleBuffer->resize(int(mSampleRatio * 100.0f));
 }
 
 void addPixel(QImage *image, int x, int y, QColor &color)
@@ -74,20 +74,20 @@ void GuiOscilloscopeProbe::fetchSamples()
     // Convert and merge new core samples to display samples
     while (!mSampleBuffer->underflow()) {
 
-        mLast = mSampleBuffer->pop().toInt(mScale, mOffset);
+        int value = mSampleBuffer->pop().toInt(mScale, mOffset);
 
         ++mCurrentSample.number;
-        if (mCurrentSample.min > mLast)
-            mCurrentSample.min = mLast;
-        if (mCurrentSample.max < mLast)
-            mCurrentSample.max = mLast;
+        if (mCurrentSample.min > value)
+            mCurrentSample.min = value;
+        if (mCurrentSample.max < value)
+            mCurrentSample.max = value;
 
         mPeriod += 1.0f;
         if (mPeriod > mSampleRatio) {
             mDisplayBuffer->push(mCurrentSample);
             mPeriod -= mSampleRatio;
-            mCurrentSample.min = mLast;
-            mCurrentSample.max = mLast;
+            mCurrentSample.min = value;
+            mCurrentSample.max = value;
             mCurrentSample.number = 1;
             mCurrentSample.overflow = false;
         }
