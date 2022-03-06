@@ -42,7 +42,13 @@ GuiOscilloscopeDock::GuiOscilloscopeDock(GuiSchemaView *view, int sampleRate)
 
 GuiOscilloscopeDock::~GuiOscilloscopeDock()
 {
+    // Have to delete probe frames before display
+    for (auto child : ui->verticalLayoutWidget->children())
+      if (qobject_cast<GuiOscilloscopeProbeFrame*>(child))
+          delete child;
+
     delete ui;
+
 }
 
 void GuiOscilloscopeDock::closeEvent(QCloseEvent *)

@@ -32,6 +32,7 @@ QT_END_NAMESPACE
 
 class GuiOscilloscopeProbeFrame : public QFrame
 {
+    Q_OBJECT
     friend ProbeShemaInteraction;
 
 public:
