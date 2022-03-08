@@ -22,6 +22,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnPlug;
 class DrawnWire;
 
+/*
+ * ConnectWireInteraction
+ * ======================
+ *
+ * Connects a plug to another plug.
+ * Started in default interaction when dragging from a connectable plug.
+ * Ends when mouse released
+ *
+ */
+
 class ConnectWireInteraction : public DrawnSchemaInteraction
 {
 public:

@@ -18,7 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "guischemascene.h"
 #include "guistyle.h"
+
 #include "draw/drawnschema.h"
+
 #include <QPainter>
 #include <QKeyEvent>
 #include <QLabel>
@@ -27,7 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 GuiSchemaScene::GuiSchemaScene(QObject *parent):
     QGraphicsScene(-10, -10, 20, 20, parent), mSchema(nullptr)
 {
-    setBackgroundBrush(GuiStyle::bBackground());
+    setBackgroundBrush(GuiStyle::cSceneBackground());
 }
 
 void GuiSchemaScene::keyPressEvent(QKeyEvent *event)

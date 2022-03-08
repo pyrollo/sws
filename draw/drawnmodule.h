@@ -30,11 +30,14 @@ class DrawnOutput;
 class CoreModule;
 class QPainter;
 class QMouseEvent;
+class QSvgRenderer;
 
 #define MODULE_TYPE(TYPE) \
 public: \
     virtual const char *getType() const override { return mType; } \
     static constexpr char *mType = (char *)TYPE;
+
+class DrawnModuleIcon;
 
 class DrawnModule : public DrawnItem
 {
@@ -53,9 +56,7 @@ public:
     void highlightPluggableOutputs();
     void highlightProbeableOutputs();
 
-    void setPenAndBrush(QPainter *painter);
-
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void setIconSvgFile(const QString &filename);
 
 protected:
     CoreModule *mCoreModule;
@@ -63,10 +64,14 @@ protected:
     std::map<std::string, DrawnInput *> mInputs;
     std::map<std::string, DrawnOutput *> mOutputs;
 
+    DrawnModuleIcon *mIcon;
+
     DrawnModule(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
 
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);
+
+    void setStyle(QPainter *painter);
 };
 
 

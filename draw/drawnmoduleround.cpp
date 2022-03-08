@@ -18,26 +18,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnmoduleround.h"
 #include "gui/guistyle.h"
+
 #include <QPainter>
+#include <QSvgRenderer>
+#include <QGraphicsSvgItem>
 
 DrawnModuleRound::DrawnModuleRound(DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModule(parentSchema, coreModule)
 {
-    float margin = GuiStyle::pModule().widthF() * 0.5f;
+    float margin = GuiStyle::wModule() * 0.5f;
     mPosGridAnchor = QPointF(margin, margin);
 }
 
 QRectF DrawnModuleRound::boundingRect() const
 {
-    float margin = GuiStyle::pModule().widthF();
+    float margin = GuiStyle::wModule();
     return QRectF(-margin * 0.5f, -margin * 0.5f, 2.0f + margin, 2.0f + margin);
 }
 
-void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    (void)(option); (void)(widget);
-
-    setPenAndBrush(painter);
+    setStyle(painter);
 
     QPainterPath path;
     path.addEllipse(0.0f, 0.0f, 2.0f, 2.0f);
@@ -46,7 +47,7 @@ void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 void DrawnModuleRound::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation)
 {
-    float margin = GuiStyle::pModule().widthF() * 0.5;
+    float margin = GuiStyle::wModule() * 0.5;
     plug->setOrientation(orientation);
     switch(orientation) {
     case DrawnPlug::top:

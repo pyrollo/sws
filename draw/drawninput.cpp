@@ -29,7 +29,7 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 {
     (void)(option); (void)(widget);
 
-    setPenAndBrush(painter);
+    setStyle(painter);
 
     static const QPointF points[3] = {
         QPointF(0.0, -plugSize),

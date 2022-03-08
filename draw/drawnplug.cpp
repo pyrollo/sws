@@ -44,7 +44,7 @@ DrawnPlug::~DrawnPlug()
 
 QRectF DrawnPlug::boundingRect() const
 {
-    float margin = GuiStyle::pPlug().width();
+    float margin = GuiStyle::wPlug();
     return QRectF(-margin, -margin - plugSize, margin + plugSize, plugSize * 2 + margin);
 }
 
@@ -70,30 +70,34 @@ void DrawnPlug::setConnecting(bool connecting)
     update();
 }
 
-void DrawnPlug::setPenAndBrush(QPainter *painter)
+void DrawnPlug::setStyle(QPainter *painter)
 {
+    QColor background = GuiStyle::cBackground();
+    QColor foreground = GuiStyle::cForeground();
+
     if (module()->isSelected()) {
-        painter->setPen(GuiStyle::pPlugSelected());
-        painter->setBrush(GuiStyle::bPlugSelected());
-    } else {
-        painter->setPen(GuiStyle::pPlug());
-        painter->setBrush(GuiStyle::bPlug());
+        background = GuiStyle::cBackgroundSelected();
+        foreground = GuiStyle::cForegroundSelected();
     }
 
     if (connected())
-        painter->setBrush(GuiStyle::bPlugConnected());
+        background = GuiStyle::cWire();
 
     if (mConnecting)
-        painter->setBrush(GuiStyle::bPlugConnecting());
+        background = GuiStyle::cWireConnecting();
 
     if (mHighlighted)
-        painter->setPen(GuiStyle::pPlugConnectable());
+        foreground = GuiStyle::cHighlighted();
 
     for (auto wire: mConnectedWires)
         if (wire->isSelected()) {
-            painter->setBrush(GuiStyle::bWireSelected());
+            background = GuiStyle::cWireSelected();
             break;
         }
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setPen(QPen(QBrush(foreground), GuiStyle::wPlug()));
+    painter->setBrush(QBrush(background));
 }
 
 void DrawnPlug::addConnectedWire(DrawnWire *wire)

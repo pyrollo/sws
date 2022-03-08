@@ -29,7 +29,7 @@ void DrawnOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
     (void)(option); (void)(widget);
 
-    setPenAndBrush(painter);
+    setStyle(painter);
 
     painter->drawChord(QRectF(-plugSize, -plugSize, plugSize*2, plugSize*2), -90*16, 180*16);
 }

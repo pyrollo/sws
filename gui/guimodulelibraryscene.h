@@ -28,6 +28,8 @@ public:
     GuiModuleLibraryScene(QObject *parent = nullptr);
     void setFactory(DrawnModuleFactory *factory);
 
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
 protected:
     DrawnModuleFactory *mFactory;
 };

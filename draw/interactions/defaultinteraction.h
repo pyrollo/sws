@@ -20,6 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define DEFAULTINTERACTION_H
 #include "draw/drawnschemainteraction.h"
 
+/*
+ * DefaultInteraction
+ * ==================
+ *
+ * This is the basic interaction on a schema when no action is ongoing.
+ * Starts other interactions if necessary.
+ * Some defaults behavior are managed at Qt level (selection, modules moving).
+ *
+ */
+
 class DefaultInteraction : public DrawnSchemaInteraction
 {
 public:

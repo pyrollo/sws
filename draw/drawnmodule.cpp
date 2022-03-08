@@ -16,22 +16,104 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "drawnitem.h"
 #include "drawnmodule.h"
+#include "drawnitem.h"
 #include "drawnschema.h"
 #include "drawninput.h"
 #include "drawnoutput.h"
 #include "gui/guistyle.h"
+
 #include "core/coremodule.h"
 #include "core/coreexceptions.h"
+
+#include <QSvgRenderer>
 #include <QPainter>
-#include <QGraphicsSceneMouseEvent>
-#include <QDrag>
-#include <QMimeData>
-#include <QPixmap>
+#include <QGraphicsEffect>
+
+class DrawnModuleIconEffect : public QGraphicsEffect
+{
+public:
+    DrawnModuleIconEffect(QObject *parent = nullptr):
+        QGraphicsEffect(parent), mBackgroundColor(Qt::white), mForegroundColor(Qt::black)
+    {}
+
+    void setForeground(QColor color) { mForegroundColor = color; }
+    void setBackground(QColor color) { mBackgroundColor = color; }
+
+    void draw(QPainter *painter) override {
+        painter->save();
+        QPoint offset;
+        QPixmap pixmap;
+
+        if (sourceIsPixmap()) {
+            pixmap = sourcePixmap(Qt::LogicalCoordinates, &offset);
+        } else {
+            pixmap = sourcePixmap(Qt::DeviceCoordinates, &offset);
+            painter->setWorldTransform(QTransform());
+        }
+
+        int oR = mForegroundColor.red();
+        int oG = mForegroundColor.green();
+        int oB = mForegroundColor.blue();
+
+        int mR = mBackgroundColor.red() - oR;
+        int mG = mBackgroundColor.green() - oG;
+        int mB = mBackgroundColor.blue() - oB;
+
+        QImage image = pixmap.toImage();
+
+        unsigned int *data = (unsigned int *)image.bits();
+
+        int pixels = image.width() * image.height();
+        for (int i = 0; i < pixels; ++i) {
+            int a = qAlpha(data[i]);
+            int v = qGray(data[i]);
+            data[i] = qPremultiply(qRgba(oR + mR * v / 255, oG + mG * v / 255, oB + mB * v / 255, a));
+        }
+
+        painter->drawImage(offset, image);
+        painter->restore();
+    }
+
+private:
+    QColor mBackgroundColor;
+    QColor mForegroundColor;
+};
+
+class DrawnModuleIcon: public QGraphicsItem
+{
+public:
+    DrawnModuleIcon(DrawnModule *parent, const QString &filename):
+        QGraphicsItem(parent), mRenderer(filename)
+    {
+        setAcceptedMouseButtons(Qt::NoButton);
+        mEffect = new DrawnModuleIconEffect();
+        setGraphicsEffect(mEffect); // Takes ownership
+    }
+
+    ~DrawnModuleIcon()
+    {}
+
+    QRectF boundingRect() const
+    {
+        return QRectF(0.2f, 0.2f, 1.6f, 1.6f);
+    }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+    {
+        mRenderer.render(painter, boundingRect());
+    }
+
+    void setForeground(QColor color) { mEffect->setForeground(color); }
+    void setBackground(QColor color) { mEffect->setBackground(color); }
+
+protected:
+    QSvgRenderer mRenderer;
+    DrawnModuleIconEffect *mEffect;
+};
 
 DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
-    DrawnItem(schema, 1.0f), mCoreModule(coreModule)
+    DrawnItem(schema, 1.0f), mCoreModule(coreModule), mIcon(nullptr)
 {
     if (mSchema)
         setFlags(flags()|ItemIsSelectable|ItemIsMovable);
@@ -43,6 +125,9 @@ DrawnModule::~DrawnModule() {
     if (mSchema)
         mSchema->removeModule(this);
 
+    if (mIcon)
+        delete mIcon;
+
     for (auto it : mInputs)
         delete it.second;
 
@@ -51,6 +136,34 @@ DrawnModule::~DrawnModule() {
 
     if (mCoreModule)
         delete mCoreModule;
+}
+
+void DrawnModule::setIconSvgFile(const QString &filename)
+{
+    if (mIcon)
+        delete mIcon;
+
+    mIcon = new DrawnModuleIcon(this, filename);
+}
+
+void DrawnModule::setStyle(QPainter *painter)
+{
+    QColor background = GuiStyle::cBackground();
+    QColor foreground = GuiStyle::cForeground();
+
+    if (isSelected()) {
+        background = GuiStyle::cBackgroundSelected();
+        foreground = GuiStyle::cForegroundSelected();
+    }
+
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->setPen(QPen(QBrush(foreground), GuiStyle::wModule()));
+    painter->setBrush(QBrush(background));
+
+    if (mIcon) {
+        mIcon->setBackground(background);
+        mIcon->setForeground(foreground);
+    }
 }
 
 DrawnInput *DrawnModule::newInput(std::string name)
@@ -138,45 +251,5 @@ void DrawnModule::unHighlightPlugs()
             it.second->setHighlighted(false);
             it.second->setConnecting(false);
         }
-    }
-}
-
-void DrawnModule::setPenAndBrush(QPainter *painter)
-{
-    if (isSelected()) {
-        painter->setPen(GuiStyle::pModuleSelected());
-        painter->setBrush(GuiStyle::bModuleSelected());
-    } else {
-        painter->setPen(GuiStyle::pModule());
-        painter->setBrush(GuiStyle::bModule());
-    }
-}
-
-void DrawnModule::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (mSchema)
-        return;
-
-    if (event->button() == Qt::LeftButton) {
-
-        QDrag *drag = new QDrag(this);
-        QMimeData *mimeData = new QMimeData();
-        mimeData->setData("sws/moduletype", QByteArray::fromStdString(getType()));
-        drag->setMimeData(mimeData);
-
-        QRectF rect = boundingRect();
-        QPixmap pix(rect.width()*20, rect.height()*20);
-        pix.fill(Qt::transparent);
-        QPainter painter(&pix);
-        painter.setTransform(QTransform().scale(20,20));
-        paint(&painter, nullptr);
-        for (auto it: mInputs)
-            it.second->paint(&painter, nullptr);
-        for (auto it: mOutputs)
-            it.second->paint(&painter, nullptr);
-        painter.end();
-        drag->setPixmap(pix);
-
-        drag->exec();
     }
 }

@@ -35,7 +35,7 @@ public:
 
     DrawnModule *module() { return mModule; }
 
-    CorePlug *core() { return mCorePlug; };
+    CorePlug *core() { return mCorePlug; }
 
     virtual bool pluggable() = 0;
     bool connected();
@@ -71,7 +71,7 @@ protected:
     bool mConnecting;
     std::unordered_set<DrawnWire *>mConnectedWires;
 
-    void setPenAndBrush(QPainter *painter);
+    void setStyle(QPainter *painter);
 };
 
 

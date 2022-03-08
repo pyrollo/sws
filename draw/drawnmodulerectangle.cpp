@@ -18,26 +18,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnmodulerectangle.h"
 #include "gui/guistyle.h"
+
 #include <QPainter>
+#include <QSvgRenderer>
 
 DrawnModuleRectangle::DrawnModuleRectangle(DrawnSchema *parentSchema, CoreModule *coreModule, float width, float height):
     DrawnModule(parentSchema, coreModule), mWidth(width), mHeight(height)
 {
-    float margin = GuiStyle::pModule().widthF() * 0.5f;
+    float margin = GuiStyle::wModule() * 0.5f;
     mPosGridAnchor = QPointF(margin, margin);
 }
 
 QRectF DrawnModuleRectangle::boundingRect() const
 {
-    float margin = GuiStyle::pModule().widthF();
+    float margin = GuiStyle::wModule();
     return QRectF(-margin * 0.5f, -margin * 0.5f, mWidth + margin, mHeight + margin);
 }
 
-void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    (void)(option); (void)(widget);
-
-    setPenAndBrush(painter);
+    setStyle(painter);
 
     QPainterPath path;
     path.addRoundedRect(0.0f, 0.0f, mWidth, mHeight, 0.1f, 0.1f);

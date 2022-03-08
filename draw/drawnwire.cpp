@@ -275,7 +275,7 @@ void DrawnWire::updatePath()
     }
 
     mPath = path();
-    float margin = GuiStyle::pWire().widthF();
+    float margin = GuiStyle::wWire();
     prepareGeometryChange();
     mBoundingRect = mPath.boundingRect().marginsAdded(QMargins(margin, margin, margin, margin));
     update();
@@ -293,11 +293,11 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     (void)(option); (void)(widget);
 
     if (mDragging) {
-        painter->setPen(GuiStyle::pWireConnecting());
+        painter->setPen(QPen(GuiStyle::cWireConnecting(), GuiStyle::wWire()));
     } else if (isSelected()) {
-        painter->setPen(GuiStyle::pWireSelected());
+        painter->setPen(QPen(GuiStyle::cWireSelected(), GuiStyle::wWire()));
     } else {
-        painter->setPen(GuiStyle::pWire());
+        painter->setPen(QPen(GuiStyle::cWire(), GuiStyle::wWire()));
     }
 
     painter->drawPath(mPath);

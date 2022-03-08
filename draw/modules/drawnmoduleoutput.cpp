@@ -39,11 +39,9 @@ DrawnModuleOutput::~DrawnModuleOutput()
     }
 }
 
-void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    (void)(option); (void)(widget);
-
-    setPenAndBrush(painter);
+    setStyle(painter);
 
     QPainterPath path;
     path.moveTo(0.0f, 0.0f);
