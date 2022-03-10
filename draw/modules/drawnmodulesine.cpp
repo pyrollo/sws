@@ -22,7 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleSine::DrawnModuleSine(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
 {
-    setIconSvgFile("/home/pyrollo/dev/30-Applications/sws/resources/icons/module_sine.svg");
+    Q_INIT_RESOURCE(draw);
+    setIconSvgFile(":/module/sine.svg");
 
     newInput("operand", DrawnPlug::left, 1.0f);
     newOutput("result", DrawnPlug::right, 1.0f);

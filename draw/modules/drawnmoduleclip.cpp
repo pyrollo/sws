@@ -22,17 +22,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleClip::DrawnModuleClip(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
 {
+    Q_INIT_RESOURCE(draw);
+    setIconSvgFile(":/module/clip.svg");
+
     newInput("operand", DrawnPlug::left, 1.0f);
     newOutput("result", DrawnPlug::right, 1.0f);
-}
-
-void DrawnModuleClip::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    DrawnModuleRectangle::paint(painter, option, widget);
-
-    QPainterPath path;
-    path.moveTo(0.5f, 1.5f);
-    path.lineTo(1.5f, 0.5f);
-    path.lineTo(1.5f, 1.5f);
-    painter->drawPath(path);
 }

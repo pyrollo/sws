@@ -151,4 +151,5 @@ DISTFILES += \
     file/coreandgui.xsd
 
 RESOURCES += \
+    draw/resources/draw.qrc \
     gui/gui.qrc

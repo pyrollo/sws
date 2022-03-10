@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>module/time.svg</file>
+        <file>module/sine.svg</file>
+        <file>module/add.svg</file>
+        <file>module/clip.svg</file>
+        <file>module/multiply.svg</file>
+    </qresource>
+</RCC>
