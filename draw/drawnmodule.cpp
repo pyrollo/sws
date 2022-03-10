@@ -96,7 +96,7 @@ public:
 
     QRectF boundingRect() const
     {
-        return QRectF(0.2f, 0.2f, 1.6f, 1.6f);
+        return QRectF(0.3f, 0.3f, 1.4f, 1.4f);
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
