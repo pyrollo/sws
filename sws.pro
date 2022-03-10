@@ -30,7 +30,7 @@ SOURCES += \
     core/modules/coremoduleinput.cpp \
     core/modules/coremodulemultiply.cpp \
     core/modules/coremoduleoutput.cpp \
-    core/modules/coremodulesinus.cpp \
+    core/modules/coremodulesine.cpp \
     core/modules/coremoduletime.cpp \
     draw/drawninput.cpp \
     draw/drawnitem.cpp \
@@ -50,7 +50,7 @@ SOURCES += \
     draw/modules/drawnmoduleinput.cpp \
     draw/modules/drawnmodulemultiply.cpp \
     draw/modules/drawnmoduleoutput.cpp \
-    draw/modules/drawnmodulesinus.cpp \
+    draw/modules/drawnmodulesine.cpp \
     draw/modules/drawnmoduletime.cpp \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
@@ -88,7 +88,7 @@ HEADERS += \
     core/modules/coremoduleinput.h \
     core/modules/coremodulemultiply.h \
     core/modules/coremoduleoutput.h \
-    core/modules/coremodulesinus.h \
+    core/modules/coremodulesine.h \
     core/modules/coremoduletime.h \
     draw/drawninput.h \
     draw/drawnitem.h \
@@ -109,7 +109,7 @@ HEADERS += \
     draw/modules/drawnmoduleinput.h \
     draw/modules/drawnmodulemultiply.h \
     draw/modules/drawnmoduleoutput.h \
-    draw/modules/drawnmodulesinus.h \
+    draw/modules/drawnmodulesine.h \
     draw/modules/drawnmoduletime.h \
     file/filedeserializer.h \
     file/fileserializer.h \

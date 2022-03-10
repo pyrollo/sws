@@ -16,24 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "drawnmodulesinus.h"
-#include <QPainter>
+#ifndef COREMODULESINE_H
+#define COREMODULESINE_H
 
-DrawnModuleSinus::DrawnModuleSinus(DrawnSchema *schema, CoreModule *coreModule):
-    DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
+#include "core/coremodule.h"
+
+class CoreModuleSine : public CoreModule
 {
-    newInput("operand", DrawnPlug::left, 1.0f);
-    newOutput("result", DrawnPlug::right, 1.0f);
-}
+public:
+    explicit CoreModuleSine(CoreSchema *schema);
+    void step();
 
-void DrawnModuleSinus::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    DrawnModuleRectangle::paint(painter, option, widget);
+protected:
+    CoreInput *mInputOperand;
+    CoreOutput *mOutputResult;
+};
 
-    QPainterPath path;
-    path.moveTo(0.5f, 1.0f);
-    path.cubicTo(0.6f, 1.5f, 0.9f, 1.5f, 1.0f, 1.0f);
-    path.cubicTo(1.1f, 0.5f, 1.4f, 0.5f, 1.5f, 1.0f);
-    path.lineTo(1.5f, 1.0f);
-    painter->drawPath(path);
-}
+#endif // COREMODULESINUS_H

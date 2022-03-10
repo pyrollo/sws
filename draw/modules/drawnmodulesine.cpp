@@ -16,18 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAWNMODULESINUS_H
-#define DRAWNMODULESINUS_H
-#include "../drawnmodulerectangle.h"
+#include "drawnmodulesine.h"
+#include <QPainter>
 
-class QPainter;
-
-class DrawnModuleSinus : public DrawnModuleRectangle
+DrawnModuleSine::DrawnModuleSine(DrawnSchema *schema, CoreModule *coreModule):
+    DrawnModuleRectangle(schema, coreModule, 2.0f, 2.0f)
 {
-    MODULE_TYPE("sinus")
-public:
-    DrawnModuleSinus(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
-};
+    setIconSvgFile("/home/pyrollo/dev/30-Applications/sws/resources/icons/module_sine.svg");
 
-#endif // DRAWNMODULESINUS_H
+    newInput("operand", DrawnPlug::left, 1.0f);
+    newOutput("result", DrawnPlug::right, 1.0f);
+}

@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "modules/drawnmoduleclip.h"
 #include "modules/drawnmoduleadd.h"
 #include "modules/drawnmodulemultiply.h"
-#include "modules/drawnmodulesinus.h"
+#include "modules/drawnmodulesine.h"
 
 #define ADDMODULECLASS(CLASS) \
     mFactories[CLASS::mType] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
@@ -38,7 +38,7 @@ DrawnModuleFactory::DrawnModuleFactory()
     ADDMODULECLASS(DrawnModuleClip)
     ADDMODULECLASS(DrawnModuleAdd)
     ADDMODULECLASS(DrawnModuleMultiply)
-    ADDMODULECLASS(DrawnModuleSinus)
+    ADDMODULECLASS(DrawnModuleSine)
 }
 
 DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)

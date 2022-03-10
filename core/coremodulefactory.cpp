@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "modules/coremoduleclip.h"
 #include "modules/coremoduleadd.h"
 #include "modules/coremodulemultiply.h"
-#include "modules/coremodulesinus.h"
+#include "modules/coremodulesine.h"
 
 class CoreSchema;
 
@@ -39,7 +39,7 @@ CoreModuleFactory::CoreModuleFactory(CoreSchema *schema) :
     mFactories["clip"]     = [](CoreSchema *schema) { return new CoreModuleClip(schema); };
     mFactories["add"]      = [](CoreSchema *schema) { return new CoreModuleAdd(schema); };
     mFactories["multiply"] = [](CoreSchema *schema) { return new CoreModuleMultiply(schema); };
-    mFactories["sinus"]    = [](CoreSchema *schema) { return new CoreModuleSinus(schema); };
+    mFactories["sine"]     = [](CoreSchema *schema) { return new CoreModuleSine(schema); };
 }
 
 CoreModule *CoreModuleFactory::newModule(std::string type)

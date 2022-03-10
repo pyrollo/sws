@@ -16,20 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef COREMODULESINUS_H
-#define COREMODULESINUS_H
+#ifndef DRAWNMODULESINE_H
+#define DRAWNMODULESINE_H
+#include "../drawnmodulerectangle.h"
 
-#include "core/coremodule.h"
+class QPainter;
 
-class CoreModuleSinus : public CoreModule
+class DrawnModuleSine : public DrawnModuleRectangle
 {
+    MODULE_TYPE("sine")
 public:
-    explicit CoreModuleSinus(CoreSchema *schema);
-    void step();
-
-protected:
-    CoreInput *mInputOperand;
-    CoreOutput *mOutputResult;
+    DrawnModuleSine(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
 };
 
-#endif // COREMODULESINUS_H
+#endif // DRAWNMODULESINUS_H

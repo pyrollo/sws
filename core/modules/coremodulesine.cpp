@@ -16,17 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "coremodulesinus.h"
+#include "coremodulesine.h"
 #include "math.h"
 
-CoreModuleSinus::CoreModuleSinus(CoreSchema *schema) :
+CoreModuleSine::CoreModuleSine(CoreSchema *schema) :
     CoreModule(schema)
 {
     mInputOperand =newInput("operand", 0.0f);
     mOutputResult =newOutput("result");
 }
 
-void CoreModuleSinus::step()
+void CoreModuleSine::step()
 {
     mOutputResult->setValue(Value(sin(mInputOperand->value().moduloOne().toDouble() * M_PI * 2.0)));
 }
