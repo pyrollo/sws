@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleTime::DrawnModuleTime(DrawnSchema *schema, CoreModule *coreModule):
     DrawnModuleRound(schema, coreModule)
 {
+    setIconSvgFile("/home/pyrollo/dev/30-Applications/sws/resources/icons/module_clock.svg");
     newOutput("time", DrawnPlug::right);
 }
 
