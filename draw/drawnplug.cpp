@@ -33,8 +33,6 @@ DrawnPlug::DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug) :
     mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
-    if (mModule->schema())
-        setAcceptHoverEvents(true);
 }
 
 DrawnPlug::~DrawnPlug()

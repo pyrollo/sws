@@ -74,6 +74,4 @@ protected:
     void setStyle(QPainter *painter);
 };
 
-
-
 #endif // DRAWNPLUG_H

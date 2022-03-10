@@ -25,10 +25,8 @@ DrawnInput::DrawnInput(DrawnModule *parent, CoreInput *coreInput) :
     DrawnPlug(parent, coreInput), mCoreInput(coreInput)
 {}
 
-void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    (void)(option); (void)(widget);
-
     setStyle(painter);
 
     static const QPointF points[3] = {
@@ -38,28 +36,4 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     };
 
     painter->drawPolygon(points, 3);
-}
-
-void DrawnInput::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
-    mIsHovered = true;
-
-    if (mCoreInput) {
-//        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-//        if (schemaScene)
-//            schemaScene->setProbe(QString("input"), mCoreInput->value());
-    }
-
-    QGraphicsItem::hoverEnterEvent(event);
-}
-
-void DrawnInput::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
-    mIsHovered = false;
-
-    if (mCoreInput) {
-//        GuiSchemaScene *schemaScene = dynamic_cast<GuiSchemaScene *>(scene());
-//        if (schemaScene)
-//            schemaScene->clearProbe();
-    }
-
-    QGraphicsItem::hoverLeaveEvent(event);
 }
