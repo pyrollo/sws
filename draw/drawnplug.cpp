@@ -44,7 +44,9 @@ DrawnPlug::~DrawnPlug()
 QRectF DrawnPlug::boundingRect() const
 {
     float margin = Style::wPlug();
-    return QRectF(-margin, -margin - plugSize, margin + plugSize, plugSize * 2 + margin);
+    float size = Style::sPlug();
+
+    return QRectF(-margin, -margin - size, margin + size, size * 2 + margin);
 }
 
 void DrawnPlug::setOrientation(Orientation orientation)

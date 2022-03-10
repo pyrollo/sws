@@ -17,8 +17,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnoutput.h"
+#include "style.h"
+
 #include "core/coreoutput.h"
-#include "gui/guischemascene.h"
+
 #include <QPainter>
 
 DrawnOutput::DrawnOutput(DrawnModule *parent, CoreOutput *coreOutput) :
@@ -29,6 +31,8 @@ void DrawnOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWi
 {
     setStyle(painter);
 
-    painter->drawChord(QRectF(-plugSize, -plugSize, plugSize*2, plugSize*2), -90*16, 180*16);
+    float size = Style::sPlug();
+
+    painter->drawChord(QRectF(-size, -size, size*2, size*2), -90*16, 180*16);
 }
 

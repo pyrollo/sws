@@ -62,8 +62,6 @@ public:
     static void unrotatePoint(QPointF &point, Orientation by);
 
 protected:
-    const float plugSize = 0.3f;
-
     DrawnModule *mModule;
     CorePlug *mCorePlug;
     Orientation mOrientation;

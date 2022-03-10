@@ -17,8 +17,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawninput.h"
+#include "style.h"
+
 #include "core/coreinput.h"
-#include "gui/guischemascene.h"
+
 #include <QPainter>
 
 DrawnInput::DrawnInput(DrawnModule *parent, CoreInput *coreInput) :
@@ -29,11 +31,9 @@ void DrawnInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWid
 {
     setStyle(painter);
 
-    static const QPointF points[3] = {
-        QPointF(0.0, -plugSize),
-        QPointF(plugSize, 0.0),
-        QPointF(0.0, plugSize)
-    };
+    float size = Style::sPlug();
+
+    static const QPointF points[3] = { QPointF(0.0, -size), QPointF(size, 0.0), QPointF(0.0, size) };
 
     painter->drawPolygon(points, 3);
 }

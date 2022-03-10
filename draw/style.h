@@ -15,6 +15,9 @@ public:
     static float wPlug()   { return 0.05f; }
     static float wWire()   { return 0.1f; }
 
+    // Dimensions
+    static float sPlug()   { return 0.3f; }
+
     // Colors
     static QColor cSceneBackground()    { return QColor("#4B4B64"); }
     static QColor cForeground()         { return QColor("#448"); }
