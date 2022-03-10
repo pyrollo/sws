@@ -27,7 +27,7 @@ public:
     static QColor cHighlighted()        { return QColor("#484"); }
     static QColor cWire()               { return QColor("#66C"); }
     static QColor cWireSelected()       { return QColor("#884"); }
-    static QColor cWireConnecting()     { return QColor("#66C"); }
+    static QColor cWireConnecting()     { return QColor("#6C6"); }
 };
 
 #endif // DRAWNSTYLE_H

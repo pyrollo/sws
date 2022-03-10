@@ -277,9 +277,12 @@ void DrawnWire::updatePath()
     }
 
     mPath = path();
-    float margin = Style::wWire();
     prepareGeometryChange();
-    mBoundingRect = mPath.boundingRect().marginsAdded(QMargins(margin, margin, margin, margin));
+
+    // TODO: Could be improbed, plug size does not always increase margin
+    float margin = Style::wWire() + Style::sPlug() - Style::wPlug();
+
+    mBoundingRect = mPath.boundingRect().marginsAdded(QMarginsF(margin, margin, margin, margin));
     update();
 }
 
@@ -290,17 +293,37 @@ QPainterPath DrawnWire::shape() const
     return stroker.createStroke(mPath);
 }
 
-void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    (void)(option); (void)(widget);
+    QColor color = Style::cWire();
 
-    if (mDragging) {
-        painter->setPen(QPen(Style::cWireConnecting(), Style::wWire()));
-    } else if (isSelected()) {
-        painter->setPen(QPen(Style::cWireSelected(), Style::wWire()));
-    } else {
-        painter->setPen(QPen(Style::cWire(), Style::wWire()));
+    if (isSelected())
+        color = Style::cWireSelected();
+
+    if (mDragging)
+        color = Style::cWireConnecting();
+
+    painter->setPen(QPen(color, Style::wWire()));
+    painter->drawPath(mPath);
+
+    painter->setPen(QPen(color, 0.0f));
+    painter->setBrush(QBrush(color));
+
+
+    float size = Style::sPlug() - Style::wPlug();
+
+    if (mConnectedOutput) {
+        painter->save();
+        painter->setTransform(transformFromPlug(mConnectedOutput).inverted(), true);
+        painter->drawEllipse(QPointF(), size, size);
+        painter->restore();
     }
 
-    painter->drawPath(mPath);
+    if (mConnectedInput) {
+        painter->save();
+        painter->setTransform(transformFromPlug(mConnectedInput).inverted(), true);
+        const QPointF points[3] = { QPointF(0.0f, -size), QPointF(-size, 0.0f), QPointF(0.0f, size) };
+        painter->drawPolygon(points, 3);
+        painter->restore();
+    }
 }

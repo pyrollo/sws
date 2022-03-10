@@ -81,9 +81,6 @@ void DrawnPlug::setStyle(QPainter *painter)
         foreground = Style::cForegroundSelected();
     }
 
-    if (connected())
-        background = Style::cWire();
-
     if (mConnecting)
         background = Style::cWireConnecting();
 
