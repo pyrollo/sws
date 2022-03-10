@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnmodulerectangle.h"
-#include "gui/guistyle.h"
+#include "style.h"
 
 #include <QPainter>
 #include <QSvgRenderer>
@@ -25,13 +25,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleRectangle::DrawnModuleRectangle(DrawnSchema *parentSchema, CoreModule *coreModule, float width, float height):
     DrawnModule(parentSchema, coreModule), mWidth(width), mHeight(height)
 {
-    float margin = GuiStyle::wModule() * 0.5f;
+    float margin = Style::wModule() * 0.5f;
     mPosGridAnchor = QPointF(margin, margin);
 }
 
 QRectF DrawnModuleRectangle::boundingRect() const
 {
-    float margin = GuiStyle::wModule();
+    float margin = Style::wModule();
     return QRectF(-margin * 0.5f, -margin * 0.5f, mWidth + margin, mHeight + margin);
 }
 

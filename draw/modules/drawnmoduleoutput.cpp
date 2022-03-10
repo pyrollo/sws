@@ -17,10 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnmoduleoutput.h"
-#include "../drawnschema.h"
-#include "gui/guistyle.h"
+#include "draw/drawnschema.h"
+#include "draw/style.h"
+
 #include "core/modules/coremoduleoutput.h"
 #include "core/coreschema.h"
+
 #include <QPainter>
 #include <QInputDialog>
 
@@ -52,7 +54,7 @@ void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     path.lineTo(0.0f, 0.0f);
     painter->drawPath(path);
 
-    painter->setFont(GuiStyle::fModule());
+    painter->setFont(Style::fModule());
     QRectF textRect(1.0f, 1.0f, 31.0f, 18.0f);
 
     painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);

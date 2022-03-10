@@ -19,12 +19,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnwire.h"
 #include "drawnoutput.h"
 #include "drawninput.h"
+#include "style.h"
+
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
 #include "core/coreschema.h"
+
 #include <algorithm>
 #include <cmath>
-#include "../gui/guistyle.h"
 #include <QPainter>
 #include <QPainterPathStroker>
 
@@ -275,7 +277,7 @@ void DrawnWire::updatePath()
     }
 
     mPath = path();
-    float margin = GuiStyle::wWire();
+    float margin = Style::wWire();
     prepareGeometryChange();
     mBoundingRect = mPath.boundingRect().marginsAdded(QMargins(margin, margin, margin, margin));
     update();
@@ -293,11 +295,11 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     (void)(option); (void)(widget);
 
     if (mDragging) {
-        painter->setPen(QPen(GuiStyle::cWireConnecting(), GuiStyle::wWire()));
+        painter->setPen(QPen(Style::cWireConnecting(), Style::wWire()));
     } else if (isSelected()) {
-        painter->setPen(QPen(GuiStyle::cWireSelected(), GuiStyle::wWire()));
+        painter->setPen(QPen(Style::cWireSelected(), Style::wWire()));
     } else {
-        painter->setPen(QPen(GuiStyle::cWire(), GuiStyle::wWire()));
+        painter->setPen(QPen(Style::cWire(), Style::wWire()));
     }
 
     painter->drawPath(mPath);

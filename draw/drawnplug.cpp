@@ -19,7 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnplug.h"
 #include "drawnwire.h"
 #include "drawnmodule.h"
-#include "gui/guistyle.h"
+#include "style.h"
+
 #include "core/coreexceptions.h"
 
 #include <QGraphicsScene>
@@ -44,7 +45,7 @@ DrawnPlug::~DrawnPlug()
 
 QRectF DrawnPlug::boundingRect() const
 {
-    float margin = GuiStyle::wPlug();
+    float margin = Style::wPlug();
     return QRectF(-margin, -margin - plugSize, margin + plugSize, plugSize * 2 + margin);
 }
 
@@ -72,31 +73,31 @@ void DrawnPlug::setConnecting(bool connecting)
 
 void DrawnPlug::setStyle(QPainter *painter)
 {
-    QColor background = GuiStyle::cBackground();
-    QColor foreground = GuiStyle::cForeground();
+    QColor background = Style::cBackground();
+    QColor foreground = Style::cForeground();
 
     if (module()->isSelected()) {
-        background = GuiStyle::cBackgroundSelected();
-        foreground = GuiStyle::cForegroundSelected();
+        background = Style::cBackgroundSelected();
+        foreground = Style::cForegroundSelected();
     }
 
     if (connected())
-        background = GuiStyle::cWire();
+        background = Style::cWire();
 
     if (mConnecting)
-        background = GuiStyle::cWireConnecting();
+        background = Style::cWireConnecting();
 
     if (mHighlighted)
-        foreground = GuiStyle::cHighlighted();
+        foreground = Style::cHighlighted();
 
     for (auto wire: mConnectedWires)
         if (wire->isSelected()) {
-            background = GuiStyle::cWireSelected();
+            background = Style::cWireSelected();
             break;
         }
 
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(QPen(QBrush(foreground), GuiStyle::wPlug()));
+    painter->setPen(QPen(QBrush(foreground), Style::wPlug()));
     painter->setBrush(QBrush(background));
 }
 

@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnmoduleround.h"
-#include "gui/guistyle.h"
+#include "style.h"
 
 #include <QPainter>
 #include <QSvgRenderer>
@@ -26,13 +26,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleRound::DrawnModuleRound(DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModule(parentSchema, coreModule)
 {
-    float margin = GuiStyle::wModule() * 0.5f;
+    float margin = Style::wModule() * 0.5f;
     mPosGridAnchor = QPointF(margin, margin);
 }
 
 QRectF DrawnModuleRound::boundingRect() const
 {
-    float margin = GuiStyle::wModule();
+    float margin = Style::wModule();
     return QRectF(-margin * 0.5f, -margin * 0.5f, 2.0f + margin, 2.0f + margin);
 }
 
@@ -47,7 +47,7 @@ void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
 void DrawnModuleRound::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation)
 {
-    float margin = GuiStyle::wModule() * 0.5;
+    float margin = Style::wModule() * 0.5;
     plug->setOrientation(orientation);
     switch(orientation) {
     case DrawnPlug::top:

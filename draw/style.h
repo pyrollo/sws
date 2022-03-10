@@ -1,30 +1,10 @@
-/*
-Short Waves System - A numeric modular synthetizer
-Copyright (C) 2021 Pierre-Yves Rollo <dev@pyrollo.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#ifndef GUISTYLE_H
-#define GUISTYLE_H
+#ifndef DRAWNSTYLE_H
+#define DRAWNSTYLE_H
 
 #include <QColor>
-#include <QBrush>
-#include <QPen>
 #include <QFont>
 
-class GuiStyle
+class Style
 {
 public:
     // Fonts
@@ -47,4 +27,4 @@ public:
     static QColor cWireConnecting()     { return QColor("#66C"); }
 };
 
-#endif // GUISTYLE_H
+#endif // DRAWNSTYLE_H

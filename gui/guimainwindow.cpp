@@ -17,19 +17,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "guimainwindow.h"
+#include "ui_guimainwindow.h"
+
+#include "guimenufile.h"
+#include "guischemascene.h"
+#include "guimodulelibraryview.h"
+#include "oscilloscope/guioscilloscopedock.h"
+
 #include "core/coreschema.h"
 #include "core/coremachine.h"
+
 #include "draw/drawnmodule.h"
 #include "draw/drawnschema.h"
 #include "draw/drawninput.h"
 #include "draw/drawnoutput.h"
 #include "draw/drawnwire.h"
-#include "ui_guimainwindow.h"
-#include "guimenufile.h"
-#include "guischemascene.h"
-#include "guimodulelibraryview.h"
-#include "oscilloscope/guioscilloscopedock.h"
-#include "guistyle.h"
 
 #include <QSettings>
 #include <stdexcept>

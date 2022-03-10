@@ -17,8 +17,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnmoduleconstant.h"
-#include "gui/guistyle.h"
+#include "draw/style.h"
+
 #include "core/coremodule.h"
+
 #include <QPainter>
 #include <QInputDialog>
 #include <QTextStream>
@@ -33,7 +35,7 @@ DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *
 void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     DrawnModuleRectangle::paint(painter, option, widget);
-    painter->setFont(GuiStyle::fModule());
+    painter->setFont(Style::fModule());
     QRectF textRect(1.0f, 1.0f, 35.0f, 8.0f);
 
     QString value;

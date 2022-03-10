@@ -111,6 +111,7 @@ HEADERS += \
     draw/modules/drawnmoduleoutput.h \
     draw/modules/drawnmodulesine.h \
     draw/modules/drawnmoduletime.h \
+    draw/style.h \
     file/filedeserializer.h \
     file/fileserializer.h \
     gui/widgets/guicolorbutton.h \
@@ -123,7 +124,6 @@ HEADERS += \
     gui/guioutputcombobox.h \
     gui/guischemascene.h \
     gui/guischemaview.h \
-    gui/guistyle.h \
     gui/oscilloscope/guioscilloscopedisplay.h \
     gui/oscilloscope/guioscilloscopedock.h \
     gui/oscilloscope/guioscilloscopeprobe.h \

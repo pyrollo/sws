@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnschema.h"
 #include "drawninput.h"
 #include "drawnoutput.h"
-#include "gui/guistyle.h"
+#include "style.h"
 
 #include "core/coremodule.h"
 #include "core/coreexceptions.h"
@@ -148,16 +148,16 @@ void DrawnModule::setIconSvgFile(const QString &filename)
 
 void DrawnModule::setStyle(QPainter *painter)
 {
-    QColor background = GuiStyle::cBackground();
-    QColor foreground = GuiStyle::cForeground();
+    QColor background = Style::cBackground();
+    QColor foreground = Style::cForeground();
 
     if (isSelected()) {
-        background = GuiStyle::cBackgroundSelected();
-        foreground = GuiStyle::cForegroundSelected();
+        background = Style::cBackgroundSelected();
+        foreground = Style::cForegroundSelected();
     }
 
     painter->setRenderHint(QPainter::Antialiasing);
-    painter->setPen(QPen(QBrush(foreground), GuiStyle::wModule()));
+    painter->setPen(QPen(QBrush(foreground), Style::wModule()));
     painter->setBrush(QBrush(background));
 
     if (mIcon) {

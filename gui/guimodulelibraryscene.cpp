@@ -17,7 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "guimodulelibraryscene.h"
-#include "guistyle.h"
+
+#include "draw/style.h"
 #include "draw/drawnmodulefactory.h"
 #include "draw/drawnmodule.h"
 
@@ -29,7 +30,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 GuiModuleLibraryScene::GuiModuleLibraryScene(QObject *parent):
     QGraphicsScene(parent), mFactory(nullptr)
 {
-    setBackgroundBrush(GuiStyle::cSceneBackground());
+    setBackgroundBrush(Style::cSceneBackground());
 }
 
 void GuiModuleLibraryScene::setFactory(DrawnModuleFactory *factory)
