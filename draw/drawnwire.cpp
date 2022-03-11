@@ -303,12 +303,13 @@ void DrawnWire::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     if (mDragging)
         color = Style::cWireConnecting();
 
+    painter->setRenderHint(QPainter::Antialiasing);
     painter->setPen(QPen(color, Style::wWire()));
+
     painter->drawPath(mPath);
 
     painter->setPen(QPen(color, 0.0f));
     painter->setBrush(QBrush(color));
-
 
     float size = Style::sPlug() - Style::wPlug();
 
