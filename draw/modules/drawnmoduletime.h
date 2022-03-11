@@ -27,7 +27,6 @@ class DrawnModuleTime : public DrawnModuleRound
     MODULE_TYPE("time")
 public:
     DrawnModuleTime(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 };
 
 #endif // DRAWMODULETIME_H

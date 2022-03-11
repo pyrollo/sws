@@ -25,8 +25,3 @@ DrawnModuleTime::DrawnModuleTime(DrawnSchema *schema, CoreModule *coreModule):
     setIconSvgFile(":/module/time.svg");
     newOutput("time", DrawnPlug::right);
 }
-
-void DrawnModuleTime::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    DrawnModuleRound::paint(painter, option, widget);
-}
