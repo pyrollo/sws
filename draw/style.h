@@ -3,12 +3,13 @@
 
 #include <QColor>
 #include <QFont>
+#include <QFontDatabase>
 
 class Style
 {
 public:
     // Fonts
-    static QFont fModule() { return QFont("SansSerif", 5); }
+    static QFont fModule() { return getfont(5); }
 
     // Line width
     static float wModule() { return 0.1f; }
@@ -28,6 +29,19 @@ public:
     static QColor cWire()               { return QColor("#66C"); }
     static QColor cWireSelected()       { return QColor("#884"); }
     static QColor cWireConnecting()     { return QColor("#6C6"); }
+
+private:
+    static QFont getfont(int size) {
+        static QString family;
+        if (family == "")
+        {
+            int id = QFontDatabase::addApplicationFont(":/fonts/Monoid-Retina-Tight-0-NoCalt.ttf");
+            family = QFontDatabase::applicationFontFamilies(id).at(0);
+        }
+        return QFont(family, size);
+    }
 };
+
+
 
 #endif // DRAWNSTYLE_H

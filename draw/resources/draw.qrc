@@ -5,5 +5,6 @@
         <file>module/add.svg</file>
         <file>module/clip.svg</file>
         <file>module/multiply.svg</file>
+        <file>fonts/Monoid-Retina-Tight-0-NoCalt.ttf</file>
     </qresource>
 </RCC>
