@@ -96,7 +96,8 @@ public:
 
     QRectF boundingRect() const
     {
-        return QRectF(0.3f, 0.3f, 1.4f, 1.4f);
+        const float size = 1.4f;
+        return QRectF(-size * 0.5f, -size * 0.5f, size, size);
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -144,6 +145,8 @@ void DrawnModule::setIconSvgFile(const QString &filename)
         delete mIcon;
 
     mIcon = new DrawnModuleIcon(this, filename);
+    QRectF rect = boundingRect();
+    mIcon->setPos(rect.width() * 0.5 + rect.left(), rect.height() * 0.5 + rect.top());
 }
 
 void DrawnModule::setStyle(QPainter *painter)
