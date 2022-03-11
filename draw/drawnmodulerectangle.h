@@ -23,19 +23,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModuleRectangle : public DrawnModule
 {
 public:
+    DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule);
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
+    void newInput(std::string name, DrawnPlug::Orientation orientation);
+    void newOutput(std::string name, DrawnPlug::Orientation orientation);
+    //void newSeparator(DrawnPlug::Orientation orientation);
 
 protected:
     float mWidth;
     float mHeight;
 
-    DrawnModuleRectangle(DrawnSchema *parentSchema, CoreModule *coreModule, float width, float height);
+    std::vector<DrawnPlug *> mPlugs[4];
 
-    DrawnInput *newInput(std::string name, DrawnPlug::Orientation orientation, float position);
-    DrawnOutput *newOutput(std::string name, DrawnPlug::Orientation orientation, float position);
-
-    void positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation, float position);
+    void addPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation);
+    void repositionPlugs(DrawnPlug::Orientation orientation);
 };
 
 #endif // DRAWNMODULERECTANGLE_H

@@ -18,27 +18,65 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnmodulefactory.h"
 #include "modules/drawnmoduleconstant.h"
-#include "modules/drawnmoduletime.h"
 #include "modules/drawnmoduleinput.h"
 #include "modules/drawnmoduleoutput.h"
-#include "modules/drawnmoduleclip.h"
-#include "modules/drawnmoduleadd.h"
-#include "modules/drawnmodulemultiply.h"
-#include "modules/drawnmodulesine.h"
+#include "drawnmodulerectangle.h"
+#include "drawnmoduleround.h"
 
-#define ADDMODULECLASS(CLASS) \
-    mFactories[CLASS::mType] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
+#define ADDMODULECLASS(TYPE, CLASS) \
+    mFactories[TYPE] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
 
 DrawnModuleFactory::DrawnModuleFactory()
 {
-    ADDMODULECLASS(DrawnModuleConstant)
-    ADDMODULECLASS(DrawnModuleTime)
-    ADDMODULECLASS(DrawnModuleInput)
-    ADDMODULECLASS(DrawnModuleOutput)
-    ADDMODULECLASS(DrawnModuleClip)
-    ADDMODULECLASS(DrawnModuleAdd)
-    ADDMODULECLASS(DrawnModuleMultiply)
-    ADDMODULECLASS(DrawnModuleSine)
+    ADDMODULECLASS("constant", DrawnModuleConstant)
+    ADDMODULECLASS("input", DrawnModuleInput)
+    ADDMODULECLASS("output", DrawnModuleOutput)
+
+    mFactories["time"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    {
+        DrawnModuleRound *module = new DrawnModuleRound("time", schema, coreModule);
+        module->setIcon(":/module/time.svg");
+        module->newOutput("time", DrawnPlug::right);
+        return module;
+    };
+
+    mFactories["multiply"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    {
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("multiply", schema, coreModule);
+        module->setIcon(":/module/multiply.svg");
+        module->newInput("operand1", DrawnPlug::left);
+        module->newInput("operand2", DrawnPlug::left);
+        module->newOutput("result", DrawnPlug::right);
+        return module;
+    };
+
+    mFactories["add"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    {
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("add", schema, coreModule);
+        module->setIcon(":/module/add.svg");
+        module->newInput("operand1", DrawnPlug::left);
+        module->newInput("operand2", DrawnPlug::left);
+        module->newOutput("result", DrawnPlug::right);
+        return module;
+    };
+
+    mFactories["sine"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    {
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("sine", schema, coreModule);
+        module->setIcon(":/module/sine.svg");
+        module->newInput("operand", DrawnPlug::left);
+        module->newOutput("result", DrawnPlug::right);
+        return module;
+    };
+
+    mFactories["clip"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    {
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("clip", schema, coreModule);
+        module->setIcon(":/module/clip.svg");
+        module->newInput("operand", DrawnPlug::left);
+        module->newOutput("result", DrawnPlug::right);
+        return module;
+    };
 }
 
 DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)

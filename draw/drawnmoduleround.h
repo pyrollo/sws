@@ -23,16 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModuleRound : public DrawnModule
 {
 public:
+    DrawnModuleRound(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule);
+
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
+    void newInput(std::string name, DrawnPlug::Orientation orientation);
+    void newOutput(std::string name, DrawnPlug::Orientation orientation);
+
 protected:
-    DrawnModuleRound(DrawnSchema *parentSchema, CoreModule *coreModule);
-
-    DrawnInput *newInput(std::string name, DrawnPlug::Orientation orientation);
-    DrawnOutput *newOutput(std::string name, DrawnPlug::Orientation orientation);
-
-    void positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation);
+    void placePlug(DrawnPlug *plug, DrawnPlug::Orientation orientation);
 
 };
 

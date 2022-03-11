@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
 
-DrawnModuleRound::DrawnModuleRound(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModule(parentSchema, coreModule)
+DrawnModuleRound::DrawnModuleRound(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule):
+    DrawnModule(type, parentSchema, coreModule)
 {
     float margin = Style::wModule() * 0.5f;
     mPosGridAnchor = QPointF(margin, margin);
@@ -45,7 +45,7 @@ void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->drawPath(path);
 }
 
-void DrawnModuleRound::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation)
+void DrawnModuleRound::placePlug(DrawnPlug *plug, DrawnPlug::Orientation orientation)
 {
     float margin = Style::wModule() * 0.5;
     plug->setOrientation(orientation);
@@ -65,16 +65,14 @@ void DrawnModuleRound::positionPlug(DrawnPlug *plug, DrawnPlug::Orientation orie
     }
 }
 
-DrawnInput *DrawnModuleRound::newInput(std::string name, DrawnPlug::Orientation orientation)
+void DrawnModuleRound::newInput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnInput *input = DrawnModule::newInput(name);
-    positionPlug(input, orientation);
-    return input;
+    placePlug(input, orientation);
 }
 
-DrawnOutput *DrawnModuleRound::newOutput(std::string name, DrawnPlug::Orientation orientation)
+void DrawnModuleRound::newOutput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnOutput *output = DrawnModule::newOutput(name);
-    positionPlug(output, orientation);
-    return output;
+    placePlug(output, orientation);
 }

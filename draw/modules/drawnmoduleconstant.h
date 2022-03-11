@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DrawnModuleConstant : public DrawnModuleRectangle
 {
-    MODULE_TYPE("constant")
 public:
     DrawnModuleConstant(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);

@@ -22,7 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawninput.h"
 #include "drawnoutput.h"
 #include <map>
-//#include <memory>
 
 class DrawSchema;
 class DrawnInput;
@@ -32,18 +31,13 @@ class QPainter;
 class QMouseEvent;
 class QSvgRenderer;
 
-#define MODULE_TYPE(TYPE) \
-public: \
-    virtual const char *getType() const override { return mType; } \
-    static constexpr char *mType = (char *)TYPE;
-
 class DrawnModuleIcon;
 
 class DrawnModule : public DrawnItem
 {
 public:
     ~DrawnModule();
-    virtual const char *getType() const { return ""; }
+    virtual const char *getType() const { return mType.c_str(); }
     DrawnSchema *schema() override { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 
@@ -56,9 +50,11 @@ public:
     void highlightPluggableOutputs();
     void highlightProbeableOutputs();
 
-    void setIconSvgFile(const QString &filename);
+    void setIcon(const QString &filename);
 
 protected:
+    std::string mType;
+
     CoreModule *mCoreModule;
 
     std::map<std::string, DrawnInput *> mInputs;
@@ -66,12 +62,13 @@ protected:
 
     DrawnModuleIcon *mIcon;
 
-    DrawnModule(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    DrawnModule(std::string type, DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
 
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);
 
     void setStyle(QPainter *painter);
+    void repositionIcon();
 };
 
 

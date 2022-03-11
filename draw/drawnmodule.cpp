@@ -113,8 +113,8 @@ protected:
     DrawnModuleIconEffect *mEffect;
 };
 
-DrawnModule::DrawnModule(DrawnSchema *schema, CoreModule *coreModule):
-    DrawnItem(schema, 1.0f), mCoreModule(coreModule), mIcon(nullptr)
+DrawnModule::DrawnModule(std::string type, DrawnSchema *schema, CoreModule *coreModule):
+    DrawnItem(schema, 1.0f), mType(type), mCoreModule(coreModule), mIcon(nullptr)
 {
     if (mSchema)
         setFlags(flags()|ItemIsSelectable|ItemIsMovable);
@@ -139,14 +139,22 @@ DrawnModule::~DrawnModule() {
         delete mCoreModule;
 }
 
-void DrawnModule::setIconSvgFile(const QString &filename)
+void DrawnModule::repositionIcon()
+{
+    if (!mIcon)
+        return;
+    QRectF rect = boundingRect();
+    mIcon->setPos(rect.width() * 0.5 + rect.left(), rect.height() * 0.5 + rect.top());
+    update();
+}
+
+void DrawnModule::setIcon(const QString &filename)
 {
     if (mIcon)
         delete mIcon;
 
     mIcon = new DrawnModuleIcon(this, filename);
-    QRectF rect = boundingRect();
-    mIcon->setPos(rect.width() * 0.5 + rect.left(), rect.height() * 0.5 + rect.top());
+    repositionIcon();
 }
 
 void DrawnModule::setStyle(QPainter *painter)

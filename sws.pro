@@ -44,14 +44,9 @@ SOURCES += \
     draw/drawnwire.cpp \
     draw/interactions/connectwireinteraction.cpp \
     draw/interactions/defaultinteraction.cpp \
-    draw/modules/drawnmoduleadd.cpp \
-    draw/modules/drawnmoduleclip.cpp \
     draw/modules/drawnmoduleconstant.cpp \
     draw/modules/drawnmoduleinput.cpp \
-    draw/modules/drawnmodulemultiply.cpp \
     draw/modules/drawnmoduleoutput.cpp \
-    draw/modules/drawnmodulesine.cpp \
-    draw/modules/drawnmoduletime.cpp \
     file/filedeserializer.cpp \
     file/fileserializer.cpp \
     gui/widgets/guicolorbutton.cpp \
@@ -103,14 +98,9 @@ HEADERS += \
     draw/drawnwire.h \
     draw/interactions/connectwireinteraction.h \
     draw/interactions/defaultinteraction.h \
-    draw/modules/drawnmoduleadd.h \
-    draw/modules/drawnmoduleclip.h \
     draw/modules/drawnmoduleconstant.h \
     draw/modules/drawnmoduleinput.h \
-    draw/modules/drawnmodulemultiply.h \
     draw/modules/drawnmoduleoutput.h \
-    draw/modules/drawnmodulesine.h \
-    draw/modules/drawnmoduletime.h \
     draw/style.h \
     file/filedeserializer.h \
     file/fileserializer.h \

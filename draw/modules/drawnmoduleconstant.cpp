@@ -27,9 +27,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "value/string.h"
 
 DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 1.0f)
+    DrawnModuleRectangle("constant", parentSchema, coreModule)
 {
-    newOutput("value", DrawnPlug::right, 0.5f);
+    mWidth = 4.0f;
+    mHeight = 1.0f;
+    newOutput("value", DrawnPlug::right);
 }
 
 void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

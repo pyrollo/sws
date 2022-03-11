@@ -27,9 +27,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QInputDialog>
 
 DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 2.0f), mName("")
+    DrawnModuleRectangle("input", parentSchema, coreModule), mName("")
 {
-    newOutput("value", DrawnPlug::right, 1.0f);
+    mWidth = 4.0f;
+    mHeight = 2.0f;
+    newOutput("value", DrawnPlug::right);
 }
 
 DrawnModuleInput::~DrawnModuleInput()

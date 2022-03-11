@@ -24,7 +24,6 @@ class CoreModuleOutput;
 
 class DrawnModuleOutput : public DrawnModuleRectangle
 {
-    MODULE_TYPE("output")
 public:
     DrawnModuleOutput(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
     ~DrawnModuleOutput();

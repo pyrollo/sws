@@ -28,9 +28,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle(parentSchema, coreModule, 4.0f, 2.0f), mName("")
+    DrawnModuleRectangle("output", parentSchema, coreModule), mName("")
 {
-    newInput("value", DrawnPlug::left, 1.0f);
+    mWidth = 4.0f;
+    mHeight = 2.0f;
+    newInput("value", DrawnPlug::left);
 }
 
 DrawnModuleOutput::~DrawnModuleOutput()
