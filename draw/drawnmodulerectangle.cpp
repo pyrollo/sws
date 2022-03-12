@@ -29,10 +29,15 @@ DrawnModuleRectangle::DrawnModuleRectangle(std::string type, DrawnSchema *parent
     mPosGridAnchor = QPointF(margin, margin);
 }
 
+QRectF DrawnModuleRectangle::baseRect() const
+{
+    return QRectF(0.0f, 0.0f, mWidth, mHeight);
+}
+
 QRectF DrawnModuleRectangle::boundingRect() const
 {
     float margin = Style::wModule();
-    return QRectF(-margin * 0.5f, -margin * 0.5f, mWidth + margin, mHeight + margin);
+    return baseRect().marginsAdded(QMarginsF(margin, margin, margin, margin));
 }
 
 void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -103,14 +108,16 @@ void DrawnModuleRectangle::addPlug(DrawnPlug *plug, DrawnPlug::Orientation orien
     update();
 }
 
-void DrawnModuleRectangle::newInput(std::string name, DrawnPlug::Orientation orientation)
+DrawnInput* DrawnModuleRectangle::newInput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnInput *input = DrawnModule::newInput(name);
     addPlug(input, orientation);
+    return input;
 }
 
-void DrawnModuleRectangle::newOutput(std::string name, DrawnPlug::Orientation orientation)
+DrawnOutput* DrawnModuleRectangle::newOutput(std::string name, DrawnPlug::Orientation orientation)
 {
     DrawnOutput *output = DrawnModule::newOutput(name);
     addPlug(output, orientation);
+    return output;
 }

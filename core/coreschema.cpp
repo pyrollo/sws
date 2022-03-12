@@ -45,6 +45,9 @@ CoreModule *CoreSchema::newModule(std::string type)
 
 void CoreSchema::removeModule(CoreModule *module)
 {
+    if (!module)
+        return;
+
     std::lock_guard<std::mutex> steplock(mStepMutex);
 
     if (module->schema() != this)
@@ -117,6 +120,11 @@ void CoreSchema::step()
 
 void CoreSchema::connect(CoreInput *input, CoreOutput *output)
 {
+    if (!input)
+        return;
+    if (!output)
+        return;
+
     if (input->module()->schema() != this ||
             output->module()->schema() != this)
         throw CoreNotSameSchemaEx();
@@ -132,6 +140,11 @@ void CoreSchema::connect(CoreInput *input, CoreOutput *output)
 
 void CoreSchema::disconnect(CoreInput *input, CoreOutput *output)
 {
+    if (!input)
+        return;
+    if (!output)
+        return;
+
     if (input->module()->schema() != this ||
             output->module()->schema() != this)
         throw CoreNotSameSchemaEx();

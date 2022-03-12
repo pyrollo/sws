@@ -19,8 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DRAWNMODULE_H
 #define DRAWNMODULE_H
 #include "drawnitem.h"
+
 #include "drawninput.h"
 #include "drawnoutput.h"
+#include "style.h"
+
 #include <map>
 
 class DrawSchema;
@@ -41,8 +44,8 @@ public:
     DrawnSchema *schema() override { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 
-    DrawnInput  *input(std::string name);
-    DrawnOutput *output(std::string name);
+    virtual DrawnInput  *input(std::string name);
+    virtual DrawnOutput *output(std::string name);
 
     void unHighlightPlugs();
     void highlightPluggableInputs();
@@ -67,7 +70,9 @@ protected:
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);
 
-    void setStyle(QPainter *painter);
+    void setStyle(QPainter *painter, QColor bgColor, QColor fgColor);
+    virtual void setStyle(QPainter *painter) { setStyle(painter,  Style::cBackground(), Style::cForeground()); }
+
     void repositionIcon();
 };
 

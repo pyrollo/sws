@@ -25,6 +25,8 @@ public:
     static QColor cBackground()         { return QColor("#224"); }
     static QColor cForegroundSelected() { return QColor("#884"); }
     static QColor cBackgroundSelected() { return QColor("#442"); }
+    static QColor cForegroundError()    { return QColor("#A44"); }
+    static QColor cBackgroundError()    { return QColor("#622"); }
     static QColor cHighlighted()        { return QColor("#484"); }
     static QColor cWire()               { return QColor("#66C"); }
     static QColor cWireSelected()       { return QColor("#884"); }

@@ -45,6 +45,7 @@ SOURCES += \
     draw/interactions/connectwireinteraction.cpp \
     draw/interactions/defaultinteraction.cpp \
     draw/modules/drawnmoduleconstant.cpp \
+    draw/modules/drawnmoduleerror.cpp \
     draw/modules/drawnmoduleinput.cpp \
     draw/modules/drawnmoduleoutput.cpp \
     file/filedeserializer.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     draw/interactions/connectwireinteraction.h \
     draw/interactions/defaultinteraction.h \
     draw/modules/drawnmoduleconstant.h \
+    draw/modules/drawnmoduleerror.h \
     draw/modules/drawnmoduleinput.h \
     draw/modules/drawnmoduleoutput.h \
     draw/style.h \

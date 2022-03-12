@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "modules/drawnmoduleconstant.h"
 #include "modules/drawnmoduleinput.h"
 #include "modules/drawnmoduleoutput.h"
+#include "modules/drawnmoduleerror.h"
 #include "drawnmodulerectangle.h"
 #include "drawnmoduleround.h"
 
@@ -81,7 +82,10 @@ DrawnModuleFactory::DrawnModuleFactory()
 
 DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)
 {
-    return mFactories.at(type)(schema, coreModule);
+    if (mFactories.count(type)) {
+        return mFactories.at(type)(schema, coreModule);
+    }
+    return new DrawnModuleError(type, schema);
 }
 
 std::vector<std::string> DrawnModuleFactory::listModules()

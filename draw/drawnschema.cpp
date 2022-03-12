@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
 #include "core/coremodule.h"
+#include "core/coreexceptions.h"
 
 #include <QPainter>
 
@@ -83,7 +84,11 @@ void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *
 
 DrawnModule *DrawnSchema::newModule(std::string type)
 {
-    CoreModule *coreModule = core()->newModule(type);
+    CoreModule *coreModule;
+    try {
+        coreModule = core()->newModule(type);
+    } catch (CoreUnknownTypeEx &) {}
+
     DrawnModule *module = mModuleFactory->newModule(type, this, coreModule);
     if (module)
         mModules.insert(module);
@@ -93,6 +98,7 @@ DrawnModule *DrawnSchema::newModule(std::string type)
 // Should be called only from module destructor
 void DrawnSchema::removeModule(DrawnModule *module) {
     core()->removeModule(module->core());
+
     mModules.erase(module);
 }
 

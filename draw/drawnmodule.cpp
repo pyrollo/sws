@@ -21,7 +21,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnschema.h"
 #include "drawninput.h"
 #include "drawnoutput.h"
-#include "style.h"
 
 #include "core/coremodule.h"
 #include "core/coreexceptions.h"
@@ -157,10 +156,10 @@ void DrawnModule::setIcon(const QString &filename)
     repositionIcon();
 }
 
-void DrawnModule::setStyle(QPainter *painter)
+void DrawnModule::setStyle(QPainter *painter, QColor bgColor, QColor fgColor)
 {
-    QColor background = Style::cBackground();
-    QColor foreground = Style::cForeground();
+    QColor background = bgColor;
+    QColor foreground = fgColor;
 
     if (isSelected()) {
         background = Style::cBackgroundSelected();

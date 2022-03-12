@@ -16,31 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAWNMODULERECTANGLE_H
-#define DRAWNMODULERECTANGLE_H
-#include "drawnmodule.h"
+#ifndef DRAWNMODULEERROR_H
+#define DRAWNMODULEERROR_H
 
-class DrawnModuleRectangle : public DrawnModule
+#include "draw/drawnmodulerectangle.h"
+
+class DrawnModuleError: public DrawnModuleRectangle
 {
 public:
-    DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule);
+    DrawnModuleError(std::string type, DrawnSchema *parentSchema);
+    ~DrawnModuleError();
 
-    QRectF baseRect() const;
-    QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
-    DrawnInput* newInput(std::string name, DrawnPlug::Orientation orientation);
-    DrawnOutput* newOutput(std::string name, DrawnPlug::Orientation orientation);
-    //void newSeparator(DrawnPlug::Orientation orientation);
+    DrawnInput  *input(std::string name) override;
+    DrawnOutput *output(std::string name) override;
 
 protected:
-    float mWidth;
-    float mHeight;
-
-    std::vector<DrawnPlug *> mPlugs[4];
-
-    void addPlug(DrawnPlug *plug, DrawnPlug::Orientation orientation);
-    void repositionPlugs(DrawnPlug::Orientation orientation);
+    void setStyle(QPainter *painter);
 };
 
-#endif // DRAWNMODULERECTANGLE_H
+#endif // DRAWNMODULEERROR_H
