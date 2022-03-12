@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QTextStream>
 #include <QApplication>
+#include <QMessageBox>
 
 #include "file/fileserializer.h"
 #include "file/filedeserializer.h"
@@ -76,6 +77,17 @@ void GuiMenuFile::loadFile(QString filePath)
     if (filePath == "")
         return;
 
+    // Check schema is serializable
+    FileSerializer fs(mMainWindow->getSchema());
+
+    if (!fs.serializable()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setText("Unable to save schema, it contains error modules.");
+        msgBox.exec();
+        return;
+    }
+
     // TODO: manage file access errors
 
     QFile file(filePath);
@@ -99,6 +111,14 @@ void GuiMenuFile::saveFile(QString filePath)
     QFile file(filePath);
 
     FileSerializer fs(mMainWindow->getSchema());
+
+    if (!fs.serializable()) {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setText("Unable to save schema, it contains error modules.");
+        msgBox.exec();
+        return;
+    }
 
     if (file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream stream(&file);

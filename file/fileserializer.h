@@ -22,10 +22,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class DrawnSchema;
 
+#include <exception>
+
+class FileSerializerErrorModules: public std::exception
+{
+public:
+    virtual const char* what() const throw() {
+        return "Could not serialize schema, it contains error modules.";
+    }
+};
+
 class FileSerializer
 {
 public:
     explicit FileSerializer(DrawnSchema *schema);
+    bool serializable();
     QString serialize();
 protected:
     DrawnSchema *mSchema;

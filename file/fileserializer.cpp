@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "fileserializer.h"
 #include "draw/drawnschema.h"
 #include "draw/drawnmodule.h"
+#include "draw/modules/drawnmoduleerror.h"
 #include "core/coreschema.h"
 #include "core/coremodule.h"
 #include "core/coreinput.h"
@@ -33,8 +34,22 @@ FileSerializer::FileSerializer(DrawnSchema *schema):
 {
 }
 
+bool FileSerializer::serializable()
+{
+    // Disable serialization of schema with errors
+    // (wont work well and will lose module internal data)
+    // TODO: Should error modules hold any module data?
+    for (auto module: mSchema->modules())
+        if (dynamic_cast<DrawnModuleError *>(module))
+            return false;
+    return true;
+}
+
 QString FileSerializer::serialize()
 {
+    if (!serializable())
+        throw(new FileSerializerErrorModules());
+
     QDomDocument xdoc("xxx");
     QDomElement xschema = xdoc.createElement("schema");
     xdoc.appendChild(xschema);
