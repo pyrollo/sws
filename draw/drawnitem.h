@@ -29,8 +29,9 @@ class DrawnItem : public QObject, public QGraphicsItem
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    explicit DrawnItem(DrawnItem *parent);
+    virtual ~DrawnItem() {}
 
+    std::string getType() const { return mType; }
     virtual DrawnSchema *schema() { return mSchema; }
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
@@ -47,9 +48,19 @@ signals:
     void positionChanged();
 
 protected:
+    std::string mType;
     DrawnSchema *mSchema;
-
     bool mAlignToGrid;
+
+    DrawnItem(DrawnItem *parent);
+    DrawnItem(std::string type, DrawnItem *parent);
+};
+
+class DrawnDecoration : public DrawnItem
+{
+public:
+    DrawnDecoration(DrawnSchema *parent): DrawnItem((DrawnItem *)parent) {}
+    virtual ~DrawnDecoration() {}
 };
 
 #endif // DRAWNITEM_H

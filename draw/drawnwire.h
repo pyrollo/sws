@@ -32,8 +32,8 @@ public:
     explicit DrawnWire(DrawnSchema *parentSchema);
     ~DrawnWire();
 
-    QRectF boundingRect() const { return mBoundingRect; }
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const override { return mBoundingRect; }
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     void connectTo(DrawnOutput *output);
     void connectTo(DrawnInput *input);

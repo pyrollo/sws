@@ -40,7 +40,7 @@ class DrawnModule : public DrawnItem
 {
 public:
     ~DrawnModule();
-    virtual const char *getType() const { return mType.c_str(); }
+    virtual const char *getType() const { return mModuleType.c_str(); }
     DrawnSchema *schema() override { return mSchema; }
     CoreModule *core() { return mCoreModule; }
 
@@ -56,7 +56,8 @@ public:
     void setIcon(const QString &filename);
 
 protected:
-    std::string mType;
+    // TODO: mModuleType and DranwItem::mType should be linked
+    std::string mModuleType;
 
     CoreModule *mCoreModule;
 

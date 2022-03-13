@@ -21,14 +21,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnitem.h"
 
-class DrawnComment: DrawnItem
+class DrawnComment: public DrawnDecoration
 {
 public:
     DrawnComment(DrawnSchema *parent);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QRectF boundingRect();
-//    void setText(QString text);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QRectF boundingRect() const override;
+
     QString getText() const { return mText; }
+    void setText(QString text) { mText = text; }
 private:
     QString mText;
     int mWidth;

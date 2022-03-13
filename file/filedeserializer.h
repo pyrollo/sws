@@ -37,6 +37,9 @@ public:
     DrawnSchema *deserializeToDrawnSchema();
 protected:
     QDomDocument mDocument;
+
+    void deserializeGui(DrawnSchema *schema, QDomElement xgui);
+
 };
 
 #endif // FILEDESERIALIZER_H

@@ -25,7 +25,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <cmath>
 
 DrawnItem::DrawnItem(DrawnItem *parent):
-    QObject(), QGraphicsItem(parent), mSchema(parent?parent->schema():nullptr),
+    QObject(), QGraphicsItem(parent), mType(""), mSchema(parent?parent->schema():nullptr),
+    mAlignToGrid(false)
+{}
+
+DrawnItem::DrawnItem(std::string type, DrawnItem *parent):
+    QObject(), QGraphicsItem(parent), mType(type), mSchema(parent?parent->schema():nullptr),
     mAlignToGrid(false)
 {}
 

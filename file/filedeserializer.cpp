@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawnschema.h"
 #include "draw/drawnmodule.h"
 #include "draw/drawnwire.h"
+#include "draw/drawncomment.h"
 #include "draw/modules/drawnmoduleinput.h"
 #include "draw/modules/drawnmoduleoutput.h"
 #include "core/coreschema.h"
@@ -38,6 +39,22 @@ FileDeserializer::FileDeserializer(const QByteArray &data)
 
     if (!mDocument.setContent(data, true))
         throw FileBadFileFormat();
+}
+
+
+void FileDeserializer::deserializeGui(DrawnSchema *schema, QDomElement xgui)
+{
+    // GUI specific stuff
+    for (int index = 0; index < xgui.childNodes().count(); index++) {
+        QDomNode xnode = xgui.childNodes().at(index);
+        if (xnode.isElement()) {
+            QDomElement xelement = xnode.toElement();
+            if (xelement.tagName() == "comment") {
+                DrawnComment *comment = (DrawnComment *)schema->newDecoration("comment");
+                comment->setText(xelement.text());
+            }
+        }
+    }
 }
 
 DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
@@ -81,7 +98,7 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
                     DrawnWire *wire = new DrawnWire(schema);
                     wire->connectTo(from->output(xfrom.attribute("output").toStdString()));
                     wire->connectTo(to->input(xto.attribute("input").toStdString()));
-                } catch(std::exception &e) {
+                } catch(std::exception &) {
                     throw FileBadFileFormat();
                 }
             }
@@ -89,7 +106,7 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
                 try {
                     DrawnModuleInput *module = (DrawnModuleInput *)drawnModules.at(xelement.attribute("module"));
                     module->setName(xelement.attribute("name"));
-                } catch(std::exception &e) {
+                } catch(std::exception &) {
                     throw FileBadFileFormat();
                 }
             }
@@ -97,10 +114,13 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
                 try {
                     DrawnModuleOutput *module = (DrawnModuleOutput *)drawnModules.at(xelement.attribute("module"));
                     module->setName(xelement.attribute("name"));
-                } catch(std::exception &e) {
+                } catch(std::exception &) {
                     throw FileBadFileFormat();
                 }
 
+            }
+            if (xelement.tagName() == "gui") {
+                deserializeGui(schema, xelement);
             }
         }
     }

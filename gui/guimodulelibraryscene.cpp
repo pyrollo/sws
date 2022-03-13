@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "guimodulelibraryscene.h"
 
 #include "draw/style.h"
-#include "draw/drawnmodulefactory.h"
+#include "draw/drawnitemfactory.h"
 #include "draw/drawnmodule.h"
 
 #include <QGraphicsSceneMouseEvent>
@@ -33,7 +33,7 @@ GuiModuleLibraryScene::GuiModuleLibraryScene(QObject *parent):
     setBackgroundBrush(Style::cSceneBackground());
 }
 
-void GuiModuleLibraryScene::setFactory(DrawnModuleFactory *factory)
+void GuiModuleLibraryScene::setFactory(DrawnItemFactory *factory)
 {
     if (mFactory == factory)
         return;
@@ -45,12 +45,12 @@ void GuiModuleLibraryScene::setFactory(DrawnModuleFactory *factory)
     if (mFactory)
     {
         float y = 1.0f;
-        for (auto moduletype: mFactory->listModules()) {
-            DrawnModule *module = mFactory->newModule(moduletype);
-            QRectF rect = module->boundingRect();
-            module->moveBy(-0.5 * rect.width(), y);
+        for (auto type: mFactory->listItems()) {
+            DrawnItem *item = mFactory->newItem(type);
+            QRectF rect = item->boundingRect();
+            item->moveBy(-0.5 * rect.width(), y);
             y += rect.height() + 1.0f;
-            addItem(module);
+            addItem(item);
         }
     }
 
@@ -63,36 +63,33 @@ void GuiModuleLibraryScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
 
-        // Find module item under
-        DrawnModule *module;
-        for (auto item : items(event->scenePos())) {
-            module = dynamic_cast<DrawnModule *>(item);
-            if (module)
-                break;
-        }
-
-        if (!module)
+        // Find first ancestor item under mouse
+        DrawnItem *item = (DrawnItem *)itemAt(event->scenePos(), QTransform());
+        if (!item)
             return;
+
+        while (item->parent())
+            item = (DrawnItem *)item->parent();
 
         // Prepare dragging if found
         QDrag *drag = new QDrag(this);
         QMimeData *mimeData = new QMimeData();
-        mimeData->setData("sws/moduletype", QByteArray::fromStdString(module->getType()));
+        mimeData->setData("sws/itemtype", QByteArray::fromStdString(item->getType()));
         drag->setMimeData(mimeData);
 
         // Create an image of module
-        QRectF rect = module->boundingRect();
+        QRectF rect = item->boundingRect();
 
-        DrawnModule *fakeModule = mFactory->newModule(module->getType());
+        DrawnItem *fakeItem = mFactory->newItem(item->getType());
         QGraphicsScene scene(rect);
-        scene.addItem(fakeModule);
+        scene.addItem(fakeItem);
 
         QPixmap pix(rect.width() * 20, rect.height() * 20);
         pix.fill(Qt::transparent);
         QPainter painter(&pix);
         scene.render(&painter, pix.rect(), rect);
         painter.end();
-        delete fakeModule;
+        delete fakeItem;
 
         // Start dragging
         drag->setPixmap(pix);

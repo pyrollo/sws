@@ -20,18 +20,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define GUIMODULELIBRARYSCENE_H
 #include <QGraphicsScene>
 
-class DrawnModuleFactory;
+class DrawnItemFactory;
 
 class GuiModuleLibraryScene : public QGraphicsScene
 {
 public:
     GuiModuleLibraryScene(QObject *parent = nullptr);
-    void setFactory(DrawnModuleFactory *factory);
+    void setFactory(DrawnItemFactory *factory);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 protected:
-    DrawnModuleFactory *mFactory;
+    DrawnItemFactory *mFactory;
 };
 
 #endif // GUIMODULELIBRARYSCENE_H

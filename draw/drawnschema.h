@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <unordered_set>
 
 class DrawnModule;
-class DrawnModuleFactory;
+class DrawnItemFactory;
 class DrawnPlug;
 class DrawnSchemaInteraction;
 
@@ -38,7 +38,7 @@ public:
     DrawnSchema *schema() override { return this; }
 
     CoreSchema *core() { return &mCoreSchema; }
-    DrawnModuleFactory *getModuleFactory() { return mModuleFactory; }
+    DrawnItemFactory *getItemFactory() { return mItemFactory; }
 
     // Interaction management
     void startInteraction(DrawnSchemaInteraction *interaction);
@@ -50,8 +50,16 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
+
+    DrawnItem *newItem(std::string type);
+
+    const std::unordered_set<DrawnModule *> &modules() { return mModules; }
     DrawnModule *newModule(std::string type);
-    void removeModule(DrawnModule *module);
+    void removeModule(DrawnModule *item);
+
+    const std::unordered_set<DrawnDecoration *> &decorations() { return mDecorations; }
+    DrawnDecoration *newDecoration(std::string type);
+    void removeDecoration(DrawnDecoration *item);
 
     void highlightConnectable(DrawnPlug * plug);
     void highlightProbeable();
@@ -60,7 +68,6 @@ public:
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
 
-    const std::unordered_set<DrawnModule *> &modules() { return mModules; }
 
 signals:
     void inputsChanged();
@@ -68,8 +75,9 @@ signals:
 
 protected:
     CoreSchema mCoreSchema;
-    DrawnModuleFactory *mModuleFactory;
+    DrawnItemFactory *mItemFactory;
     std::unordered_set<DrawnModule *> mModules;
+    std::unordered_set<DrawnDecoration *> mDecorations;
     DefaultInteraction mDefaultInteraction;
     DrawnSchemaInteraction *mInteraction;
 };

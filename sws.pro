@@ -2,7 +2,7 @@ QT       += core gui multimedia xml svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -35,8 +35,8 @@ SOURCES += \
     draw/drawncomment.cpp \
     draw/drawninput.cpp \
     draw/drawnitem.cpp \
+    draw/drawnitemfactory.cpp \
     draw/drawnmodule.cpp \
-    draw/drawnmodulefactory.cpp \
     draw/drawnmodulerectangle.cpp \
     draw/drawnmoduleround.cpp \
     draw/drawnoutput.cpp \
@@ -90,8 +90,8 @@ HEADERS += \
     draw/drawncomment.h \
     draw/drawninput.h \
     draw/drawnitem.h \
+    draw/drawnitemfactory.h \
     draw/drawnmodule.h \
-    draw/drawnmodulefactory.h \
     draw/drawnmodulerectangle.h \
     draw/drawnmoduleround.h \
     draw/drawnoutput.h \

@@ -119,7 +119,7 @@ bool GuiMainWindow::changeSchema(DrawnSchema *schema)
         emit schemaChanged(mSchema);
 
         // TODO : Use above signal instead
-        ui->modulesLibraryView->setFactory(mSchema->getModuleFactory());
+        ui->modulesLibraryView->setFactory(mSchema->getItemFactory());
         ui->speakerOutputComboBox->setSchema(mSchema); // TODO: ComboBox should be connected to view rather than schema
         ui->schemaView->setSchema(mSchema);
         ui->schemaView->setTransform(QTransform());

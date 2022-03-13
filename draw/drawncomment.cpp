@@ -22,7 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnComment::DrawnComment(DrawnSchema *parent):
-    DrawnItem((DrawnItem *)parent)
+    DrawnDecoration(parent)
 {
     mText = "Comment";
     mWidth = 10;
@@ -42,7 +42,7 @@ void DrawnComment::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
     painter->drawText(boundingRect(), Qt::AlignLeft | Qt::AlignTop, mText);
 }
 
-QRectF DrawnComment::boundingRect()
+QRectF DrawnComment::boundingRect() const
 {
     return QRectF(0.0f, 0.0f, mWidth * Style::sGrid(), mHeight * Style::sGrid());
 }

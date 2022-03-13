@@ -16,91 +16,106 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "drawnmodulefactory.h"
+#include "drawnitemfactory.h"
+
+#include "drawncomment.h"
+#include "drawnmodulerectangle.h"
+#include "drawnmoduleround.h"
 #include "modules/drawnmoduleconstant.h"
 #include "modules/drawnmoduleinput.h"
 #include "modules/drawnmoduleoutput.h"
 #include "modules/drawnmoduleerror.h"
-#include "drawnmodulerectangle.h"
-#include "drawnmoduleround.h"
 
-DrawnModuleFactory::DrawnModuleFactory()
+DrawnItemFactory::DrawnItemFactory()
 {
-    mFactories["constant"] = [](DrawnSchema *schema)
-    {
-        return new DrawnModuleConstant(schema);
-    };
+}
 
-    mFactories["input"] = [](DrawnSchema *schema)
-    {
-        return new DrawnModuleInput(schema);
-    };
+void DrawnItemFactory::registerDecoration(std::string type, decorationConstructor constructor)
+{
+    mConstructors[decorationPrefix + type] = constructor;
+}
 
-    mFactories["output"] = [](DrawnSchema *schema)
-    {
-        return new DrawnModuleOutput(schema);
-    };
+void DrawnItemFactory::registerModule(std::string type, moduleConstructor constructor)
+{
+    mConstructors[modulePrefix + type] = constructor;
+}
 
-    mFactories["time"] = [](DrawnSchema *schema)
-    {
+DrawnItem *DrawnItemFactory::newItem(std::string type, DrawnSchema *schema)
+{
+    if (mConstructors.count(type)) {
+        return mConstructors.at(type)(schema);
+    }
+    return nullptr;
+}
+
+DrawnModule *DrawnItemFactory::newModule(std::string type, DrawnSchema *schema)
+{
+    return (DrawnModule *)newItem(modulePrefix + type, schema);
+}
+
+DrawnDecoration *DrawnItemFactory::newDecoration(std::string type, DrawnSchema *schema)
+{
+    return (DrawnDecoration *)newItem(decorationPrefix + type, schema);
+}
+
+std::vector<std::string> DrawnItemFactory::listItems()
+{
+    std::vector<std::string> result;
+    for (auto it: mConstructors)
+        result.push_back(it.first);
+
+    return result;
+}
+
+void populateFactory(DrawnItemFactory *factory)
+{
+    // Decorations
+    factory->registerDecoration("comment", [](DrawnSchema *schema) { return new DrawnComment(schema); });
+
+    // Base modules
+    factory->registerModule("constant", [](DrawnSchema *schema) { return new DrawnModuleConstant(schema); });
+    factory->registerModule("input",    [](DrawnSchema *schema) { return new DrawnModuleInput(schema); });
+    factory->registerModule("output",   [](DrawnSchema *schema) { return new DrawnModuleOutput(schema); });
+
+    // Generic modules
+    factory->registerModule("time", [](DrawnSchema *schema) {
         DrawnModuleRound *module = new DrawnModuleRound("time", schema);
         module->setIcon(":/module/time.svg");
         module->newOutput("time", DrawnPlug::right);
         return module;
-    };
+    });
 
-    mFactories["multiply"] = [](DrawnSchema *schema)
-    {
+    factory->registerModule("multiply", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("multiply", schema);
         module->setIcon(":/module/multiply.svg");
         module->newInput("operand1", DrawnPlug::left);
         module->newInput("operand2", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
         return module;
-    };
+    });
 
-    mFactories["add"] = [](DrawnSchema *schema)
-    {
+    factory->registerModule("add", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("add", schema);
         module->setIcon(":/module/add.svg");
         module->newInput("operand1", DrawnPlug::left);
         module->newInput("operand2", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
         return module;
-    };
+    });
 
-    mFactories["sine"] = [](DrawnSchema *schema)
-    {
+    factory->registerModule("sine", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("sine", schema);
         module->setIcon(":/module/sine.svg");
         module->newInput("operand", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
         return module;
-    };
+    });
 
-    mFactories["clip"] = [](DrawnSchema *schema)
-    {
+    factory->registerModule("clip", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("clip", schema);
         module->setIcon(":/module/clip.svg");
         module->newInput("operand", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
         return module;
-    };
-}
-
-DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema)
-{
-    if (mFactories.count(type)) {
-        return mFactories.at(type)(schema);
-    }
-    return new DrawnModuleError(type, schema);
-}
-
-std::vector<std::string> DrawnModuleFactory::listModules()
-{
-    std::vector<std::string> result;
-    for (auto it: mFactories)
-        result.push_back(it.first);
-
-    return result;
+    });
 }

@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnschema.h"
 #include "drawnmodule.h"
-#include "drawnmodulefactory.h"
+#include "drawnitemfactory.h"
 #include "drawnschemainteraction.h"
 #include "core/coreschema.h"
 #include "core/coreinput.h"
@@ -29,9 +29,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnSchema::DrawnSchema() :
-    DrawnItem(nullptr), mCoreSchema(), mModuleFactory(new DrawnModuleFactory()),
+    DrawnItem(nullptr), mCoreSchema(),
     mDefaultInteraction(this), mInteraction(&mDefaultInteraction)
 {
+    mItemFactory = new DrawnItemFactory();
+    // TODO: Not sure this is the best place for populating
+    populateFactory(mItemFactory);
 }
 
 DrawnSchema::~DrawnSchema()
@@ -39,7 +42,7 @@ DrawnSchema::~DrawnSchema()
     while (mModules.size())
         delete *(mModules.begin());
 
-    delete mModuleFactory;
+    delete mItemFactory;
 }
 
 void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
@@ -82,12 +85,31 @@ void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *
     mInteraction->mouseReleaseEvent(event, item);
 }
 
-DrawnModule *DrawnSchema::newModule(std::string type)
+DrawnItem *DrawnSchema::newItem(std::string type)
 {
-    DrawnModule *module = mModuleFactory->newModule(type, this);
+    DrawnItem *item = mItemFactory->newItem(type, this);
+
+    DrawnModule *module = dynamic_cast<DrawnModule *>(item);
     if (module)
         mModules.insert(module);
-    return module;
+
+    DrawnDecoration *decoration = dynamic_cast<DrawnDecoration *>(item);
+    if (decoration)
+        mDecorations.insert(decoration);
+
+    return item;
+}
+
+DrawnModule *DrawnSchema::newModule(std::string type)
+{
+    DrawnItem *item = newItem(mItemFactory->modulePrefix + type);
+    return (DrawnModule *) item;
+}
+
+DrawnDecoration *DrawnSchema::newDecoration(std::string type)
+{
+    DrawnItem *item = newItem(mItemFactory->decorationPrefix + type);
+    return (DrawnDecoration *) item;
 }
 
 // Should be called only from module destructor
@@ -95,6 +117,11 @@ void DrawnSchema::removeModule(DrawnModule *module) {
     core()->removeModule(module->core());
 
     mModules.erase(module);
+}
+
+// Should be called only from decoration destructor
+void DrawnSchema::removeDecoration(DrawnDecoration *decoration) {
+    mDecorations.erase(decoration);
 }
 
 void DrawnSchema::highlightConnectable(DrawnPlug * plug)

@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "fileserializer.h"
 #include "draw/drawnschema.h"
 #include "draw/drawnmodule.h"
+#include "draw/drawnitem.h"
+#include "draw/drawncomment.h"
 #include "draw/modules/drawnmoduleerror.h"
 #include "core/coreschema.h"
 #include "core/coremodule.h"
@@ -26,8 +28,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/coreoutput.h"
 #include "core/modules/coremoduleconstant.h"
 #include "value/string.h"
-
-#include <QtXml>
 
 FileSerializer::FileSerializer(DrawnSchema *schema):
     mSchema(schema)
@@ -43,6 +43,17 @@ bool FileSerializer::serializable()
         if (dynamic_cast<DrawnModuleError *>(module))
             return false;
     return true;
+}
+
+void FileSerializer::setPositionAttributes(QDomElement &xelement, DrawnItem *item)
+{
+    // setAttributes(float) looks buggy : it uses locale decimal separator instead of dot and adds extra digits
+    QString buffer;
+    // TODO: We should use and store "grid" coordinates (wich btw would be integers)
+    buffer.setNum(item->pos().x());
+    xelement.setAttribute("x", buffer);
+    buffer.setNum(item->pos().y());
+    xelement.setAttribute("y", buffer);
 }
 
 QString FileSerializer::serialize()
@@ -84,13 +95,7 @@ QString FileSerializer::serialize()
         // GUI specific stuff
         QDomElement xgui = xdoc.createElement("gui");
         xmodule.appendChild(xgui);
-
-        // setAttributes(float) looks buggy : it uses locale decimal separator instead of dot and adds extra digits
-        QString buffer;
-        buffer.setNum(module->pos().x());
-        xgui.setAttribute("x", buffer);
-        buffer.setNum(module->pos().y());
-        xgui.setAttribute("y", buffer);
+        setPositionAttributes(xgui, module);
     }
 
     // Create connect elements
@@ -132,6 +137,19 @@ QString FileSerializer::serialize()
         xschema.appendChild(xinput);
         xinput.setAttribute("module", coreModules[(CoreModule *)it.second]);
         xinput.setAttribute("name", QString::fromStdString(it.first));
+    }
+
+    // GUI specific stuff
+    QDomElement xgui = xdoc.createElement("gui");
+    xschema.appendChild(xgui);
+
+    for (auto decoration: mSchema->decorations()) {
+        // TODO: Switch on decorationtype
+        DrawnComment *comment = (DrawnComment *)decoration;
+        QDomElement xcomment = xdoc.createElement("comment");
+        xgui.appendChild(xcomment);
+        setPositionAttributes(xcomment, comment);
+        xcomment.appendChild(xdoc.createTextNode(comment->getText()));
     }
 
     return xdoc.toString();
