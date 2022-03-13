@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModuleConstant : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleConstant(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    DrawnModuleConstant(DrawnSchema *schema = nullptr);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 };

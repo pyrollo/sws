@@ -25,7 +25,7 @@ class CoreModuleInput;
 class DrawnModuleInput : public DrawnModuleRectangle
 {
 public:
-    DrawnModuleInput(DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    DrawnModuleInput(DrawnSchema *schema = nullptr);
     ~DrawnModuleInput();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);

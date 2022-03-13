@@ -31,10 +31,10 @@ class DrawnModuleFactory
 {
 public:
     DrawnModuleFactory();
-    DrawnModule *newModule(std::string type, DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    DrawnModule *newModule(std::string type, DrawnSchema *schema = nullptr);
     std::vector<std::string> listModules();
 protected:
-    std::map<std::string, std::function<DrawnModule *(DrawnSchema *schema, CoreModule *coreModule)>> mFactories;
+    std::map<std::string, std::function<DrawnModule *(DrawnSchema *schema)>> mFactories;
 };
 
 #endif // DRAWNMODULEFACTORY_H

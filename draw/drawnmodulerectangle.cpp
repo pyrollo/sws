@@ -22,8 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QSvgRenderer>
 
-DrawnModuleRectangle::DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModule(type, parentSchema, coreModule), mWidth(2.0f), mHeight(2.0f)
+DrawnModuleRectangle::DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema):
+    DrawnModule(type, parentSchema), mWidth(2.0f), mHeight(2.0f)
 {}
 
 QRectF DrawnModuleRectangle::baseRect() const

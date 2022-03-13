@@ -26,8 +26,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QInputDialog>
 
-DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle("input", parentSchema, coreModule), mName("")
+DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema):
+    DrawnModuleRectangle("input", parentSchema), mName("")
 {
     mWidth = 4.0f;
     mHeight = 2.0f;

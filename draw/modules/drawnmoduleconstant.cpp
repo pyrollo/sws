@@ -26,8 +26,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QTextStream>
 #include "value/string.h"
 
-DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle("constant", parentSchema, coreModule)
+DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema):
+    DrawnModuleRectangle("constant", parentSchema)
 {
     mWidth = 4.0f;
     mHeight = 1.0f;

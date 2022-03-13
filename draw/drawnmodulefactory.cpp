@@ -24,26 +24,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnmodulerectangle.h"
 #include "drawnmoduleround.h"
 
-#define ADDMODULECLASS(TYPE, CLASS) \
-    mFactories[TYPE] = [](DrawnSchema *schema, CoreModule *coreModule) { return new CLASS(schema, coreModule); };
-
 DrawnModuleFactory::DrawnModuleFactory()
 {
-    ADDMODULECLASS("constant", DrawnModuleConstant)
-    ADDMODULECLASS("input", DrawnModuleInput)
-    ADDMODULECLASS("output", DrawnModuleOutput)
-
-    mFactories["time"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    mFactories["constant"] = [](DrawnSchema *schema)
     {
-        DrawnModuleRound *module = new DrawnModuleRound("time", schema, coreModule);
+        return new DrawnModuleConstant(schema);
+    };
+
+    mFactories["input"] = [](DrawnSchema *schema)
+    {
+        return new DrawnModuleInput(schema);
+    };
+
+    mFactories["output"] = [](DrawnSchema *schema)
+    {
+        return new DrawnModuleOutput(schema);
+    };
+
+    mFactories["time"] = [](DrawnSchema *schema)
+    {
+        DrawnModuleRound *module = new DrawnModuleRound("time", schema);
         module->setIcon(":/module/time.svg");
         module->newOutput("time", DrawnPlug::right);
         return module;
     };
 
-    mFactories["multiply"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    mFactories["multiply"] = [](DrawnSchema *schema)
     {
-        DrawnModuleRectangle *module = new DrawnModuleRectangle("multiply", schema, coreModule);
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("multiply", schema);
         module->setIcon(":/module/multiply.svg");
         module->newInput("operand1", DrawnPlug::left);
         module->newInput("operand2", DrawnPlug::left);
@@ -51,9 +59,9 @@ DrawnModuleFactory::DrawnModuleFactory()
         return module;
     };
 
-    mFactories["add"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    mFactories["add"] = [](DrawnSchema *schema)
     {
-        DrawnModuleRectangle *module = new DrawnModuleRectangle("add", schema, coreModule);
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("add", schema);
         module->setIcon(":/module/add.svg");
         module->newInput("operand1", DrawnPlug::left);
         module->newInput("operand2", DrawnPlug::left);
@@ -61,18 +69,18 @@ DrawnModuleFactory::DrawnModuleFactory()
         return module;
     };
 
-    mFactories["sine"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    mFactories["sine"] = [](DrawnSchema *schema)
     {
-        DrawnModuleRectangle *module = new DrawnModuleRectangle("sine", schema, coreModule);
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("sine", schema);
         module->setIcon(":/module/sine.svg");
         module->newInput("operand", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
         return module;
     };
 
-    mFactories["clip"] = [](DrawnSchema *schema, CoreModule *coreModule)
+    mFactories["clip"] = [](DrawnSchema *schema)
     {
-        DrawnModuleRectangle *module = new DrawnModuleRectangle("clip", schema, coreModule);
+        DrawnModuleRectangle *module = new DrawnModuleRectangle("clip", schema);
         module->setIcon(":/module/clip.svg");
         module->newInput("operand", DrawnPlug::left);
         module->newOutput("result", DrawnPlug::right);
@@ -80,10 +88,10 @@ DrawnModuleFactory::DrawnModuleFactory()
     };
 }
 
-DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema, CoreModule *coreModule)
+DrawnModule *DrawnModuleFactory::newModule(std::string type, DrawnSchema *schema)
 {
     if (mFactories.count(type)) {
-        return mFactories.at(type)(schema, coreModule);
+        return mFactories.at(type)(schema);
     }
     return new DrawnModuleError(type, schema);
 }

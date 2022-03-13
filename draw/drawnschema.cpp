@@ -84,12 +84,7 @@ void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *
 
 DrawnModule *DrawnSchema::newModule(std::string type)
 {
-    CoreModule *coreModule;
-    try {
-        coreModule = core()->newModule(type);
-    } catch (CoreUnknownTypeEx &) {}
-
-    DrawnModule *module = mModuleFactory->newModule(type, this, coreModule);
+    DrawnModule *module = mModuleFactory->newModule(type, this);
     if (module)
         mModules.insert(module);
     return module;

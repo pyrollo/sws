@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * */
 
 DrawnModuleError::DrawnModuleError(std::string type, DrawnSchema *parentSchema):
-    DrawnModuleRectangle(type, parentSchema, nullptr)
+    DrawnModuleRectangle(type, parentSchema)
 {}
 
 DrawnModuleError::~DrawnModuleError()

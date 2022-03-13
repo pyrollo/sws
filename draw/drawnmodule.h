@@ -65,7 +65,7 @@ protected:
 
     DrawnModuleIcon *mIcon;
 
-    DrawnModule(std::string type, DrawnSchema *schema = nullptr, CoreModule *coreModule = nullptr);
+    DrawnModule(std::string type, DrawnSchema *schema = nullptr);
 
     virtual DrawnInput *newInput(std::string name);
     virtual DrawnOutput *newOutput(std::string name);

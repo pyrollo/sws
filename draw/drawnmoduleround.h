@@ -23,7 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModuleRound : public DrawnModule
 {
 public:
-    DrawnModuleRound(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule);
+    DrawnModuleRound(std::string type, DrawnSchema *parentSchema);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);

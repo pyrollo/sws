@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "core/coremodule.h"
 #include "core/coreexceptions.h"
+#include "core/coremodulefactory.h"
 
 #include <QSvgRenderer>
 #include <QPainter>
@@ -112,16 +113,20 @@ protected:
     DrawnModuleIconEffect *mEffect;
 };
 
-DrawnModule::DrawnModule(std::string type, DrawnSchema *schema, CoreModule *coreModule):
-    DrawnItem(schema), mType(type), mCoreModule(coreModule), mIcon(nullptr)
+DrawnModule::DrawnModule(std::string type, DrawnSchema *schema):
+    DrawnItem(schema), mType(type), mCoreModule(nullptr), mIcon(nullptr)
 {
     mAlignToGrid = true;
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
 
-    if (mSchema)
-        setFlags(flags()|ItemIsSelectable|ItemIsMovable);
-    else
-        setFlags(flags()|ItemIsSelectable);
+    if (mSchema) {
+        setFlags(flags()|ItemIsMovable);
+
+        // TODO: Missing some mechanism to ensure certain modules have their core stuff created
+        try {
+            mCoreModule = mSchema->core()->newModule(type);
+        } catch (CoreUnknownTypeEx &) {}
+    }
 }
 
 DrawnModule::~DrawnModule() {

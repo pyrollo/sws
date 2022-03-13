@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
 
-DrawnModuleRound::DrawnModuleRound(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModule(type, parentSchema, coreModule)
+DrawnModuleRound::DrawnModuleRound(std::string type, DrawnSchema *parentSchema):
+    DrawnModule(type, parentSchema)
 {}
 
 QRectF DrawnModuleRound::boundingRect() const

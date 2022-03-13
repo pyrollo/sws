@@ -27,8 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QInputDialog>
 
 
-DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema, CoreModule *coreModule):
-    DrawnModuleRectangle("output", parentSchema, coreModule), mName("")
+DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema):
+    DrawnModuleRectangle("output", parentSchema), mName("")
 {
     mWidth = 4.0f;
     mHeight = 2.0f;
