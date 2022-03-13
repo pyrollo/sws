@@ -18,19 +18,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNPLUG_H
 #define DRAWNPLUG_H
-#include "drawnitem.h"
+
+#include "drawninteractive.h"
 #include <unordered_set>
 
 class DrawnWire;
 class DrawnModule;
 class CorePlug;
 
-class DrawnPlug : public DrawnItem
+class DrawnPlug : public DrawnInteractive
 {
+    Q_OBJECT
+
 public:
     enum Orientation { left = 0, top, right, bottom };
 
-    DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug = nullptr);
+    DrawnPlug(DrawnModule *module, CorePlug *corePlug = nullptr);
     ~DrawnPlug();
 
     DrawnModule *module() { return mModule; }
@@ -42,6 +45,8 @@ public:
 
     QRectF boundingRect() const;
     QPointF connectionPoint() const { return QPointF(0, 0); }
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     void setOrientation(Orientation orientation);
     Orientation getOrientation() { return mOrientation; }
@@ -60,6 +65,9 @@ public:
     static Orientation rotateOrientation(Orientation orientation, Orientation by);
     static void rotatePoint(QPointF &point, Orientation by);
     static void unrotatePoint(QPointF &point, Orientation by);
+
+signals:
+    void positionChanged();
 
 protected:
     DrawnModule *mModule;

@@ -9,7 +9,7 @@ class Style
 {
 public:
     // Fonts
-    static QFont fModule() { return getfont(5); }
+    static QFont fModule()  { return getfont(5); }
 
     // Line width
     static qreal wModule() { return 0.1f; }

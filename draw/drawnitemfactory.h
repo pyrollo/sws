@@ -16,32 +16,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef FILEDESERIALIZER_H
-#define FILEDESERIALIZER_H
-#include <string>
-#include <QDomDocument>
+#ifndef DRAWNITEMFACTORY_H
+#define DRAWNITEMFACTORY_H
 
-class DrawnSchema;
+#include <functional>
+#include <map>
+#include <vector>
+
 class DrawnItem;
+class DrawnSchema;
+class DrawnDecoration;
+class DrawnModule;
 
-class QByteArray;
-
-class FileBadFileFormat : public std::exception
+class DrawnItemFactory
 {
 public:
-    virtual const char* what() const throw() { return "Bad file format"; }
-};
+    DrawnItemFactory();
 
-class FileDeserializer
-{
-public:
-    explicit FileDeserializer(const QByteArray &data);
-    DrawnSchema *deserializeToDrawnSchema();
+    DrawnItem *newItem(std::string type, DrawnSchema *schema = nullptr);
+    std::vector<std::string> listItems();
+
+    typedef std::function<DrawnItem *(DrawnSchema *schema)> itemConstructor;
+    void registerItem(std::string type, itemConstructor constructor);
+
 protected:
-    QDomDocument mDocument;
-
-    void setPositionFromAttributes(QDomElement &xelement, DrawnItem *item);
-
+    std::map<std::string, itemConstructor> mConstructors;
 };
 
-#endif // FILEDESERIALIZER_H
+void populateFactory(DrawnItemFactory *factory);
+
+#endif // DRAWNITEMFACTORY_H

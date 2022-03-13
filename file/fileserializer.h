@@ -18,11 +18,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef FILESERIALIZER_H
 #define FILESERIALIZER_H
+
 #include <QString>
+#include <QtXml>
+#include <exception>
 
 class DrawnSchema;
-
-#include <exception>
+class DrawnItem;
 
 class FileSerializerErrorModules: public std::exception
 {
@@ -40,6 +42,9 @@ public:
     QString serialize();
 protected:
     DrawnSchema *mSchema;
+
+    void setPositionAttributes(QDomElement &xelement, DrawnItem *item);
+
 };
 
 #endif // FILESERIALIZER_H

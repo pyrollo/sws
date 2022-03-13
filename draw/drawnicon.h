@@ -16,25 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAWNMODULEFACTORY_H
-#define DRAWNMODULEFACTORY_H
+#ifndef DRAWNICON_H
+#define DRAWNICON_H
 
-#include <functional>
-#include <map>
-#include <vector>
+#include <QGraphicsItem>
+#include <QSvgRenderer>
 
-class DrawnModule;
-class DrawnSchema;
-class CoreModule;
+class DrawnIconEffect;
 
-class DrawnModuleFactory
+class DrawnIcon : public QGraphicsItem
 {
 public:
-    DrawnModuleFactory();
-    DrawnModule *newModule(std::string type, DrawnSchema *schema = nullptr);
-    std::vector<std::string> listModules();
+    DrawnIcon(QGraphicsItem *parent, const QString &filename);
+    ~DrawnIcon();
+
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
+
+    void setForeground(QColor color);
+    void setBackground(QColor color);
+
 protected:
-    std::map<std::string, std::function<DrawnModule *(DrawnSchema *schema)>> mFactories;
+    QSvgRenderer mRenderer;
+    DrawnIconEffect *mEffect;
 };
 
-#endif // DRAWNMODULEFACTORY_H
+#endif // DRAWNICON_H

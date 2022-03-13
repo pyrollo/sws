@@ -72,7 +72,7 @@ void GuiSchemaView::wheelEvent(QWheelEvent* event)
 
 void GuiSchemaView::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasFormat("sws/moduletype"))
+    if (event->mimeData()->hasFormat("sws/itemtype"))
         event->acceptProposedAction();
 }
 
@@ -83,10 +83,10 @@ void GuiSchemaView::dragMoveEvent(QDragMoveEvent *event)
 
 void GuiSchemaView::dropEvent(QDropEvent *event)
 {
-    std::string moduletype = event->mimeData()->data("sws/moduletype").toStdString();
+    std::string type = event->mimeData()->data("sws/itemtype").toStdString();
     QPointF pos = mapToScene(event->pos());
-    DrawnModule *module = mScene.schema()->newModule(moduletype);
-    module->moveBy(pos.x(), pos.y());
+    DrawnItem *item = mScene.schema()->newItem(type);
+    item->moveBy(pos.x(), pos.y());
     event->acceptProposedAction();
 }
 

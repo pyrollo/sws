@@ -17,9 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnschema.h"
-#include "drawnmodule.h"
-#include "drawnmodulefactory.h"
+
+#include "drawnitem.h"
+#include "drawnitemfactory.h"
 #include "drawnschemainteraction.h"
+#include "drawnmodule.h"
+#include "drawninput.h"
+#include "drawnoutput.h"
+
 #include "core/coreschema.h"
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
@@ -29,17 +34,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnSchema::DrawnSchema() :
-    DrawnItem(nullptr), mCoreSchema(), mModuleFactory(new DrawnModuleFactory()),
+    QGraphicsObject(nullptr), mCoreSchema(),
     mDefaultInteraction(this), mInteraction(&mDefaultInteraction)
 {
+    mItemFactory = new DrawnItemFactory();
+    // TODO: Not sure this is the best place for populating
+    populateFactory(mItemFactory);
 }
 
 DrawnSchema::~DrawnSchema()
 {
-    while (mModules.size())
-        delete *(mModules.begin());
+    while (mItems.size())
+        delete *(mItems.begin());
 
-    delete mModuleFactory;
+    delete mItemFactory;
 }
 
 void DrawnSchema::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
@@ -62,39 +70,45 @@ void DrawnSchema::endInteraction()
     startInteraction(&mDefaultInteraction);
 }
 
-void DrawnSchema::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseDoubleClickEvent(event, item);
+    mInteraction->mouseDoubleClickEvent(event, emitter);
 }
 
-void DrawnSchema::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mousePressEvent(event, item);
+    mInteraction->mousePressEvent(event, emitter);
 }
 
-void DrawnSchema::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseMoveEvent(event, item);
+    mInteraction->mouseMoveEvent(event, emitter);
 }
 
-void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseReleaseEvent(event, item);
+    mInteraction->mouseReleaseEvent(event, emitter);
 }
 
-DrawnModule *DrawnSchema::newModule(std::string type)
+DrawnItem *DrawnSchema::newItem(std::string type)
 {
-    DrawnModule *module = mModuleFactory->newModule(type, this);
-    if (module)
-        mModules.insert(module);
-    return module;
+    DrawnItem *item = mItemFactory->newItem(type, this);
+    mItems.insert(item);
+
+    if (item->core()) {
+        DrawnModule *module = dynamic_cast<DrawnModule *>(item);
+        if (module) // Should be true
+            mModules.insert(module);
+    }
+
+    return item;
 }
 
-// Should be called only from module destructor
-void DrawnSchema::removeModule(DrawnModule *module) {
-    core()->removeModule(module->core());
-
-    mModules.erase(module);
+// Should be called only from item destructor
+void DrawnSchema::removeItem(DrawnItem *item)
+{
+    mModules.erase((DrawnModule *)item);
+    mItems.erase(item);
 }
 
 void DrawnSchema::highlightConnectable(DrawnPlug * plug)

@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnmoduleround.h"
 #include "style.h"
+#include "drawninput.h"
+#include "drawnoutput.h"
 
 #include <QPainter>
 #include <QSvgRenderer>
@@ -30,7 +32,7 @@ DrawnModuleRound::DrawnModuleRound(std::string type, DrawnSchema *parentSchema):
 QRectF DrawnModuleRound::boundingRect() const
 {
     float margin = Style::wModule();
-    return QRectF(-margin * 0.5f, -margin * 0.5f, 2.0f + margin, 2.0f + margin);
+    return QRectF(-margin * 0.5f, -margin * 0.5f, 2 * Style::sGrid() + margin, 2 * Style::sGrid() + margin);
 }
 
 void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

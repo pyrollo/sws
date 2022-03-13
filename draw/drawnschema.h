@@ -18,40 +18,44 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNSCHEMA_H
 #define DRAWNSCHEMA_H
-#include "drawnitem.h"
+
 #include "interactions/defaultinteraction.h"
 #include "core/coreschema.h"
-#include <unordered_set>
 
+#include <unordered_set>
+#include <QGraphicsObject>
+
+class DrawnItem;
+class DrawnItemFactory;
+class DrawnInteractive;
 class DrawnModule;
-class DrawnModuleFactory;
 class DrawnPlug;
 class DrawnSchemaInteraction;
 
-class DrawnSchema : public DrawnItem
+class DrawnSchema : public QGraphicsObject
 {
     Q_OBJECT
 public:
     DrawnSchema();
     ~DrawnSchema();
 
-    DrawnSchema *schema() override { return this; }
-
     CoreSchema *core() { return &mCoreSchema; }
-    DrawnModuleFactory *getModuleFactory() { return mModuleFactory; }
+    DrawnItemFactory *getItemFactory() { return mItemFactory; }
 
     // Interaction management
     void startInteraction(DrawnSchemaInteraction *interaction);
     void endInteraction();
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
-    DrawnModule *newModule(std::string type);
-    void removeModule(DrawnModule *module);
+
+    const std::unordered_set<DrawnItem *> &items() { return mItems; }
+    DrawnItem *newItem(std::string type);
+    void removeItem(DrawnItem *item);
 
     void highlightConnectable(DrawnPlug * plug);
     void highlightProbeable();
@@ -60,16 +64,17 @@ public:
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
 
-    const std::unordered_set<DrawnModule *> &modules() { return mModules; }
-
 signals:
     void inputsChanged();
     void outputsChanged();
 
 protected:
     CoreSchema mCoreSchema;
-    DrawnModuleFactory *mModuleFactory;
+    DrawnItemFactory *mItemFactory;
+
+    std::unordered_set<DrawnItem *> mItems;
     std::unordered_set<DrawnModule *> mModules;
+
     DefaultInteraction mDefaultInteraction;
     DrawnSchemaInteraction *mInteraction;
 };

@@ -21,14 +21,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsView>
 #include "guimodulelibraryscene.h"
 
-class DrawnModuleFactory;
+class DrawnItemFactory;
 class GuiModuleLibraryScene;
 
 class GuiModuleLibraryView : public QGraphicsView
 {
 public:
     GuiModuleLibraryView(QWidget *parent = nullptr);
-    void setFactory(DrawnModuleFactory *factory);
+    void setFactory(DrawnItemFactory *factory);
     float getScale() const { return mScale; }
 protected:
     GuiModuleLibraryScene mScene;

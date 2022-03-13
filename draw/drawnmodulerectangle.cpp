@@ -17,18 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnmodulerectangle.h"
+#include "drawninput.h"
+#include "drawnoutput.h"
 #include "style.h"
 
 #include <QPainter>
 #include <QSvgRenderer>
 
-DrawnModuleRectangle::DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema):
-    DrawnModule(type, parentSchema), mWidth(2.0f), mHeight(2.0f)
+DrawnModuleRectangle::DrawnModuleRectangle(std::string type, DrawnSchema *schema):
+    DrawnModule(type, schema), mWidth(2), mHeight(2)
 {}
 
 QRectF DrawnModuleRectangle::baseRect() const
 {
-    return QRectF(0.0f, 0.0f, mWidth, mHeight);
+    return QRectF(0.0f, 0.0f, Style::sGrid() * mWidth, Style::sGrid() * mHeight);
 }
 
 QRectF DrawnModuleRectangle::boundingRect() const
@@ -42,7 +44,7 @@ void DrawnModuleRectangle::paint(QPainter *painter, const QStyleOptionGraphicsIt
     setStyle(painter);
 
     QPainterPath path;
-    path.addRoundedRect(0.0f, 0.0f, mWidth, mHeight, 0.1f, 0.1f);
+    path.addRoundedRect(0.0f, 0.0f, Style::sGrid() * mWidth, Style::sGrid() * mHeight, 0.1f, 0.1f);
     painter->drawPath(path);
 }
 
@@ -53,25 +55,25 @@ void DrawnModuleRectangle::repositionPlugs(DrawnPlug::Orientation orientation)
         return;
 
     bool horizontal = orientation == DrawnPlug::top || orientation == DrawnPlug::bottom;
-    float totalSize = horizontal?mWidth:mHeight;
-    float offset = 0.5f * (totalSize - plugsNb * 1.0f + 1.0f);
+    float totalSize = Style::sGrid() * (horizontal?mWidth:mHeight);
+    float offset = 0.5f * (totalSize - plugsNb * Style::sGrid() + Style::sGrid());
 
     switch(orientation) {
     case DrawnPlug::top:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(offset + index * 1.0f, 0.0f);
+            mPlugs[orientation][index]->setPos(offset + Style::sGrid() * index, 0.0f);
         break;
     case DrawnPlug::right:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(mWidth, offset + index * 1.0f);
+            mPlugs[orientation][index]->setPos(Style::sGrid() * mWidth, offset + Style::sGrid() * index);
         break;
     case DrawnPlug::bottom:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(offset + index * 1.0f, mHeight);
+            mPlugs[orientation][index]->setPos(offset + Style::sGrid() * index, Style::sGrid() * mHeight);
         break;
     case DrawnPlug::left:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(0.0f, offset + index * 1.0f);
+            mPlugs[orientation][index]->setPos(0.0f, offset + Style::sGrid() * index);
         break;
     }
 }
@@ -80,7 +82,7 @@ void DrawnModuleRectangle::addPlug(DrawnPlug *plug, DrawnPlug::Orientation orien
 {
     plug->setOrientation(orientation);
     mPlugs[orientation].push_back(plug);
-    float minSize = mPlugs[orientation].size() * 1.0f;
+    int minSize = mPlugs[orientation].size();
 
     if (orientation == DrawnPlug::top || orientation == DrawnPlug::bottom) {
         if (mWidth < minSize) {

@@ -33,13 +33,13 @@ ConnectWireInteraction::ConnectWireInteraction(DrawnSchema *schema, DrawnPlug *p
     mSchema->highlightConnectable(plug);
 }
 
-void ConnectWireInteraction::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *)
+void ConnectWireInteraction::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *)
 {
     mWire->drag(event->scenePos());
     event->accept();
 }
 
-void ConnectWireInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *)
+void ConnectWireInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *)
 {
     auto items = mSchema->scene()->items(event->scenePos());
     for (auto item: items) {

@@ -27,8 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-DrawnPlug::DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug) :
-    DrawnItem(parentModule), mModule(parentModule), mCorePlug(corePlug),
+DrawnPlug::DrawnPlug(DrawnModule *module, CorePlug *corePlug) :
+    DrawnInteractive(module, module->schema()), mModule(module), mCorePlug(corePlug),
     mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
@@ -46,6 +46,14 @@ QRectF DrawnPlug::boundingRect() const
     float size = Style::sPlug();
 
     return QRectF(-margin, -margin - size, margin + size, size * 2 + margin);
+}
+
+QVariant DrawnPlug::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange)
+        emit positionChanged();
+
+    return QGraphicsItem::itemChange(change, value);
 }
 
 void DrawnPlug::setOrientation(Orientation orientation)

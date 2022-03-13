@@ -23,8 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QPainter>
 
-DrawnOutput::DrawnOutput(DrawnModule *parent, CoreOutput *coreOutput) :
-    DrawnPlug(parent, coreOutput), mCoreOutput(coreOutput)
+DrawnOutput::DrawnOutput(DrawnModule *module, CoreOutput *coreOutput) :
+    DrawnPlug(module, coreOutput), mCoreOutput(coreOutput)
 {}
 
 void DrawnOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)

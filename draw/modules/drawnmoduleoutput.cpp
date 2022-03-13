@@ -30,15 +30,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema):
     DrawnModuleRectangle("output", parentSchema), mName("")
 {
-    mWidth = 4.0f;
-    mHeight = 2.0f;
+    mWidth = 4;
+    mHeight = 2;
     newInput("value", DrawnPlug::left);
 }
 
 DrawnModuleOutput::~DrawnModuleOutput()
 {
     if (core() && mSchema) {
-        mSchema->core()->setOutputName(core(), "");
+        mSchema->core()->setOutputName((CoreModuleOutput *)core(), "");
         mSchema->notifyOutputsChanged();
     }
 }
@@ -47,12 +47,15 @@ void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 {
     setStyle(painter);
 
+    qreal width = Style::sGrid() * mWidth;
+    qreal height = Style::sGrid() * mHeight;
     QPainterPath path;
+
     path.moveTo(0.0f, 0.0f);
-    path.lineTo(mWidth, 0.0f);
-    path.arcTo(mWidth - (mHeight - 0.8f) * 0.5f, 0.4f, mHeight - 0.8f, mHeight - 0.8f, 90, 180);
-    path.lineTo(mWidth, mHeight);
-    path.lineTo(0.0f, mHeight);
+    path.lineTo(width, 0.0f);
+    path.arcTo(width - (height - 0.8f) * 0.5f, 0.4f, height - 0.8f, height - 0.8f, 90, 180);
+    path.lineTo(width, height);
+    path.lineTo(0.0f, height);
     path.lineTo(0.0f, 0.0f);
     painter->drawPath(path);
 
@@ -69,7 +72,7 @@ void DrawnModuleOutput::setName(QString name) {
         return;
 
     mName = name;
-    mSchema->core()->setOutputName(core(), mName.toStdString());
+    mSchema->core()->setOutputName((CoreModuleOutput *)core(), mName.toStdString());
     schema()->notifyOutputsChanged();
     update();
 }

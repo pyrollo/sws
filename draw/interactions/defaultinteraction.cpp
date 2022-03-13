@@ -20,15 +20,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "connectwireinteraction.h"
 #include "draw/drawnschema.h"
 #include "draw/drawnplug.h"
+#include "draw/drawninteractive.h"
+
 #include <QGraphicsSceneMouseEvent>
 
 DefaultInteraction::DefaultInteraction(DrawnSchema *schema):
     DrawnSchemaInteraction(schema)
 {}
 
-void DefaultInteraction::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DefaultInteraction::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
+    DrawnPlug *plug = dynamic_cast<DrawnPlug *>(emitter);
 
     if (plug && plug->pluggable()) {
         ConnectWireInteraction *interaction = new ConnectWireInteraction(mSchema, plug);

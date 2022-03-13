@@ -33,6 +33,8 @@ public:
     void setSchema(DrawnSchema *schema);
     DrawnSchema *schema() const { return mSchema; }
 
+    void deleteSelected();
+
 protected:
     DrawnSchema *mSchema;
 };

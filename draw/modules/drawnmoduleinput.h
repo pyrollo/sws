@@ -30,7 +30,6 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void setName(QString name);
-    CoreModuleInput *core() { return (CoreModuleInput *)mCoreModule; }
 protected:
     QString mName;
 };

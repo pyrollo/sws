@@ -25,7 +25,7 @@ GuiModuleLibraryView::GuiModuleLibraryView(QWidget *parent):
     setScene(&mScene);
 }
 
-void GuiModuleLibraryView::setFactory(DrawnModuleFactory *factory)
+void GuiModuleLibraryView::setFactory(DrawnItemFactory *factory)
 {
     mScene.setFactory(factory);
 

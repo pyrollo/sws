@@ -19,11 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DRAWNMODULERECTANGLE_H
 #define DRAWNMODULERECTANGLE_H
 #include "drawnmodule.h"
+#include "drawnplug.h"
 
 class DrawnModuleRectangle : public DrawnModule
 {
 public:
-    DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema);
+    DrawnModuleRectangle(std::string type, DrawnSchema *schema);
 
     QRectF baseRect() const;
     QRectF boundingRect() const override;
@@ -34,8 +35,8 @@ public:
     //void newSeparator(DrawnPlug::Orientation orientation);
 
 protected:
-    float mWidth;
-    float mHeight;
+    int mWidth;
+    int mHeight;
 
     std::vector<DrawnPlug *> mPlugs[4];
 

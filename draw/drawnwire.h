@@ -18,22 +18,23 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNWIRE_H
 #define DRAWNWIRE_H
-#include "drawnitem.h"
+
+#include <QGraphicsObject>
 #include "drawnschema.h"
 
 class DrawnOutput;
 class DrawnInput;
 class DrawnPlug;
 
-class DrawnWire : public DrawnItem
+class DrawnWire : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit DrawnWire(DrawnSchema *parentSchema);
+    explicit DrawnWire(QGraphicsObject *parent);
     ~DrawnWire();
 
-    QRectF boundingRect() const { return mBoundingRect; }
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const override { return mBoundingRect; }
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     void connectTo(DrawnOutput *output);
     void connectTo(DrawnInput *input);
@@ -43,11 +44,12 @@ public:
     void endDrag();
     bool isValid() { return mConnectedOutput && mConnectedInput; }
 
-    Q_SLOT void endpointsmoved();
-
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     QPainterPath shape() const;
+
+public slots:
+    void endpointsmoved();
 
 protected:
     QRectF mBoundingRect;
@@ -60,13 +62,15 @@ protected:
     DrawnOutput *mConnectedOutput;
     DrawnInput *mConnectedInput;
 
+    QPainterPath mPath;
+
     QTransform transformFromPlug(DrawnPlug* plug) const;
     QTransform rotateFromPlug(DrawnPlug* plug) const;
 
     void updatePath();
     bool isDrawable() const;
     QPainterPath path() const;
-    QPainterPath mPath;
+
 };
 
 #endif // DRAWNWIRE_H

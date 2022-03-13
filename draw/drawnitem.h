@@ -18,38 +18,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNITEM_H
 #define DRAWNITEM_H
-#include <QGraphicsItem>
-
-const float baseSize = 1.0f;
+#include "drawninteractive.h"
 
 class DrawnSchema;
+class DrawnIcon;
+class CoreModule;
 
-class DrawnItem : public QObject, public QGraphicsItem
+class DrawnItem : public DrawnInteractive
 {
     Q_OBJECT
-    Q_INTERFACES(QGraphicsItem)
 public:
-    explicit DrawnItem(DrawnItem *parent);
+    virtual ~DrawnItem();
 
-    virtual DrawnSchema *schema() { return mSchema; }
+    std::string getType() const { return mType; }
+    DrawnSchema *schema() { return mSchema; }
+    virtual CoreModule *core() { return nullptr; }
 
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    void setIcon(const QString &filename);
 
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    void deleteAll();
-    void deleteSelected();
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 signals:
     void positionChanged();
 
 protected:
+    std::string mType;
     DrawnSchema *mSchema;
+    DrawnIcon *mIcon;
 
-    bool mAlignToGrid;
+    DrawnItem(std::string type, DrawnSchema *schema);
+
+    void repositionIcon();
 };
 
 #endif // DRAWNITEM_H

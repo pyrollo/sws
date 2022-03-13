@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawnschema.h"
 #include "draw/drawnmodule.h"
 #include "draw/drawnwire.h"
+#include "draw/style.h"
 #include "draw/modules/drawnmoduleinput.h"
 #include "draw/modules/drawnmoduleoutput.h"
 #include "core/coreschema.h"
@@ -40,67 +41,74 @@ FileDeserializer::FileDeserializer(const QByteArray &data)
         throw FileBadFileFormat();
 }
 
+void FileDeserializer::setPositionFromAttributes(QDomElement &xelement, DrawnItem *item)
+{
+    item->setPos(
+        Style::sGrid() * xelement.attribute("x").toInt(),
+        Style::sGrid() * xelement.attribute("y").toInt()
+    );
+}
+
 DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
 {
     DrawnSchema *schema = new DrawnSchema();
-    std::map<QString, DrawnModule *> drawnModules;
+    std::map<QString, DrawnItem *> drawnItems;
     QDomNodeList xfound;
 
-    QDomElement xroot = mDocument.documentElement();
-    for (int index = 0; index < xroot.childNodes().count(); index++) {
-        QDomNode xnode = xroot.childNodes().at(index);
+    QDomElement xschema = mDocument.documentElement();
+    if (xschema.tagName() != "schema")
+        throw FileBadFileFormat();
+
+    // Core
+    // ----
+
+    QDomElement xcore = xschema.firstChildElement("core");
+    if (xcore.isNull())
+        throw FileBadFileFormat();
+
+    for (int index = 0; index < xcore.childNodes().count(); index++) {
+        QDomNode xnode = xcore.childNodes().at(index);
         if (xnode.isElement()) {
             QDomElement xelement = xnode.toElement();
             if (xelement.tagName() == "module") {
-                DrawnModule *module = schema->newModule(xelement.attribute("type").toStdString());
-                drawnModules[xelement.attribute("id")] = module;
+                DrawnItem *item = schema->newItem(xelement.attribute("type").toStdString());
+                drawnItems[xelement.attribute("id")] = item;
 
                 // Some module type specific stuff
-                xfound = xelement.elementsByTagName("internal");
-                if (xfound.count()) {
-                    if (strcmp(module->getType(), "constant") == 0) {
-                        QDomElement xinternal = xfound.at(0).toElement();
-                        ((CoreModuleConstant *)module->core())->setValue(
-                                valueFromQString(xinternal.attribute("value")));
-                    }
-                }
-                // GUI Specific stuff
-                xfound = xelement.elementsByTagName("gui");
-                if (xfound.count()) {
-                    QDomElement xgui = xfound.at(0).toElement();
-                    module->moveBy(xgui.attribute("x").toFloat(), xgui.attribute("y").toFloat());
-                }
+                if (item->getType() == "constant")
+                    ((CoreModuleConstant *)item->core())->setValue(valueFromQString(xelement.attribute("value")));
             }
             if (xelement.tagName() == "connect") {
                 QDomElement xfrom = xelement.elementsByTagName("from").at(0).toElement();
                 QDomElement xto = xelement.elementsByTagName("to").at(0).toElement();
 
                 try {
-                    DrawnModule *from = drawnModules.at(xfrom.attribute("module"));
-                    DrawnModule *to   = drawnModules.at(xto.attribute("module"));
+                    DrawnModule *from = (DrawnModule *)drawnItems.at(xfrom.attribute("module"));
+                    DrawnModule *to = (DrawnModule *)drawnItems.at(xto.attribute("module"));
                     DrawnWire *wire = new DrawnWire(schema);
                     wire->connectTo(from->output(xfrom.attribute("output").toStdString()));
                     wire->connectTo(to->input(xto.attribute("input").toStdString()));
-                } catch(std::exception &e) {
+                } catch(std::exception &) {
                     throw FileBadFileFormat();
                 }
             }
-            if (xelement.tagName() == "input") {
-                try {
-                    DrawnModuleInput *module = (DrawnModuleInput *)drawnModules.at(xelement.attribute("module"));
-                    module->setName(xelement.attribute("name"));
-                } catch(std::exception &e) {
-                    throw FileBadFileFormat();
-                }
-            }
-            if (xelement.tagName() == "output") {
-                try {
-                    DrawnModuleOutput *module = (DrawnModuleOutput *)drawnModules.at(xelement.attribute("module"));
-                    module->setName(xelement.attribute("name"));
-                } catch(std::exception &e) {
-                    throw FileBadFileFormat();
-                }
+        }
+    }
 
+    // Draw
+    // ----
+
+    QDomElement xdraw = xschema.firstChildElement("draw");
+    if (xdraw.isNull())
+        throw FileBadFileFormat();
+
+    for (int index = 0; index < xcore.childNodes().count(); index++) {
+        QDomNode xnode = xcore.childNodes().at(index);
+        if (xnode.isElement()) {
+            QDomElement xelement = xnode.toElement();
+            if (xelement.tagName() == "place-module") {
+                DrawnItem *item = drawnItems.at(xelement.attribute("module"));
+                setPositionFromAttributes(xelement, item);
             }
         }
     }

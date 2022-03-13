@@ -29,8 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleConstant::DrawnModuleConstant(DrawnSchema *parentSchema):
     DrawnModuleRectangle("constant", parentSchema)
 {
-    mWidth = 4.0f;
-    mHeight = 1.0f;
+    mWidth = 4;
+    mHeight = 1;
     newOutput("value", DrawnPlug::right);
 }
 

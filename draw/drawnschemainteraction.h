@@ -21,17 +21,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 class QGraphicsSceneMouseEvent;
 class DrawnSchema;
-class DrawnItem;
+class DrawnInteractive;
 
 class DrawnSchemaInteraction {
 public:
-    explicit DrawnSchemaInteraction(DrawnSchema *schema) : mSchema(schema) {}
-    virtual ~DrawnSchemaInteraction() {}
+    explicit DrawnSchemaInteraction(DrawnSchema *schema);
+    virtual ~DrawnSchemaInteraction();
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) { (void)(e); (void)(item); }
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) { (void)(e); (void)(item); }
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) { (void)(e); (void)(item); }
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) { (void)(e); (void)(item); }
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
     virtual void init() {}
     virtual void terminate() {}
 

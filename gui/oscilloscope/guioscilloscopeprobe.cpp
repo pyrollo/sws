@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "guioscilloscopeprobe.h"
 
 #include "draw/drawnschema.h"
+#include "draw/drawnmodule.h"
 #include "draw/drawnplug.h"
 
 GuiOscilloscopeProbe::GuiOscilloscopeProbe():
@@ -46,12 +47,12 @@ void GuiOscilloscopeProbe::setBufferSize(size_t size)
 void GuiOscilloscopeProbe::probePlug(DrawnPlug *plug)
 {
     if (mProbedPlug)
-        mProbedPlug->schema()->core()->disconnectReadingBuffer(mSampleBuffer);
+        mProbedPlug->module()->schema()->core()->disconnectReadingBuffer(mSampleBuffer);
 
     mProbedPlug = plug;
 
     if (mProbedPlug)
-        mProbedPlug->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
+        mProbedPlug->module()->schema()->core()->connectReadingBuffer(mSampleBuffer, mProbedPlug->core());
 }
 
 void addPixel(QImage *image, int x, int y, QColor &color)
