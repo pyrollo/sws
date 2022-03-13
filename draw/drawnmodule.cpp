@@ -113,8 +113,11 @@ protected:
 };
 
 DrawnModule::DrawnModule(std::string type, DrawnSchema *schema, CoreModule *coreModule):
-    DrawnItem(schema, 1.0f), mType(type), mCoreModule(coreModule), mIcon(nullptr)
+    DrawnItem(schema), mType(type), mCoreModule(coreModule), mIcon(nullptr)
 {
+    mAlignToGrid = true;
+    setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
+
     if (mSchema)
         setFlags(flags()|ItemIsSelectable|ItemIsMovable);
     else

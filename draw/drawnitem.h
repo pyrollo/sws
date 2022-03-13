@@ -29,14 +29,11 @@ class DrawnItem : public QObject, public QGraphicsItem
     Q_OBJECT
     Q_INTERFACES(QGraphicsItem)
 public:
-    explicit DrawnItem(DrawnItem *parent, float posGridSize = 0.0f);
+    explicit DrawnItem(DrawnItem *parent);
 
     virtual DrawnSchema *schema() { return mSchema; }
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -52,9 +49,7 @@ signals:
 protected:
     DrawnSchema *mSchema;
 
-    bool mIsHovered;
-    float mPosGridSize;
-    QPointF mPosGridAnchor;
+    bool mAlignToGrid;
 };
 
 #endif // DRAWNITEM_H

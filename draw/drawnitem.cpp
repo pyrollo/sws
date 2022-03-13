@@ -18,42 +18,31 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnitem.h"
 #include "drawnschema.h"
-#include "../gui/guischemascene.h"
+#include "style.h"
+#include "gui/guischemascene.h"
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
 #include <cmath>
 
-DrawnItem::DrawnItem(DrawnItem *parent, float posGridSize):
+DrawnItem::DrawnItem(DrawnItem *parent):
     QObject(), QGraphicsItem(parent), mSchema(parent?parent->schema():nullptr),
-    mIsHovered(false), mPosGridSize(posGridSize), mPosGridAnchor(0.0f, 0.0f)
-{
-    if (mPosGridSize > 0.0f)
-        setFlags(flags() | QGraphicsItem::ItemSendsGeometryChanges);
-}
+    mAlignToGrid(false)
+{}
 
 QVariant DrawnItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemPositionChange)
         emit positionChanged();
 
-    if (change == ItemPositionChange && mPosGridSize > 0.0f) {
-        QPointF newPos = value.toPointF() + mPosGridAnchor;
-        qreal xV = round(newPos.x()/mPosGridSize)*mPosGridSize;
-        qreal yV = round(newPos.y()/mPosGridSize)*mPosGridSize;
-        return QPointF(xV, yV) - mPosGridAnchor;
+    if (change == ItemPositionChange && mAlignToGrid) {
+        qreal gridSize = Style::sGrid();
+        QPointF newPos = value.toPointF();
+        qreal xV = round(newPos.x() / gridSize) * gridSize;
+        qreal yV = round(newPos.y() / gridSize) * gridSize;
+        return QPointF(xV, yV);
     }
 
     return QGraphicsItem::itemChange(change, value);
-}
-
-void DrawnItem::hoverEnterEvent(QGraphicsSceneHoverEvent * event) {
-    mIsHovered = true;
-    QGraphicsItem::hoverEnterEvent(event);
-}
-
-void DrawnItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event) {
-    mIsHovered = false;
-    QGraphicsItem::hoverLeaveEvent(event);
 }
 
 void DrawnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

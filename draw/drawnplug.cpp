@@ -26,7 +26,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
-#include <QMessageBox>
 
 DrawnPlug::DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug) :
     DrawnItem(parentModule), mModule(parentModule), mCorePlug(corePlug),

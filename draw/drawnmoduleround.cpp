@@ -25,10 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 DrawnModuleRound::DrawnModuleRound(std::string type, DrawnSchema *parentSchema, CoreModule *coreModule):
     DrawnModule(type, parentSchema, coreModule)
-{
-    float margin = Style::wModule() * 0.5f;
-    mPosGridAnchor = QPointF(margin, margin);
-}
+{}
 
 QRectF DrawnModuleRound::boundingRect() const
 {
