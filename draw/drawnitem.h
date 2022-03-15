@@ -18,28 +18,26 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNITEM_H
 #define DRAWNITEM_H
-#include <QGraphicsItem>
+#include "drawninteractive.h"
 
 const float baseSize = 1.0f;
 
 class DrawnSchema;
+class DrawnIcon;
+class CoreModule;
 
-class DrawnItem : public QObject, public QGraphicsItem
+class DrawnItem : public DrawnInteractive
 {
-    Q_OBJECT
-    Q_INTERFACES(QGraphicsItem)
 public:
-    virtual ~DrawnItem() {}
+    virtual ~DrawnItem();
 
     std::string getType() const { return mType; }
-    virtual DrawnSchema *schema() { return mSchema; }
+    DrawnSchema *schema() { return mSchema; }
+    virtual CoreModule *core() { return nullptr; }
+
+    void setIcon(const QString &filename);
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     void deleteAll();
     void deleteSelected();
@@ -50,17 +48,13 @@ signals:
 protected:
     std::string mType;
     DrawnSchema *mSchema;
+
+    DrawnIcon *mIcon;
     bool mAlignToGrid;
 
-    DrawnItem(DrawnItem *parent);
-    DrawnItem(std::string type, DrawnItem *parent);
-};
+    DrawnItem(std::string type, DrawnSchema *schema);
 
-class DrawnDecoration : public DrawnItem
-{
-public:
-    DrawnDecoration(DrawnSchema *parent): DrawnItem((DrawnItem *)parent) {}
-    virtual ~DrawnDecoration() {}
+    void repositionIcon();
 };
 
 #endif // DRAWNITEM_H

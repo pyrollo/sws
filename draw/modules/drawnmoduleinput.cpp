@@ -29,8 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema):
     DrawnModuleRectangle("input", parentSchema), mName("")
 {
-    mWidth = 4.0f;
-    mHeight = 2.0f;
+    mWidth = 4;
+    mHeight = 2;
     newOutput("value", DrawnPlug::right);
 }
 
@@ -46,13 +46,16 @@ void DrawnModuleInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 {
     setStyle(painter);
 
+    qreal width = Style::sGrid() * mWidth;
+    qreal height = Style::sGrid() * mHeight;
     QPainterPath path;
+
     path.moveTo(0.0f, 0.0f);
-    path.lineTo(mWidth, 0.0f);
-    path.lineTo(mWidth, mHeight);
-    path.lineTo(0.0f, mHeight);
-    path.lineTo(0.0f, mHeight - 0.4f);
-    path.lineTo(mHeight * 0.5f - 0.4f, mHeight * 0.5f);
+    path.lineTo(width, 0.0f);
+    path.lineTo(width, height);
+    path.lineTo(0.0f, height);
+    path.lineTo(0.0f, height - 0.4f);
+    path.lineTo(height * 0.5f - 0.4f, height * 0.5f);
     path.lineTo(0.0f, 0.4f);
     path.lineTo(0.0f, 0.0f);
     painter->drawPath(path);

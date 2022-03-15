@@ -16,28 +16,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "defaultinteraction.h"
-#include "connectwireinteraction.h"
-#include "draw/drawnschema.h"
-#include "draw/drawnplug.h"
-#include "draw/drawninteractive.h"
+#ifndef DRAWNICON_H
+#define DRAWNICON_H
 
-#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
+#include <QSvgRenderer>
 
-DefaultInteraction::DefaultInteraction(DrawnSchema *schema):
-    DrawnSchemaInteraction(schema)
-{}
+class DrawnIconEffect;
 
-void DefaultInteraction::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *item)
+class DrawnIcon : public QGraphicsItem
 {
-    DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
+public:
+    DrawnIcon(QGraphicsItem *parent, const QString &filename);
+    ~DrawnIcon();
 
-    if (plug && plug->pluggable()) {
-        ConnectWireInteraction *interaction = new ConnectWireInteraction(mSchema, plug);
-        mSchema->startInteraction(interaction);
-    }
-    event->accept();
-}
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
 
+    void setForeground(QColor color);
+    void setBackground(QColor color);
 
+protected:
+    QSvgRenderer mRenderer;
+    DrawnIconEffect *mEffect;
+};
 
+#endif // DRAWNICON_H

@@ -36,18 +36,8 @@ public:
     DrawnItem *newItem(std::string type, DrawnSchema *schema = nullptr);
     std::vector<std::string> listItems();
 
-    typedef std::function<DrawnDecoration *(DrawnSchema *schema)> decorationConstructor;
-    typedef std::function<DrawnModule *(DrawnSchema *schema)> moduleConstructor;
     typedef std::function<DrawnItem *(DrawnSchema *schema)> itemConstructor;
-
-    DrawnDecoration *newDecoration(std::string type, DrawnSchema *schema);
-    DrawnModule *newModule(std::string type, DrawnSchema *schema);
-
-    void registerDecoration(std::string type, decorationConstructor constructor);
-    void registerModule(std::string type, moduleConstructor constructor);
-
-    inline static std::string modulePrefix = "module/";
-    inline static std::string decorationPrefix = "decoration/";
+    void registerItem(std::string type, itemConstructor constructor);
 
 protected:
     std::map<std::string, itemConstructor> mConstructors;

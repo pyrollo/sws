@@ -18,24 +18,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNSCHEMA_H
 #define DRAWNSCHEMA_H
-#include "drawnitem.h"
+
 #include "interactions/defaultinteraction.h"
 #include "core/coreschema.h"
-#include <unordered_set>
 
-class DrawnModule;
+#include <unordered_set>
+#include <QGraphicsItem>
+
+class DrawnItem;
 class DrawnItemFactory;
+class DrawnModule;
 class DrawnPlug;
 class DrawnSchemaInteraction;
 
-class DrawnSchema : public DrawnItem
+class DrawnSchema : public QGraphicsItem
 {
     Q_OBJECT
 public:
     DrawnSchema();
     ~DrawnSchema();
-
-    DrawnSchema *schema() override { return this; }
 
     CoreSchema *core() { return &mCoreSchema; }
     DrawnItemFactory *getItemFactory() { return mItemFactory; }
@@ -51,15 +52,9 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
 
+    const std::unordered_set<DrawnItem *> &items() { return mItems; }
     DrawnItem *newItem(std::string type);
-
-    const std::unordered_set<DrawnModule *> &modules() { return mModules; }
-    DrawnModule *newModule(std::string type);
-    void removeModule(DrawnModule *item);
-
-    const std::unordered_set<DrawnDecoration *> &decorations() { return mDecorations; }
-    DrawnDecoration *newDecoration(std::string type);
-    void removeDecoration(DrawnDecoration *item);
+    void removeItem(DrawnItem *item);
 
     void highlightConnectable(DrawnPlug * plug);
     void highlightProbeable();
@@ -68,7 +63,6 @@ public:
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
 
-
 signals:
     void inputsChanged();
     void outputsChanged();
@@ -76,8 +70,10 @@ signals:
 protected:
     CoreSchema mCoreSchema;
     DrawnItemFactory *mItemFactory;
+
+    std::unordered_set<DrawnItem *> mItems;
     std::unordered_set<DrawnModule *> mModules;
-    std::unordered_set<DrawnDecoration *> mDecorations;
+
     DefaultInteraction mDefaultInteraction;
     DrawnSchemaInteraction *mInteraction;
 };

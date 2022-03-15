@@ -38,7 +38,7 @@ public:
 protected:
     QDomDocument mDocument;
 
-    void deserializeGui(DrawnSchema *schema, QDomElement xgui);
+    void setPositionFromAttributes(QDomElement &xelement, DrawnItem *item);
 
 };
 

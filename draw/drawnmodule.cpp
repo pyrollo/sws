@@ -21,121 +21,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnschema.h"
 #include "drawninput.h"
 #include "drawnoutput.h"
+#include "drawnicon.h"
 
 #include "core/coremodule.h"
 #include "core/coreexceptions.h"
 #include "core/coremodulefactory.h"
 
-#include <QSvgRenderer>
 #include <QPainter>
-#include <QGraphicsEffect>
-
-class DrawnModuleIconEffect : public QGraphicsEffect
-{
-public:
-    DrawnModuleIconEffect(QObject *parent = nullptr):
-        QGraphicsEffect(parent), mBackgroundColor(Qt::white), mForegroundColor(Qt::black)
-    {}
-
-    void setForeground(QColor color) { mForegroundColor = color; }
-    void setBackground(QColor color) { mBackgroundColor = color; }
-
-    void draw(QPainter *painter) override {
-        painter->save();
-        QPoint offset;
-        QPixmap pixmap;
-
-        if (sourceIsPixmap()) {
-            pixmap = sourcePixmap(Qt::LogicalCoordinates, &offset);
-        } else {
-            pixmap = sourcePixmap(Qt::DeviceCoordinates, &offset);
-            painter->setWorldTransform(QTransform());
-        }
-
-        int oR = mForegroundColor.red();
-        int oG = mForegroundColor.green();
-        int oB = mForegroundColor.blue();
-
-        int mR = mBackgroundColor.red() - oR;
-        int mG = mBackgroundColor.green() - oG;
-        int mB = mBackgroundColor.blue() - oB;
-
-        QImage image = pixmap.toImage();
-
-        unsigned int *data = (unsigned int *)image.bits();
-
-        int pixels = image.width() * image.height();
-        for (int i = 0; i < pixels; ++i) {
-            int a = qAlpha(data[i]);
-            int v = qGray(data[i]);
-            data[i] = qPremultiply(qRgba(oR + mR * v / 255, oG + mG * v / 255, oB + mB * v / 255, a));
-        }
-
-        painter->drawImage(offset, image);
-        painter->restore();
-    }
-
-private:
-    QColor mBackgroundColor;
-    QColor mForegroundColor;
-};
-
-class DrawnModuleIcon: public QGraphicsItem
-{
-public:
-    DrawnModuleIcon(DrawnModule *parent, const QString &filename):
-        QGraphicsItem(parent), mRenderer(filename)
-    {
-        setAcceptedMouseButtons(Qt::NoButton);
-        mEffect = new DrawnModuleIconEffect();
-        setGraphicsEffect(mEffect); // Takes ownership
-    }
-
-    ~DrawnModuleIcon()
-    {}
-
-    QRectF boundingRect() const
-    {
-        const float size = 1.4f;
-        return QRectF(-size * 0.5f, -size * 0.5f, size, size);
-    }
-
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-    {
-        mRenderer.render(painter, boundingRect());
-    }
-
-    void setForeground(QColor color) { mEffect->setForeground(color); }
-    void setBackground(QColor color) { mEffect->setBackground(color); }
-
-protected:
-    QSvgRenderer mRenderer;
-    DrawnModuleIconEffect *mEffect;
-};
-
-DrawnModule::DrawnModule(std::string type, DrawnSchema *schema):
-    DrawnItem(schema), mModuleType(type), mCoreModule(nullptr), mIcon(nullptr)
-{
-    mAlignToGrid = true;
-    setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);
-
-    if (mSchema) {
-        setFlags(flags()|ItemIsMovable);
-
-        // TODO: Missing some mechanism to ensure certain modules have their core stuff created
-        try {
-            mCoreModule = mSchema->core()->newModule(type);
-        } catch (CoreUnknownTypeEx &) {}
-    }
-}
 
 DrawnModule::~DrawnModule() {
-    if (mSchema)
-        mSchema->removeModule(this);
-
-    if (mIcon)
-        delete mIcon;
-
     for (auto it : mInputs)
         delete it.second;
 
@@ -144,24 +38,6 @@ DrawnModule::~DrawnModule() {
 
     if (mCoreModule)
         delete mCoreModule;
-}
-
-void DrawnModule::repositionIcon()
-{
-    if (!mIcon)
-        return;
-    QRectF rect = boundingRect();
-    mIcon->setPos(rect.width() * 0.5 + rect.left(), rect.height() * 0.5 + rect.top());
-    update();
-}
-
-void DrawnModule::setIcon(const QString &filename)
-{
-    if (mIcon)
-        delete mIcon;
-
-    mIcon = new DrawnModuleIcon(this, filename);
-    repositionIcon();
 }
 
 void DrawnModule::setStyle(QPainter *painter, QColor bgColor, QColor fgColor)
@@ -192,7 +68,7 @@ DrawnInput *DrawnModule::newInput(std::string name)
     else
         input = new DrawnInput(this);
 
-    connect(this, SIGNAL(positionChanged()), input, SIGNAL(positionChanged()));
+//    connect(this, SIGNAL(positionChanged()), input, SIGNAL(positionChanged()));
     mInputs[name] = input;
     return input;
 }
@@ -205,7 +81,7 @@ DrawnOutput *DrawnModule::newOutput(std::string name)
     else
         output = new DrawnOutput(this);
 
-    connect(this, SIGNAL(positionChanged()), output, SIGNAL(positionChanged()));
+//    connect(this, SIGNAL(positionChanged()), output, SIGNAL(positionChanged()));
     mOutputs[name] = output;
     return output;
 }

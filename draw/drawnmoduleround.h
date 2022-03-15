@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DRAWNMODULEROUND_H
 #define DRAWNMODULEROUND_H
 #include "drawnmodule.h"
+#include "drawnplug.h"
 
 class DrawnModuleRound : public DrawnModule
 {

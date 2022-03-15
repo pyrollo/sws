@@ -17,9 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnschema.h"
-#include "drawnmodule.h"
+
+#include "drawnitem.h"
 #include "drawnitemfactory.h"
 #include "drawnschemainteraction.h"
+#include "drawnmodule.h"
+
 #include "core/coreschema.h"
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
@@ -29,7 +32,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnSchema::DrawnSchema() :
-    DrawnItem(nullptr), mCoreSchema(),
+    QGraphicsItem(nullptr), mCoreSchema(),
     mDefaultInteraction(this), mInteraction(&mDefaultInteraction)
 {
     mItemFactory = new DrawnItemFactory();
@@ -39,8 +42,8 @@ DrawnSchema::DrawnSchema() :
 
 DrawnSchema::~DrawnSchema()
 {
-    while (mModules.size())
-        delete *(mModules.begin());
+    while (mItems.size())
+        delete *(mItems.begin());
 
     delete mItemFactory;
 }
@@ -88,40 +91,25 @@ void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *
 DrawnItem *DrawnSchema::newItem(std::string type)
 {
     DrawnItem *item = mItemFactory->newItem(type, this);
+    mItems.insert(item);
 
-    DrawnModule *module = dynamic_cast<DrawnModule *>(item);
-    if (module)
-        mModules.insert(module);
-
-    DrawnDecoration *decoration = dynamic_cast<DrawnDecoration *>(item);
-    if (decoration)
-        mDecorations.insert(decoration);
+    if (item->core()) {
+        DrawnModule *module = dynamic_cast<DrawnModule *>(item);
+        if (module) // Should be true
+            mModules.insert(module);
+    }
 
     return item;
 }
 
-DrawnModule *DrawnSchema::newModule(std::string type)
-{
-    DrawnItem *item = newItem(mItemFactory->modulePrefix + type);
-    return (DrawnModule *) item;
-}
+// Should be called only from item destructor
+void DrawnSchema::removeItem(DrawnItem *item) {
+    if (item->core()) {
+        core()->removeModule(item->core());
+        mModules.erase((DrawnModule *)item);
+    }
 
-DrawnDecoration *DrawnSchema::newDecoration(std::string type)
-{
-    DrawnItem *item = newItem(mItemFactory->decorationPrefix + type);
-    return (DrawnDecoration *) item;
-}
-
-// Should be called only from module destructor
-void DrawnSchema::removeModule(DrawnModule *module) {
-    core()->removeModule(module->core());
-
-    mModules.erase(module);
-}
-
-// Should be called only from decoration destructor
-void DrawnSchema::removeDecoration(DrawnDecoration *decoration) {
-    mDecorations.erase(decoration);
+    mItems.erase(item);
 }
 
 void DrawnSchema::highlightConnectable(DrawnPlug * plug)

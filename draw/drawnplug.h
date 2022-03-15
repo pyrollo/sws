@@ -18,19 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNPLUG_H
 #define DRAWNPLUG_H
-#include "drawnitem.h"
+
+#include "drawninteractive.h"
 #include <unordered_set>
 
 class DrawnWire;
 class DrawnModule;
 class CorePlug;
 
-class DrawnPlug : public DrawnItem
+class DrawnPlug : public DrawnInteractive
 {
 public:
     enum Orientation { left = 0, top, right, bottom };
 
-    DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug = nullptr);
+    DrawnPlug(DrawnModule *module, CorePlug *corePlug = nullptr);
     ~DrawnPlug();
 
     DrawnModule *module() { return mModule; }

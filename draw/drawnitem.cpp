@@ -18,21 +18,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "drawnitem.h"
 #include "drawnschema.h"
+#include "drawnicon.h"
 #include "style.h"
+
 #include "gui/guischemascene.h"
+
+#include <cmath>
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
-#include <cmath>
 
-DrawnItem::DrawnItem(DrawnItem *parent):
-    QObject(), QGraphicsItem(parent), mType(""), mSchema(parent?parent->schema():nullptr),
+DrawnItem::DrawnItem(std::string type, DrawnSchema *schema):
+    QGraphicsObject(schema), mType(type), mSchema(schema),
     mAlignToGrid(false)
 {}
 
-DrawnItem::DrawnItem(std::string type, DrawnItem *parent):
-    QObject(), QGraphicsItem(parent), mType(type), mSchema(parent?parent->schema():nullptr),
-    mAlignToGrid(false)
-{}
+DrawnItem::~DrawnItem()
+{
+    if (mSchema)
+        mSchema->removeItem(this);
+
+    if (mIcon)
+        delete mIcon;
+}
 
 QVariant DrawnItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
@@ -50,40 +57,22 @@ QVariant DrawnItem::itemChange(GraphicsItemChange change, const QVariant &value)
     return QGraphicsItem::itemChange(change, value);
 }
 
-void DrawnItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void DrawnItem::repositionIcon()
 {
-    if (mSchema)
-        mSchema->mouseDoubleClickEvent(event, this);
-
-    if (!event->isAccepted())
-        QGraphicsItem::mouseDoubleClickEvent(event);
+    if (!mIcon)
+        return;
+    QRectF rect = boundingRect();
+    mIcon->setPos(rect.width() * 0.5 + rect.left(), rect.height() * 0.5 + rect.top());
+    update();
 }
 
-void DrawnItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void DrawnItem::setIcon(const QString &filename)
 {
-    if (mSchema)
-        mSchema->mousePressEvent(event, this);
+    if (mIcon)
+        delete mIcon;
 
-    if (!event->isAccepted())
-        QGraphicsItem::mousePressEvent(event);
-}
-
-void DrawnItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (mSchema)
-        mSchema->mouseMoveEvent(event, this);
-
-    if (!event->isAccepted())
-        QGraphicsItem::mouseMoveEvent(event);
-}
-
-void DrawnItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    if (mSchema)
-        mSchema->mouseReleaseEvent(event, this);
-
-    if (!event->isAccepted())
-        QGraphicsItem::mouseReleaseEvent(event);
+    mIcon = new DrawnIcon(this, filename);
+    repositionIcon();
 }
 
 void DrawnItem::deleteAll()

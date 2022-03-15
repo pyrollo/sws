@@ -27,8 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
-DrawnPlug::DrawnPlug(DrawnModule *parentModule, CorePlug *corePlug) :
-    DrawnItem(parentModule), mModule(parentModule), mCorePlug(corePlug),
+DrawnPlug::DrawnPlug(DrawnModule *module, CorePlug *corePlug) :
+    DrawnInteractive(parent->schema()), mModule(module), mCorePlug(corePlug),
     mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);

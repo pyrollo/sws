@@ -30,14 +30,9 @@ DrawnItemFactory::DrawnItemFactory()
 {
 }
 
-void DrawnItemFactory::registerDecoration(std::string type, decorationConstructor constructor)
+void DrawnItemFactory::registerItem(std::string type, itemConstructor constructor)
 {
-    mConstructors[decorationPrefix + type] = constructor;
-}
-
-void DrawnItemFactory::registerModule(std::string type, moduleConstructor constructor)
-{
-    mConstructors[modulePrefix + type] = constructor;
+    mConstructors[type] = constructor;
 }
 
 DrawnItem *DrawnItemFactory::newItem(std::string type, DrawnSchema *schema)
@@ -46,16 +41,6 @@ DrawnItem *DrawnItemFactory::newItem(std::string type, DrawnSchema *schema)
         return mConstructors.at(type)(schema);
     }
     return nullptr;
-}
-
-DrawnModule *DrawnItemFactory::newModule(std::string type, DrawnSchema *schema)
-{
-    return (DrawnModule *)newItem(modulePrefix + type, schema);
-}
-
-DrawnDecoration *DrawnItemFactory::newDecoration(std::string type, DrawnSchema *schema)
-{
-    return (DrawnDecoration *)newItem(decorationPrefix + type, schema);
 }
 
 std::vector<std::string> DrawnItemFactory::listItems()
@@ -70,22 +55,22 @@ std::vector<std::string> DrawnItemFactory::listItems()
 void populateFactory(DrawnItemFactory *factory)
 {
     // Decorations
-    factory->registerDecoration("comment", [](DrawnSchema *schema) { return new DrawnComment(schema); });
+    factory->registerItem("comment", [](DrawnSchema *schema) { return new DrawnComment(schema); });
 
     // Base modules
-    factory->registerModule("constant", [](DrawnSchema *schema) { return new DrawnModuleConstant(schema); });
-    factory->registerModule("input",    [](DrawnSchema *schema) { return new DrawnModuleInput(schema); });
-    factory->registerModule("output",   [](DrawnSchema *schema) { return new DrawnModuleOutput(schema); });
+    factory->registerItem("constant", [](DrawnSchema *schema) { return new DrawnModuleConstant(schema); });
+    factory->registerItem("input",    [](DrawnSchema *schema) { return new DrawnModuleInput(schema); });
+    factory->registerItem("output",   [](DrawnSchema *schema) { return new DrawnModuleOutput(schema); });
 
     // Generic modules
-    factory->registerModule("time", [](DrawnSchema *schema) {
+    factory->registerItem("time", [](DrawnSchema *schema) {
         DrawnModuleRound *module = new DrawnModuleRound("time", schema);
         module->setIcon(":/module/time.svg");
         module->newOutput("time", DrawnPlug::right);
         return module;
     });
 
-    factory->registerModule("multiply", [](DrawnSchema *schema) {
+    factory->registerItem("multiply", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("multiply", schema);
         module->setIcon(":/module/multiply.svg");
         module->newInput("operand1", DrawnPlug::left);
@@ -94,7 +79,7 @@ void populateFactory(DrawnItemFactory *factory)
         return module;
     });
 
-    factory->registerModule("add", [](DrawnSchema *schema) {
+    factory->registerItem("add", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("add", schema);
         module->setIcon(":/module/add.svg");
         module->newInput("operand1", DrawnPlug::left);
@@ -103,7 +88,7 @@ void populateFactory(DrawnItemFactory *factory)
         return module;
     });
 
-    factory->registerModule("sine", [](DrawnSchema *schema) {
+    factory->registerItem("sine", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("sine", schema);
         module->setIcon(":/module/sine.svg");
         module->newInput("operand", DrawnPlug::left);
@@ -111,7 +96,7 @@ void populateFactory(DrawnItemFactory *factory)
         return module;
     });
 
-    factory->registerModule("clip", [](DrawnSchema *schema) {
+    factory->registerItem("clip", [](DrawnSchema *schema) {
         DrawnModuleRectangle *module = new DrawnModuleRectangle("clip", schema);
         module->setIcon(":/module/clip.svg");
         module->newInput("operand", DrawnPlug::left);

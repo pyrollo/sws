@@ -18,10 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #ifndef DRAWNMODULE_H
 #define DRAWNMODULE_H
-#include "drawnitem.h"
 
-#include "drawninput.h"
-#include "drawnoutput.h"
+#include "drawnitem.h"
 #include "style.h"
 
 #include <map>
@@ -38,11 +36,11 @@ class DrawnModuleIcon;
 
 class DrawnModule : public DrawnItem
 {
+    Q_OBJECT
 public:
     ~DrawnModule();
     virtual const char *getType() const { return mModuleType.c_str(); }
-    DrawnSchema *schema() override { return mSchema; }
-    CoreModule *core() { return mCoreModule; }
+    CoreModule *core() override { return mCoreModule; }
 
     virtual DrawnInput  *input(std::string name);
     virtual DrawnOutput *output(std::string name);
@@ -53,8 +51,6 @@ public:
     void highlightPluggableOutputs();
     void highlightProbeableOutputs();
 
-    void setIcon(const QString &filename);
-
 protected:
     // TODO: mModuleType and DranwItem::mType should be linked
     std::string mModuleType;
@@ -63,8 +59,6 @@ protected:
 
     std::map<std::string, DrawnInput *> mInputs;
     std::map<std::string, DrawnOutput *> mOutputs;
-
-    DrawnModuleIcon *mIcon;
 
     DrawnModule(std::string type, DrawnSchema *schema = nullptr);
 

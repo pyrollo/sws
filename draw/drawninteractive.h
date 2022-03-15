@@ -16,24 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DRAWNCOMMENT_H
-#define DRAWNCOMMENT_H
+#ifndef DRAWNINTERACTIVE_H
+#define DRAWNINTERACTIVE_H
 
-#include "drawnitem.h"
+#include <QGraphicsObject>
 
-class DrawnComment: public DrawnItem
+class DrawnSchema;
+
+class DrawnInteractive: public QGraphicsObject
 {
 public:
-    DrawnComment(DrawnSchema *parent);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-    QRectF boundingRect() const override;
+    DrawnInteractive(DrawnSchema *schema);
 
-    QString getText() const { return mText; }
-    void setText(QString text) { mText = text; }
-private:
-    QString mText;
-    int mWidth;
-    int mHeight;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+    DrawnSchema *mSchema;
 };
 
-#endif // DRAWNCOMMENT_H
+#endif // DRAWNINTERACTIVE_H

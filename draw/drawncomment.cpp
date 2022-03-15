@@ -17,12 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawncomment.h"
+#include "drawnitem.h"
 #include "style.h"
 
 #include <QPainter>
 
 DrawnComment::DrawnComment(DrawnSchema *parent):
-    DrawnDecoration(parent)
+    DrawnItem("comment", parent)
 {
     mText = "Comment";
     mWidth = 10;

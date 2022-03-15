@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnwire.h"
+#include "drawnmodule.h"
 #include "drawnoutput.h"
 #include "drawninput.h"
 #include "style.h"
@@ -30,10 +31,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QPainterPathStroker>
 
-DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
-    DrawnItem(parentSchema), mBoundingRect(0,0,0,0),
-    mDragging(false), mDragpoint(0, 0),
-    mConnectedOutput(nullptr), mConnectedInput(nullptr)
+DrawnWire::DrawnWire(DrawnSchema *parent) :
+    QGraphicsItem(parent),
+    mBoundingRect(0,0,0,0),
+    mDragging(false),
+    mDragpoint(0, 0),
+    mConnectedOutput(nullptr),
+    mConnectedInput(nullptr)
 {
     setFlags(flags()|ItemIsSelectable);
     setZValue(1);
@@ -42,13 +46,14 @@ DrawnWire::DrawnWire(DrawnSchema *parentSchema) :
 DrawnWire::~DrawnWire()
 {
     if (mConnectedOutput && mConnectedInput)
-        mSchema->core()->disconnect(mConnectedInput->core(), mConnectedOutput->core());
+        mConnectedOutput->module()->schema()->core()->disconnect(mConnectedInput->core(), mConnectedOutput->core());
+
     if (mConnectedOutput)
         mConnectedOutput->removeConnectedWire(this);
+
     if (mConnectedInput)
         mConnectedInput->removeConnectedWire(this);
 }
-
 
 void DrawnWire::connectTo(DrawnOutput *output)
 {
@@ -56,7 +61,7 @@ void DrawnWire::connectTo(DrawnOutput *output)
         return;
 
     if (mConnectedInput)
-        schema()->core()->connect(mConnectedInput->core(), output->core());
+        mConnectedInput->module()->schema()->core()->connect(mConnectedInput->core(), output->core());
 
     mConnectedOutput = output;
     mConnectedOutput->addConnectedWire(this);
@@ -71,7 +76,7 @@ void DrawnWire::connectTo(DrawnInput *input)
         return;
 
     if (mConnectedOutput)
-        schema()->core()->connect(input->core(), mConnectedOutput->core());
+        mConnectedOutput->module()->schema()->core()->connect(input->core(), mConnectedOutput->core());
 
     mConnectedInput = input;
     mConnectedInput->addConnectedWire(this);

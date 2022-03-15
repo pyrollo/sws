@@ -17,16 +17,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "fileserializer.h"
+
 #include "draw/drawnschema.h"
 #include "draw/drawnmodule.h"
 #include "draw/drawnitem.h"
 #include "draw/drawncomment.h"
+#include "draw/style.h"
 #include "draw/modules/drawnmoduleerror.h"
+
 #include "core/coreschema.h"
 #include "core/coremodule.h"
 #include "core/coreinput.h"
 #include "core/coreoutput.h"
 #include "core/modules/coremoduleconstant.h"
+
 #include "value/string.h"
 
 FileSerializer::FileSerializer(DrawnSchema *schema):
@@ -39,21 +43,16 @@ bool FileSerializer::serializable()
     // Disable serialization of schema with errors
     // (wont work well and will lose module internal data)
     // TODO: Should error modules hold any module data?
-    for (auto module: mSchema->modules())
-        if (dynamic_cast<DrawnModuleError *>(module))
+    for (auto item: mSchema->items())
+        if (dynamic_cast<DrawnModuleError *>(item))
             return false;
     return true;
 }
 
 void FileSerializer::setPositionAttributes(QDomElement &xelement, DrawnItem *item)
 {
-    // setAttributes(float) looks buggy : it uses locale decimal separator instead of dot and adds extra digits
-    QString buffer;
-    // TODO: We should use and store "grid" coordinates (wich btw would be integers)
-    buffer.setNum(item->pos().x());
-    xelement.setAttribute("x", buffer);
-    buffer.setNum(item->pos().y());
-    xelement.setAttribute("y", buffer);
+    xelement.setAttribute("x", int(item->pos().x() / Style::sGrid()));
+    xelement.setAttribute("y", int(item->pos().y() / Style::sGrid()));
 }
 
 QString FileSerializer::serialize()
@@ -61,95 +60,97 @@ QString FileSerializer::serialize()
     if (!serializable())
         throw(new FileSerializerErrorModules());
 
-    QDomDocument xdoc("xxx");
+    QDomDocument xdoc("sws-schema");
     QDomElement xschema = xdoc.createElement("schema");
     xdoc.appendChild(xschema);
 
     // Arbitrary order modules to give them ids
-    std::map<DrawnModule *, int> drawnModules;
+    std::map<DrawnItem *, int> drawnModules;
     std::map<CoreModule *, int> coreModules;
 
     // Map core and drawn modules to generated IDs for this file
     int id = 1;
-    for (auto module: mSchema->modules()) {
-        drawnModules[module] = id;
-        coreModules[module->core()] = id;
+    for (auto item: mSchema->items()) {
+        DrawnModule *module = dynamic_cast<DrawnModule *>(item);
+        if (module && module->core()) {
+            drawnModules[item] = id;
+            coreModules[module->core()] = id;
+        }
         id++;
     }
 
-    // Create module elements
-    for (auto module: mSchema->modules()) {
+    // Core part
+    // ---------
+
+    QDomElement xcore = xdoc.createElement("core");
+    xschema.appendChild(xcore);
+
+    // Modules
+    for (auto module: coreModules) {
         QDomElement xmodule = xdoc.createElement("module");
-        xschema.appendChild(xmodule);
-        xmodule.setAttribute("id", QString::number(drawnModules[module]));
-        xmodule.setAttribute("type", QString::fromStdString(module->getType()));
+        xcore.appendChild(xmodule);
+        xmodule.setAttribute("id", QString::number(module.second));
+        xmodule.setAttribute("type", QString::fromStdString(module.first->getType()));
 
         // Some module type specific stuff
-        if (strcmp(module->getType(), "constant") == 0) {
-            QDomElement xinternal = xdoc.createElement("internal");
-            xmodule.appendChild(xinternal);
-            xinternal.setAttribute("value", valueToQString(
-                    ((CoreModuleConstant *)module->core())->getValue()));
-        }
-
-        // GUI specific stuff
-        QDomElement xgui = xdoc.createElement("gui");
-        xmodule.appendChild(xgui);
-        setPositionAttributes(xgui, module);
+        if (strcmp(module.first->getType(), "constant") == 0)
+            xmodule.setAttribute("value", valueToQString(
+                ((CoreModuleConstant *)module.first)->getValue()));
     }
 
-    // Create connect elements
-    for (auto toModule: mSchema->core()->modules()) {
-        for (auto it: toModule->inputs()) {
-            CoreOutput *fromOutput = it.second->connectedOutput();
+    // Connections
+    for (auto module: coreModules) {
+        for (auto input: module.first->inputs()) {
+            CoreOutput *fromOutput = input.first->connectedOutput();
             if (!fromOutput)
                 continue;
-            CoreModule *fromModule = fromOutput->module();
+
             std::string fromOutputName = "";
-            for (auto it2: fromModule->outputs())
-                if (it2.second == fromOutput)
-                    fromOutputName = it2.first;
+            for (auto output: fromOutput->module()->outputs())
+                if (output.second == fromOutput)
+                    fromOutputName = output.first;
 
             QDomElement xconnect = xdoc.createElement("connect");
-            xschema.appendChild(xconnect);
+            xcore.appendChild(xconnect);
+
             QDomElement xfrom = xdoc.createElement("from");
             xconnect.appendChild(xfrom);
+            xfrom.setAttribute("module", QString::number(coreModules[fromOutput->module()]));
+            xfrom.setAttribute("output", QString::fromStdString(fromOutputName));
+
             QDomElement xto = xdoc.createElement("to");
             xconnect.appendChild(xto);
-            xfrom.setAttribute("module", QString::number(coreModules[fromModule]));
-            xfrom.setAttribute("output", QString::fromStdString(fromOutputName));
-            xto.setAttribute("module", QString::number(coreModules[toModule]));
-            xto.setAttribute("input", QString::fromStdString(it.first));
+            xto.setAttribute("module", QString::number(module.second));
+            xto.setAttribute("input", QString::fromStdString(input.first));
         }
     }
 
-    // Create input elements
-    for (auto it: mSchema->core()->inputs()) {
-        QDomElement xinput = xdoc.createElement("input");
-        xschema.appendChild(xinput);
-        xinput.setAttribute("module", coreModules[(CoreModule *)it.second]);
-        xinput.setAttribute("name", QString::fromStdString(it.first));
+    // Draw Part
+    // ---------
+
+    QDomElement xdraw = xdoc.createElement("draw");
+    xschema.appendChild(xdraw);
+
+    // Modules
+    for (auto module : drawnModules) {
+        QDomElement xmodule = xdoc.createElement("place-module");
+        xdraw.appendChild(xmodule);
+        xmodule.setAttribute("id", QString::number(module.second));
+        setPositionAttributes(xmodule, module.first);
     }
 
-    // Create output elements
-    for (auto it: mSchema->core()->outputs()) {
-        QDomElement xinput = xdoc.createElement("output");
-        xschema.appendChild(xinput);
-        xinput.setAttribute("module", coreModules[(CoreModule *)it.second]);
-        xinput.setAttribute("name", QString::fromStdString(it.first));
-    }
+    // Decorations
+    for (auto item: mSchema->items()) {
+        if (drawnModules(item))
+            continue;
 
-    // GUI specific stuff
-    QDomElement xgui = xdoc.createElement("gui");
-    xschema.appendChild(xgui);
-
-    for (auto decoration: mSchema->decorations()) {
-        // TODO: Switch on decorationtype
-        DrawnComment *comment = (DrawnComment *)decoration;
-        QDomElement xcomment = xdoc.createElement("comment");
-        xgui.appendChild(xcomment);
-        setPositionAttributes(xcomment, comment);
-        xcomment.appendChild(xdoc.createTextNode(comment->getText()));
+        DrawnComment comment = dynamic_cast<DrawnComment *>(item);
+        if (comment) {
+            QDomElement xcomment = xdoc.createElement("comment");
+            xdraw.appendChild(xcomment);
+            setPositionAttributes(xcomment, comment);
+            xcomment.appendChild(xdoc.createTextNode(comment->getText()));
+        }
     }
 
     return xdoc.toString();
