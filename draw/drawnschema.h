@@ -23,15 +23,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "core/coreschema.h"
 
 #include <unordered_set>
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 
 class DrawnItem;
 class DrawnItemFactory;
+class DrawnInteractive;
 class DrawnModule;
 class DrawnPlug;
 class DrawnSchemaInteraction;
 
-class DrawnSchema : public QGraphicsItem
+class DrawnSchema : public QGraphicsObject
 {
     Q_OBJECT
 public:
@@ -44,10 +45,10 @@ public:
     // Interaction management
     void startInteraction(DrawnSchemaInteraction *interaction);
     void endInteraction();
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter);
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr);
@@ -62,6 +63,8 @@ public:
 
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
+
+    void deleteSelected();
 
 signals:
     void inputsChanged();

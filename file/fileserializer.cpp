@@ -86,22 +86,22 @@ QString FileSerializer::serialize()
     xschema.appendChild(xcore);
 
     // Modules
-    for (auto module: coreModules) {
+    for (auto module: drawnModules) {
         QDomElement xmodule = xdoc.createElement("module");
         xcore.appendChild(xmodule);
         xmodule.setAttribute("id", QString::number(module.second));
         xmodule.setAttribute("type", QString::fromStdString(module.first->getType()));
 
         // Some module type specific stuff
-        if (strcmp(module.first->getType(), "constant") == 0)
+        if (module.first->getType() == "constant")
             xmodule.setAttribute("value", valueToQString(
-                ((CoreModuleConstant *)module.first)->getValue()));
+                ((CoreModuleConstant *)module.first->core())->getValue()));
     }
 
     // Connections
     for (auto module: coreModules) {
         for (auto input: module.first->inputs()) {
-            CoreOutput *fromOutput = input.first->connectedOutput();
+            CoreOutput *fromOutput = input.second->connectedOutput();
             if (!fromOutput)
                 continue;
 
@@ -141,10 +141,10 @@ QString FileSerializer::serialize()
 
     // Decorations
     for (auto item: mSchema->items()) {
-        if (drawnModules(item))
+        if (drawnModules.find(item) != drawnModules.end())
             continue;
 
-        DrawnComment comment = dynamic_cast<DrawnComment *>(item);
+        DrawnComment *comment = dynamic_cast<DrawnComment *>(item);
         if (comment) {
             QDomElement xcomment = xdoc.createElement("comment");
             xdraw.appendChild(xcomment);

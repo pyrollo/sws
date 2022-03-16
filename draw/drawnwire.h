@@ -19,18 +19,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef DRAWNWIRE_H
 #define DRAWNWIRE_H
 
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 #include "drawnschema.h"
 
 class DrawnOutput;
 class DrawnInput;
 class DrawnPlug;
 
-class DrawnWire : public QGraphicsItem
+class DrawnWire : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit DrawnWire(QGraphicsItem *parent);
+    explicit DrawnWire(QGraphicsObject *parent);
     ~DrawnWire();
 
     QRectF boundingRect() const override { return mBoundingRect; }

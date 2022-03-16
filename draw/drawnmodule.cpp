@@ -29,7 +29,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QPainter>
 
-DrawnModule::~DrawnModule() {
+DrawnModule::DrawnModule(std::string type, DrawnSchema *schema):
+    DrawnItem(type, schema), mCoreModule(nullptr)
+{
+    if (mSchema) {
+        setFlags(flags()|ItemIsMovable);
+
+        // TODO: Missing some mechanism to ensure certain modules have their core stuff created
+        try {
+            mCoreModule = mSchema->core()->newModule(type);
+        } catch (CoreUnknownTypeEx &) {}
+    }
+}
+
+DrawnModule::~DrawnModule()
+{
     for (auto it : mInputs)
         delete it.second;
 

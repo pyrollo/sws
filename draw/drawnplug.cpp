@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnPlug::DrawnPlug(DrawnModule *module, CorePlug *corePlug) :
-    DrawnInteractive(parent->schema()), mModule(module), mCorePlug(corePlug),
+    DrawnInteractive(module->schema()), mModule(module), mCorePlug(corePlug),
     mOrientation(top), mHighlighted(false), mConnecting(false)
 {
     setFlags(flags()|ItemIsSelectable|ItemSendsGeometryChanges);

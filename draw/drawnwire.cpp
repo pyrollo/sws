@@ -31,8 +31,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 #include <QPainterPathStroker>
 
-DrawnWire::DrawnWire(DrawnSchema *parent) :
-    QGraphicsItem(parent),
+DrawnWire::DrawnWire(QGraphicsObject *parent) :
+    QGraphicsObject(parent),
     mBoundingRect(0,0,0,0),
     mDragging(false),
     mDragpoint(0, 0),

@@ -20,14 +20,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define DRAWNITEM_H
 #include "drawninteractive.h"
 
-const float baseSize = 1.0f;
-
 class DrawnSchema;
 class DrawnIcon;
 class CoreModule;
 
 class DrawnItem : public DrawnInteractive
 {
+    Q_OBJECT
 public:
     virtual ~DrawnItem();
 
@@ -38,9 +37,6 @@ public:
     void setIcon(const QString &filename);
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-
-    void deleteAll();
-    void deleteSelected();
 
 signals:
     void positionChanged();

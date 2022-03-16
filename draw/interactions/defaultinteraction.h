@@ -35,7 +35,7 @@ class DefaultInteraction : public DrawnSchemaInteraction
 public:
     explicit DefaultInteraction(DrawnSchema *schema);
     ~DefaultInteraction() {}
-    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *) override;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *) override;
 };
 
 #endif // DEFAULTINTERACTION_H

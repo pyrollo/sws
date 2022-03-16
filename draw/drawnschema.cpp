@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "drawnitemfactory.h"
 #include "drawnschemainteraction.h"
 #include "drawnmodule.h"
+#include "drawninput.h"
+#include "drawnoutput.h"
 
 #include "core/coreschema.h"
 #include "core/coreinput.h"
@@ -32,7 +34,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QPainter>
 
 DrawnSchema::DrawnSchema() :
-    QGraphicsItem(nullptr), mCoreSchema(),
+    QGraphicsObject(nullptr), mCoreSchema(),
     mDefaultInteraction(this), mInteraction(&mDefaultInteraction)
 {
     mItemFactory = new DrawnItemFactory();
@@ -68,24 +70,24 @@ void DrawnSchema::endInteraction()
     startInteraction(&mDefaultInteraction);
 }
 
-void DrawnSchema::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseDoubleClickEvent(event, item);
+    mInteraction->mouseDoubleClickEvent(event, emitter);
 }
 
-void DrawnSchema::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mousePressEvent(event, item);
+    mInteraction->mousePressEvent(event, emitter);
 }
 
-void DrawnSchema::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseMoveEvent(event, item);
+    mInteraction->mouseMoveEvent(event, emitter);
 }
 
-void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *item)
+void DrawnSchema::mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    mInteraction->mouseReleaseEvent(event, item);
+    mInteraction->mouseReleaseEvent(event, emitter);
 }
 
 DrawnItem *DrawnSchema::newItem(std::string type)
@@ -149,3 +151,9 @@ void DrawnSchema::unHighlight()
         module->unHighlightPlugs();
 }
 
+void DrawnSchema::deleteSelected()
+{
+    for (auto item: mItems)
+        if (item->isSelected())
+            delete item;
+}

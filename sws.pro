@@ -44,6 +44,7 @@ SOURCES += \
     draw/drawnoutput.cpp \
     draw/drawnplug.cpp \
     draw/drawnschema.cpp \
+    draw/drawnschemainteraction.cpp \
     draw/drawnwire.cpp \
     draw/interactions/connectwireinteraction.cpp \
     draw/interactions/defaultinteraction.cpp \

@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 class DrawnModuleRectangle : public DrawnModule
 {
 public:
-    DrawnModuleRectangle(std::string type, DrawnSchema *parentSchema);
+    DrawnModuleRectangle(std::string type, DrawnSchema *schema);
 
     QRectF baseRect() const;
     QRectF boundingRect() const override;

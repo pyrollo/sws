@@ -72,7 +72,7 @@ void GuiSchemaView::wheelEvent(QWheelEvent* event)
 
 void GuiSchemaView::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasFormat("sws/moduletype"))
+    if (event->mimeData()->hasFormat("sws/itemtype"))
         event->acceptProposedAction();
 }
 

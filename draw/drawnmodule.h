@@ -39,7 +39,6 @@ class DrawnModule : public DrawnItem
     Q_OBJECT
 public:
     ~DrawnModule();
-    virtual const char *getType() const { return mModuleType.c_str(); }
     CoreModule *core() override { return mCoreModule; }
 
     virtual DrawnInput  *input(std::string name);
@@ -52,9 +51,6 @@ public:
     void highlightProbeableOutputs();
 
 protected:
-    // TODO: mModuleType and DranwItem::mType should be linked
-    std::string mModuleType;
-
     CoreModule *mCoreModule;
 
     std::map<std::string, DrawnInput *> mInputs;
@@ -67,8 +63,6 @@ protected:
 
     void setStyle(QPainter *painter, QColor bgColor, QColor fgColor);
     virtual void setStyle(QPainter *painter) { setStyle(painter,  Style::cBackground(), Style::cForeground()); }
-
-    void repositionIcon();
 };
 
 

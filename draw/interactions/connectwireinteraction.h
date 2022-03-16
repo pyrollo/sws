@@ -37,8 +37,8 @@ class ConnectWireInteraction : public DrawnSchemaInteraction
 public:
     ConnectWireInteraction(DrawnSchema *schema, DrawnPlug *plug);
     ~ConnectWireInteraction() {}
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnItem *) override;
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnItem *) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *) override;
 protected:
     DrawnPlug *mPlug;
     DrawnWire *mWire;

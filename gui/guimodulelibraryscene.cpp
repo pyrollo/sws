@@ -64,23 +64,28 @@ void GuiModuleLibraryScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
 
         // Find first ancestor item under mouse
-        DrawnItem *item = (DrawnItem *)itemAt(event->scenePos(), QTransform());
+        QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
         if (!item)
             return;
 
-        while (item->parent())
-            item = (DrawnItem *)item->parent();
+        while (item->parentItem())
+            item = item->parentItem();
+
+        DrawnItem *draggedItem = dynamic_cast<DrawnItem *>(item);
+
+        if (!draggedItem)
+            return;
 
         // Prepare dragging if found
         QDrag *drag = new QDrag(this);
         QMimeData *mimeData = new QMimeData();
-        mimeData->setData("sws/itemtype", QByteArray::fromStdString(item->getType()));
+        mimeData->setData("sws/itemtype", QByteArray::fromStdString(draggedItem->getType()));
         drag->setMimeData(mimeData);
 
         // Create an image of module
-        QRectF rect = item->boundingRect();
+        QRectF rect = draggedItem->boundingRect();
 
-        DrawnItem *fakeItem = mFactory->newItem(item->getType());
+        DrawnItem *fakeItem = mFactory->newItem(draggedItem->getType());
         QGraphicsScene scene(rect);
         scene.addItem(fakeItem);
 

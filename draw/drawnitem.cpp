@@ -28,8 +28,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsSceneMouseEvent>
 
 DrawnItem::DrawnItem(std::string type, DrawnSchema *schema):
-    QGraphicsObject(schema), mType(type), mSchema(schema),
-    mAlignToGrid(false)
+    DrawnInteractive(schema), mType(type), mSchema(schema),
+    mIcon(nullptr), mAlignToGrid(false)
 {}
 
 DrawnItem::~DrawnItem()
@@ -75,21 +75,3 @@ void DrawnItem::setIcon(const QString &filename)
     repositionIcon();
 }
 
-void DrawnItem::deleteAll()
-{
-    delete this;
-}
-
-void DrawnItem::deleteSelected()
-{
-    for (auto qitem: childItems()) {
-        DrawnItem *item = dynamic_cast<DrawnItem *>(qitem);
-        if (!item)
-            continue;
-
-        if (item->isSelected())
-            item->deleteAll();
-        else
-            item->deleteSelected();
-    }
-}

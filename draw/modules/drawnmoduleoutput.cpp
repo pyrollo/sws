@@ -38,7 +38,7 @@ DrawnModuleOutput::DrawnModuleOutput(DrawnSchema *parentSchema):
 DrawnModuleOutput::~DrawnModuleOutput()
 {
     if (core() && mSchema) {
-        mSchema->core()->setOutputName(core(), "");
+        mSchema->core()->setOutputName((CoreModuleOutput *)core(), "");
         mSchema->notifyOutputsChanged();
     }
 }
@@ -72,7 +72,7 @@ void DrawnModuleOutput::setName(QString name) {
         return;
 
     mName = name;
-    mSchema->core()->setOutputName(core(), mName.toStdString());
+    mSchema->core()->setOutputName((CoreModuleOutput *)core(), mName.toStdString());
     schema()->notifyOutputsChanged();
     update();
 }

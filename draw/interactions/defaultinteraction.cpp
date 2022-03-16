@@ -28,9 +28,9 @@ DefaultInteraction::DefaultInteraction(DrawnSchema *schema):
     DrawnSchemaInteraction(schema)
 {}
 
-void DefaultInteraction::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *item)
+void DefaultInteraction::mousePressEvent(QGraphicsSceneMouseEvent *event, DrawnInteractive *emitter)
 {
-    DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
+    DrawnPlug *plug = dynamic_cast<DrawnPlug *>(emitter);
 
     if (plug && plug->pluggable()) {
         ConnectWireInteraction *interaction = new ConnectWireInteraction(mSchema, plug);

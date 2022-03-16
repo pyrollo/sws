@@ -37,7 +37,7 @@ DrawnModuleInput::DrawnModuleInput(DrawnSchema *parentSchema):
 DrawnModuleInput::~DrawnModuleInput()
 {
     if (mCoreModule && mSchema) {
-            mSchema->core()->setInputName(core(), "");
+            mSchema->core()->setInputName((CoreModuleInput *)core(), "");
             mSchema->notifyInputsChanged();
     }
 }
@@ -73,7 +73,7 @@ void DrawnModuleInput::setName(QString name) {
         return;
 
     mName = name;
-    mSchema->core()->setInputName(core(), mName.toStdString());
+    mSchema->core()->setInputName((CoreModuleInput *)core(), mName.toStdString());
     schema()->notifyInputsChanged();
     update();
 }

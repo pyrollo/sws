@@ -35,9 +35,9 @@ public:
         delete this;
     }
 
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e, DrawnItem *item) override
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e, DrawnInteractive *emmiter) override
     {
-        DrawnPlug *plug = dynamic_cast<DrawnPlug *>(item);
+        DrawnPlug *plug = dynamic_cast<DrawnPlug *>(emmiter);
         if (!plug)
             return;
 

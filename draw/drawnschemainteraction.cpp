@@ -1,6 +1,6 @@
 /*
 Short Waves System - A numeric modular synthetizer
-Copyright (C) 2021 Pierre-Yves Rollo <dev@pyrollo.com>
+Copyright (C) 2022 Pierre-Yves Rollo <dev@pyrollo.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,32 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef FILEDESERIALIZER_H
-#define FILEDESERIALIZER_H
-#include <string>
-#include <QDomDocument>
+#include "drawnschemainteraction.h"
 
-class DrawnSchema;
-class DrawnItem;
+DrawnSchemaInteraction::DrawnSchemaInteraction(DrawnSchema *schema) : mSchema(schema)
+{}
 
-class QByteArray;
+DrawnSchemaInteraction::~DrawnSchemaInteraction()
+{}
 
-class FileBadFileFormat : public std::exception
-{
-public:
-    virtual const char* what() const throw() { return "Bad file format"; }
-};
+void DrawnSchemaInteraction::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *, DrawnInteractive *)
+{}
 
-class FileDeserializer
-{
-public:
-    explicit FileDeserializer(const QByteArray &data);
-    DrawnSchema *deserializeToDrawnSchema();
-protected:
-    QDomDocument mDocument;
+void DrawnSchemaInteraction::mousePressEvent(QGraphicsSceneMouseEvent *, DrawnInteractive *)
+{}
 
-    void setPositionFromAttributes(QDomElement &xelement, DrawnItem *item);
+void DrawnSchemaInteraction::mouseMoveEvent(QGraphicsSceneMouseEvent *, DrawnInteractive *)
+{}
 
-};
+void DrawnSchemaInteraction::mouseReleaseEvent(QGraphicsSceneMouseEvent *, DrawnInteractive *)
+{}
 
-#endif // FILEDESERIALIZER_H

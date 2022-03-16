@@ -116,7 +116,7 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
             if (xelement.tagName() == "comment") {
                 DrawnComment *comment = (DrawnComment *)schema->newItem("comment");
                 comment->setText(xelement.text());
-                setPositionFromAttributes(xelement, item);
+                setPositionFromAttributes(xelement, comment);
             }
         }
     }
