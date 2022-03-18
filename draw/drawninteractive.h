@@ -26,7 +26,7 @@ class DrawnSchema;
 class DrawnInteractive: public QGraphicsObject
 {
 public:
-    DrawnInteractive(DrawnSchema *schema);
+    DrawnInteractive(QGraphicsObject *parent, DrawnSchema *schema);
 
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

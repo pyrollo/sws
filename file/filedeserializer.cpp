@@ -56,9 +56,8 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
     std::map<QString, DrawnItem *> drawnItems;
     QDomNodeList xfound;
 
-    QDomElement xroot = mDocument.documentElement();
-    QDomElement xschema = xroot.firstChildElement("schema");
-    if (xschema.isNull())
+    QDomElement xschema = mDocument.documentElement();
+    if (xschema.tagName() != "schema")
         throw FileBadFileFormat();
 
     // Core

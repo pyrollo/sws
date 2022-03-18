@@ -36,7 +36,7 @@ public:
 
     void setIcon(const QString &filename);
 
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
 signals:
     void positionChanged();
@@ -44,9 +44,7 @@ signals:
 protected:
     std::string mType;
     DrawnSchema *mSchema;
-
     DrawnIcon *mIcon;
-    bool mAlignToGrid;
 
     DrawnItem(std::string type, DrawnSchema *schema);
 

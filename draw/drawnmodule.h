@@ -38,7 +38,7 @@ class DrawnModule : public DrawnItem
 {
     Q_OBJECT
 public:
-    ~DrawnModule();
+    virtual ~DrawnModule();
     CoreModule *core() override { return mCoreModule; }
 
     virtual DrawnInput  *input(std::string name);

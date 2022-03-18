@@ -105,12 +105,9 @@ DrawnItem *DrawnSchema::newItem(std::string type)
 }
 
 // Should be called only from item destructor
-void DrawnSchema::removeItem(DrawnItem *item) {
-    if (item->core()) {
-        core()->removeModule(item->core());
-        mModules.erase((DrawnModule *)item);
-    }
-
+void DrawnSchema::removeItem(DrawnItem *item)
+{
+    mModules.erase((DrawnModule *)item);
     mItems.erase(item);
 }
 
@@ -151,9 +148,3 @@ void DrawnSchema::unHighlight()
         module->unHighlightPlugs();
 }
 
-void DrawnSchema::deleteSelected()
-{
-    for (auto item: mItems)
-        if (item->isSelected())
-            delete item;
-}

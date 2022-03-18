@@ -50,8 +50,13 @@ DrawnModule::~DrawnModule()
     for (auto it : mOutputs)
         delete it.second;
 
+    if (mSchema && mCoreModule)
+        mSchema->core()->removeModule(mCoreModule);
+
     if (mCoreModule)
         delete mCoreModule;
+
+    mCoreModule = nullptr;
 }
 
 void DrawnModule::setStyle(QPainter *painter, QColor bgColor, QColor fgColor)
@@ -82,7 +87,7 @@ DrawnInput *DrawnModule::newInput(std::string name)
     else
         input = new DrawnInput(this);
 
-//    connect(this, SIGNAL(positionChanged()), input, SIGNAL(positionChanged()));
+    connect(this, SIGNAL(positionChanged()), input, SIGNAL(positionChanged()));
     mInputs[name] = input;
     return input;
 }
@@ -95,7 +100,7 @@ DrawnOutput *DrawnModule::newOutput(std::string name)
     else
         output = new DrawnOutput(this);
 
-//    connect(this, SIGNAL(positionChanged()), output, SIGNAL(positionChanged()));
+    connect(this, SIGNAL(positionChanged()), output, SIGNAL(positionChanged()));
     mOutputs[name] = output;
     return output;
 }

@@ -44,11 +44,12 @@ public:
     void endDrag();
     bool isValid() { return mConnectedOutput && mConnectedInput; }
 
-    Q_SLOT void endpointsmoved();
-
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     QPainterPath shape() const;
+
+public slots:
+    void endpointsmoved();
 
 protected:
     QRectF mBoundingRect;

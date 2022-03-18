@@ -55,25 +55,25 @@ void DrawnModuleRectangle::repositionPlugs(DrawnPlug::Orientation orientation)
         return;
 
     bool horizontal = orientation == DrawnPlug::top || orientation == DrawnPlug::bottom;
-    float totalSize = horizontal?mWidth:mHeight;
-    float offset = 0.5f * (totalSize - plugsNb * 1.0f + 1.0f);
+    float totalSize = Style::sGrid() * (horizontal?mWidth:mHeight);
+    float offset = 0.5f * (totalSize - plugsNb * Style::sGrid() + Style::sGrid());
 
     switch(orientation) {
     case DrawnPlug::top:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(offset + index * 1.0f, 0.0f);
+            mPlugs[orientation][index]->setPos(offset + Style::sGrid() * index, 0.0f);
         break;
     case DrawnPlug::right:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(Style::sGrid() * mWidth, offset + index * 1.0f);
+            mPlugs[orientation][index]->setPos(Style::sGrid() * mWidth, offset + Style::sGrid() * index);
         break;
     case DrawnPlug::bottom:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(offset + index * 1.0f, Style::sGrid() * mHeight);
+            mPlugs[orientation][index]->setPos(offset + Style::sGrid() * index, Style::sGrid() * mHeight);
         break;
     case DrawnPlug::left:
         for (int index = 0; index < plugsNb; ++index)
-            mPlugs[orientation][index]->setPos(0.0f, offset + index * 1.0f);
+            mPlugs[orientation][index]->setPos(0.0f, offset + Style::sGrid() * index);
         break;
     }
 }

@@ -64,8 +64,6 @@ public:
     void notifyInputsChanged() { emit inputsChanged(); }
     void notifyOutputsChanged() { emit outputsChanged(); }
 
-    void deleteSelected();
-
 signals:
     void inputsChanged();
     void outputsChanged();

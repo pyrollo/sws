@@ -28,6 +28,8 @@ class CorePlug;
 
 class DrawnPlug : public DrawnInteractive
 {
+    Q_OBJECT
+
 public:
     enum Orientation { left = 0, top, right, bottom };
 
@@ -43,6 +45,8 @@ public:
 
     QRectF boundingRect() const;
     QPointF connectionPoint() const { return QPointF(0, 0); }
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
     void setOrientation(Orientation orientation);
     Orientation getOrientation() { return mOrientation; }
@@ -61,6 +65,9 @@ public:
     static Orientation rotateOrientation(Orientation orientation, Orientation by);
     static void rotatePoint(QPointF &point, Orientation by);
     static void unrotatePoint(QPointF &point, Orientation by);
+
+signals:
+    void positionChanged();
 
 protected:
     DrawnModule *mModule;

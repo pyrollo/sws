@@ -38,7 +38,7 @@ void GuiSchemaScene::keyPressEvent(QKeyEvent *event)
         return;
 
     if (event->key() == Qt::Key_Delete)
-        mSchema->deleteSelected();
+        deleteSelected();
 }
 
 void GuiSchemaScene::setSchema(DrawnSchema *schema)
@@ -54,4 +54,11 @@ void GuiSchemaScene::setSchema(DrawnSchema *schema)
         addItem(mSchema);
 
     update();
+}
+
+void GuiSchemaScene::deleteSelected()
+{
+    auto selected = selectedItems();
+    for (auto item: selected)
+        delete item;
 }

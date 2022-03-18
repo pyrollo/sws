@@ -99,7 +99,7 @@ void DrawnWire::connectTo(DrawnPlug *plug)
     }
 }
 
-Q_SLOT void DrawnWire::endpointsmoved()
+void DrawnWire::endpointsmoved()
 {
     updatePath();
 }

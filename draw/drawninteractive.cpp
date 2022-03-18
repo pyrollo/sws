@@ -21,8 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QGraphicsSceneMouseEvent>
 
-DrawnInteractive::DrawnInteractive(DrawnSchema *schema):
-    QGraphicsObject(schema), mSchema(schema)
+DrawnInteractive::DrawnInteractive(QGraphicsObject *parent, DrawnSchema *schema):
+    QGraphicsObject(parent), mSchema(schema)
 {
 }
 
