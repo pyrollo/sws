@@ -23,6 +23,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/style.h"
 #include "draw/modules/drawnmoduleinput.h"
 #include "draw/modules/drawnmoduleoutput.h"
+#include "draw/drawncomment.h"
+
 #include "core/coreschema.h"
 #include "core/coremodule.h"
 #include "core/modules/coremoduleconstant.h"
@@ -106,10 +108,18 @@ DrawnSchema *FileDeserializer::deserializeToDrawnSchema()
         QDomNode xnode = xcore.childNodes().at(index);
         if (xnode.isElement()) {
             QDomElement xelement = xnode.toElement();
+
             if (xelement.tagName() == "place-module") {
                 DrawnItem *item = drawnItems.at(xelement.attribute("module"));
                 setPositionFromAttributes(xelement, item);
             }
+
+            if (xelement.tagName() == "comment") {
+                DrawnComment *comment = (DrawnComment *)schema->newItem("comment");
+                comment->setText(xelement.text());
+                setPositionFromAttributes(xelement, comment);
+            }
+
         }
     }
 

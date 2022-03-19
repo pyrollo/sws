@@ -32,6 +32,7 @@ SOURCES += \
     core/modules/coremoduleoutput.cpp \
     core/modules/coremodulesine.cpp \
     core/modules/coremoduletime.cpp \
+    draw/drawncomment.cpp \
     draw/drawnicon.cpp \
     draw/drawninput.cpp \
     draw/drawninteractive.cpp \
@@ -89,6 +90,7 @@ HEADERS += \
     core/modules/coremoduleoutput.h \
     core/modules/coremodulesine.h \
     core/modules/coremoduletime.h \
+    draw/drawncomment.h \
     draw/drawnicon.h \
     draw/drawninput.h \
     draw/drawninteractive.h \

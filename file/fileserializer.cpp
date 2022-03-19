@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "draw/drawnitem.h"
 #include "draw/style.h"
 #include "draw/modules/drawnmoduleerror.h"
+#include "draw/drawncomment.h"
 
 #include "core/coreschema.h"
 #include "core/coremodule.h"
@@ -136,6 +137,20 @@ QString FileSerializer::serialize()
         xdraw.appendChild(xmodule);
         xmodule.setAttribute("id", QString::number(module.second));
         setPositionAttributes(xmodule, module.first);
+    }
+
+    // Decorations
+    for (auto item: mSchema->items()) {
+        if (drawnModules.find(item) != drawnModules.end())
+            continue;
+
+        DrawnComment *comment = dynamic_cast<DrawnComment *>(item);
+        if (comment) {
+            QDomElement xcomment = xdoc.createElement("comment");
+            xdraw.appendChild(xcomment);
+            setPositionAttributes(xcomment, comment);
+            xcomment.appendChild(xdoc.createTextNode(comment->getText()));
+        }
     }
 
     return xdoc.toString();

@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "modules/drawnmoduleinput.h"
 #include "modules/drawnmoduleoutput.h"
 #include "modules/drawnmoduleerror.h"
+#include "drawncomment.h"
 
 DrawnItemFactory::DrawnItemFactory()
 {
@@ -53,6 +54,9 @@ std::vector<std::string> DrawnItemFactory::listItems()
 
 void populateFactory(DrawnItemFactory *factory)
 {
+    // Decorations
+    factory->registerItem("comment", [](DrawnSchema *schema) { return new DrawnComment(schema); });
+
     // Base modules
     factory->registerItem("constant", [](DrawnSchema *schema) { return new DrawnModuleConstant(schema); });
     factory->registerItem("input",    [](DrawnSchema *schema) { return new DrawnModuleInput(schema); });
