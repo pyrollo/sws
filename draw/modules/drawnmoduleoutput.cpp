@@ -49,20 +49,21 @@ void DrawnModuleOutput::paint(QPainter *painter, const QStyleOptionGraphicsItem 
 
     qreal width = Style::sGrid() * mWidth;
     qreal height = Style::sGrid() * mHeight;
+    qreal size = height * 0.5f;
+    qreal margin = 0.1f * Style::sGrid();
+
     QPainterPath path;
 
     path.moveTo(0.0f, 0.0f);
     path.lineTo(width, 0.0f);
-    path.arcTo(width - (height - 0.8f) * 0.5f, 0.4f, height - 0.8f, height - 0.8f, 90, 180);
+    path.arcTo(width - size * 0.5f, (height - size) * 0.5f, size, size, 90, 180);
     path.lineTo(width, height);
     path.lineTo(0.0f, height);
     path.lineTo(0.0f, 0.0f);
     painter->drawPath(path);
 
     painter->setFont(Style::fModule());
-    QRectF textRect(1.0f, 1.0f, 31.0f, 18.0f);
-
-    painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
+    QRectF textRect(margin + Style::sPlug(), margin, width - size * 0.5f - margin - Style::sPlug(), Style::sGrid() * mHeight - 2 * margin);
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, mCoreModule?mName:"Output");
 }
 

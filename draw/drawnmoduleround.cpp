@@ -40,7 +40,7 @@ void DrawnModuleRound::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     setStyle(painter);
 
     QPainterPath path;
-    path.addEllipse(0.0f, 0.0f, 2.0f, 2.0f);
+    path.addEllipse(0.0f, 0.0f, 2 * Style::sGrid(), 2 * Style::sGrid());
     painter->drawPath(path);
 }
 
@@ -50,16 +50,16 @@ void DrawnModuleRound::placePlug(DrawnPlug *plug, DrawnPlug::Orientation orienta
     plug->setOrientation(orientation);
     switch(orientation) {
     case DrawnPlug::top:
-        plug->moveBy(1.0f, margin);
+        plug->moveBy(Style::sGrid(), margin);
         break;
     case DrawnPlug::right:
-        plug->moveBy(2.0f - margin, 1.0f);
+        plug->moveBy(2 * Style::sGrid() - margin, Style::sGrid());
         break;
     case DrawnPlug::bottom:
-        plug->moveBy(1.0f, 2.0f - margin);
+        plug->moveBy(Style::sGrid(), 2 * Style::sGrid() - margin);
         break;
     case DrawnPlug::left:
-        plug->moveBy(margin, 1.0f);
+        plug->moveBy(margin, Style::sGrid());
         break;
     }
 }

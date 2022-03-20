@@ -48,22 +48,23 @@ void DrawnModuleInput::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 
     qreal width = Style::sGrid() * mWidth;
     qreal height = Style::sGrid() * mHeight;
+    qreal size = height * 0.5f;
+    qreal margin = 0.1f * Style::sGrid();
+
     QPainterPath path;
 
     path.moveTo(0.0f, 0.0f);
     path.lineTo(width, 0.0f);
     path.lineTo(width, height);
     path.lineTo(0.0f, height);
-    path.lineTo(0.0f, height - 0.4f);
-    path.lineTo(height * 0.5f - 0.4f, height * 0.5f);
-    path.lineTo(0.0f, 0.4f);
+    path.lineTo(0.0f, (height + size) * 0.5f);
+    path.lineTo(size * 0.5f, height * 0.5f);
+    path.lineTo(0.0f, (height - size) * 0.5f);
     path.lineTo(0.0f, 0.0f);
     painter->drawPath(path);
 
     painter->setFont(Style::fModule());
-    QRectF textRect(8.0f, 1.0f, 31.0f, 18.0f);
-
-    painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
+    QRectF textRect(margin + size * 0.5f, margin, width - size * 0.5f - margin - Style::sPlug(), Style::sGrid() * mHeight - 2 * margin);
     painter->drawText(textRect, Qt::AlignLeft | Qt::AlignVCenter, mCoreModule?mName:"Input");
 }
 

@@ -38,7 +38,9 @@ void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsIte
 {
     DrawnModuleRectangle::paint(painter, option, widget);
     painter->setFont(Style::fModule());
-    QRectF textRect(1.0f, 1.0f, 35.0f, 8.0f);
+
+    qreal margin = 0.1f * Style::sGrid();
+    QRectF textRect(margin, margin, Style::sGrid() * mWidth - margin - Style::sPlug(), Style::sGrid() * mHeight - 2 * margin);
 
     QString value;
     if (mCoreModule)
@@ -46,7 +48,6 @@ void DrawnModuleConstant::paint(QPainter *painter, const QStyleOptionGraphicsIte
     else
         value = "Constant";
 
-    painter->setTransform(QTransform::fromScale(0.1f, 0.1f), true);
     painter->drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, value);
 }
 

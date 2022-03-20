@@ -12,13 +12,14 @@ public:
     static QFont fModule()  { return getfont(5); }
 
     // Line width
-    static qreal wModule() { return 0.1f; }
-    static qreal wPlug()   { return 0.05f; }
-    static qreal wWire()   { return 0.1f; }
+    static qreal wModule() { return 1.0f; }
+    static qreal wPlug()   { return 0.5f; }
+    static qreal wWire()   { return 1.0f; }
 
     // Dimensions
-    static qreal sGrid()   { return 1.0f; }
-    static qreal sPlug()   { return 0.3f; }
+    static qreal sGrid()   { return 10.0f; }
+    static qreal sPlug()   { return 3.0f; }
+    static qreal sIcon()   { return 14.0f; }
 
     // Colors
     static QColor cSceneBackground()    { return QColor("#4B4B64"); }

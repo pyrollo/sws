@@ -166,8 +166,8 @@ QTransform DrawnWire::rotateFromPlug(DrawnPlug* plug) const
 
 QPainterPath DrawnWire::path() const
 {
-    static const float lateral = 2.0f;
-    static const float extension = 1.0f;
+    static const float lateral = Style::sGrid() * 2;
+    static const float extension = Style::sGrid();
 
     if (!isDrawable())
         return QPainterPath();

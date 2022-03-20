@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include "drawnicon.h"
+#include "style.h"
 
 #include <QSvgRenderer>
 #include <QPainter>
@@ -86,7 +87,7 @@ DrawnIcon::~DrawnIcon()
 
 QRectF DrawnIcon::boundingRect() const
 {
-    const float size = 1.4f;
+    const float size = Style::sIcon();
     return QRectF(-size * 0.5f, -size * 0.5f, size, size);
 }
 
