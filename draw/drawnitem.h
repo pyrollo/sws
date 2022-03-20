@@ -34,7 +34,9 @@ public:
     DrawnSchema *schema() { return mSchema; }
     virtual CoreModule *core() { return nullptr; }
 
+
     void setIcon(const QString &filename);
+    void alignToGrid(bool align) { mAlignToGrid = align; }
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
@@ -45,6 +47,7 @@ protected:
     std::string mType;
     DrawnSchema *mSchema;
     DrawnIcon *mIcon;
+    bool mAlignToGrid;
 
     DrawnItem(std::string type, DrawnSchema *schema);
 

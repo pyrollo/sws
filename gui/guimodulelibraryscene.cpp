@@ -46,12 +46,13 @@ void GuiModuleLibraryScene::setFactory(DrawnItemFactory *factory)
 
     if (mFactory)
     {
-        float y = 1.0f;
+        float y = 0.0f;
         for (auto type: mFactory->listItems()) {
             DrawnItem *item = mFactory->newItem(type);
+            item->alignToGrid(false);
             QRectF rect = item->boundingRect();
             item->moveBy(-0.5 * rect.width(), y);
-            y += rect.height() + Style::sGrid();
+            y += rect.height() + Style::sGrid() * 0.5f;
             addItem(item);
         }
     }

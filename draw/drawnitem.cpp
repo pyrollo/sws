@@ -28,7 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QGraphicsSceneMouseEvent>
 
 DrawnItem::DrawnItem(std::string type, DrawnSchema *schema):
-    DrawnInteractive(schema, schema), mType(type), mSchema(schema), mIcon(nullptr)
+    DrawnInteractive(schema, schema), mType(type), mSchema(schema), mIcon(nullptr), mAlignToGrid(true)
 {
     setFlags(flags() | ItemIsSelectable | ItemSendsGeometryChanges);
 }
@@ -44,14 +44,15 @@ DrawnItem::~DrawnItem()
 
 QVariant DrawnItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    if (change == ItemPositionChange) {
+    if (change == ItemPositionChange)
+        emit positionChanged();
+
+    if (change == ItemPositionChange && mAlignToGrid) {
 
         qreal gridSize = Style::sGrid();
         QPointF newPos = value.toPointF();
         qreal xV = round(newPos.x() / gridSize) * gridSize;
         qreal yV = round(newPos.y() / gridSize) * gridSize;
-
-        emit positionChanged();
 
         return QPointF(xV, yV);
     }
@@ -76,4 +77,3 @@ void DrawnItem::setIcon(const QString &filename)
     mIcon = new DrawnIcon(this, filename);
     repositionIcon();
 }
-
