@@ -27,6 +27,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <QMimeData>
 #include <QPainter>
 
+#include <QGraphicsView>
+
 GuiModuleLibraryScene::GuiModuleLibraryScene(QObject *parent):
     QGraphicsScene(parent), mFactory(nullptr)
 {
@@ -49,7 +51,7 @@ void GuiModuleLibraryScene::setFactory(DrawnItemFactory *factory)
             DrawnItem *item = mFactory->newItem(type);
             QRectF rect = item->boundingRect();
             item->moveBy(-0.5 * rect.width(), y);
-            y += rect.height() + 1.0f;
+            y += rect.height() + Style::sGrid();
             addItem(item);
         }
     }
@@ -62,6 +64,14 @@ void GuiModuleLibraryScene::setFactory(DrawnItemFactory *factory)
 void GuiModuleLibraryScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
+        QGraphicsView *view = nullptr;
+
+        for (auto v: views())
+            if ((QWidget *)(v->viewport()) == event->widget())
+                view = v;
+
+        if (!view) // Strange, we could not get event view
+            return;
 
         // Find first ancestor item under mouse
         QGraphicsItem *item = itemAt(event->scenePos(), QTransform());
@@ -89,7 +99,10 @@ void GuiModuleLibraryScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QGraphicsScene scene(rect);
         scene.addItem(fakeItem);
 
-        QPixmap pix(rect.width() * 20, rect.height() * 20);
+        // Matrix is supposed to be a pan/zoom only (no rotate no shear)
+        QPixmap pix(view->matrix().m11() * rect.width(),
+                    view->matrix().m22() * rect.height());
+
         pix.fill(Qt::transparent);
         QPainter painter(&pix);
         scene.render(&painter, pix.rect(), rect);
