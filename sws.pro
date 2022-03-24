@@ -42,6 +42,7 @@ SOURCES += \
     draw/drawnmoduleround.cpp \
     draw/drawnoutput.cpp \
     draw/drawnplug.cpp \
+    draw/drawnresizeable.cpp \
     draw/drawnschema.cpp \
     draw/drawnschemainteraction.cpp \
     draw/drawnwire.cpp \
@@ -99,6 +100,7 @@ HEADERS += \
     draw/drawnmoduleround.h \
     draw/drawnoutput.h \
     draw/drawnplug.h \
+    draw/drawnresizeable.h \
     draw/drawnschema.h \
     draw/drawnschemainteraction.h \
     draw/drawnwire.h \
